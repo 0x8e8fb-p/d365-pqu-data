@@ -1,0 +1,206 @@
+{
+  "dataset": "d365-finops-pqu",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-09-24T12:48:45.947948Z",
+  "source": {
+    "publisher": "Microsoft",
+    "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+    "branch": "main",
+    "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+    "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "markdown_date": "2026-09-21",
+    "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
+    "retrieved_at": "2026-09-24T12:48:45.947948Z"
+  },
+  "count": 31,
+  "records": [
+    {
+      "station": 1,
+      "station_label": "Station 1",
+      "region": "Only for opted-in environments",
+      "is_region": false
+    },
+    {
+      "station": 2,
+      "station_label": "Station 2",
+      "region": "Canada Central",
+      "is_region": true
+    },
+    {
+      "station": 2,
+      "station_label": "Station 2",
+      "region": "Canada East",
+      "is_region": true
+    },
+    {
+      "station": 2,
+      "station_label": "Station 2",
+      "region": "France Central",
+      "is_region": true
+    },
+    {
+      "station": 2,
+      "station_label": "Station 2",
+      "region": "India Central",
+      "is_region": true
+    },
+    {
+      "station": 2,
+      "station_label": "Station 2",
+      "region": "Norway East",
+      "is_region": true
+    },
+    {
+      "station": 2,
+      "station_label": "Station 2",
+      "region": "Switzerland West",
+      "is_region": true
+    },
+    {
+      "station": 3,
+      "station_label": "Station 3",
+      "region": "Australia East",
+      "is_region": true
+    },
+    {
+      "station": 3,
+      "station_label": "Station 3",
+      "region": "Australia South East",
+      "is_region": true
+    },
+    {
+      "station": 3,
+      "station_label": "Station 3",
+      "region": "France South",
+      "is_region": true
+    },
+    {
+      "station": 3,
+      "station_label": "Station 3",
+      "region": "India South",
+      "is_region": true
+    },
+    {
+      "station": 3,
+      "station_label": "Station 3",
+      "region": "Japan East",
+      "is_region": true
+    },
+    {
+      "station": 3,
+      "station_label": "Station 3",
+      "region": "Norway West",
+      "is_region": true
+    },
+    {
+      "station": 3,
+      "station_label": "Station 3",
+      "region": "South Africa North",
+      "is_region": true
+    },
+    {
+      "station": 3,
+      "station_label": "Station 3",
+      "region": "South East Asia",
+      "is_region": true
+    },
+    {
+      "station": 3,
+      "station_label": "Station 3",
+      "region": "Switzerland North",
+      "is_region": true
+    },
+    {
+      "station": 3,
+      "station_label": "Station 3",
+      "region": "UAE North",
+      "is_region": true
+    },
+    {
+      "station": 3,
+      "station_label": "Station 3",
+      "region": "UK South",
+      "is_region": true
+    },
+    {
+      "station": 4,
+      "station_label": "Station 4",
+      "region": "Brazil South",
+      "is_region": true
+    },
+    {
+      "station": 4,
+      "station_label": "Station 4",
+      "region": "East Asia",
+      "is_region": true
+    },
+    {
+      "station": 4,
+      "station_label": "Station 4",
+      "region": "East US",
+      "is_region": true
+    },
+    {
+      "station": 4,
+      "station_label": "Station 4",
+      "region": "Japan West",
+      "is_region": true
+    },
+    {
+      "station": 4,
+      "station_label": "Station 4",
+      "region": "North Europe",
+      "is_region": true
+    },
+    {
+      "station": 4,
+      "station_label": "Station 4",
+      "region": "UAE Central",
+      "is_region": true
+    },
+    {
+      "station": 4,
+      "station_label": "Station 4",
+      "region": "UK West",
+      "is_region": true
+    },
+    {
+      "station": 5,
+      "station_label": "Station 5",
+      "region": "Central US",
+      "is_region": true
+    },
+    {
+      "station": 5,
+      "station_label": "Station 5",
+      "region": "West Europe",
+      "is_region": true
+    },
+    {
+      "station": 5,
+      "station_label": "Station 5",
+      "region": "West US",
+      "is_region": true
+    },
+    {
+      "station": 6,
+      "station_label": "Station 6",
+      "region": "China",
+      "is_region": true
+    },
+    {
+      "station": 6,
+      "station_label": "Station 6",
+      "region": "DoD",
+      "is_region": true
+    },
+    {
+      "station": 6,
+      "station_label": "Station 6",
+      "region": "Government Community Cloud",
+      "is_region": true
+    }
+  ]
+}

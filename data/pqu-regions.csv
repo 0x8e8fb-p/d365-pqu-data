@@ -1,0 +1,32 @@
+station,station_label,region,is_region
+1,Station 1,Only for opted-in environments,false
+2,Station 2,Canada Central,true
+2,Station 2,Canada East,true
+2,Station 2,France Central,true
+2,Station 2,India Central,true
+2,Station 2,Norway East,true
+2,Station 2,Switzerland West,true
+3,Station 3,Australia East,true
+3,Station 3,Australia South East,true
+3,Station 3,France South,true
+3,Station 3,India South,true
+3,Station 3,Japan East,true
+3,Station 3,Norway West,true
+3,Station 3,South Africa North,true
+3,Station 3,South East Asia,true
+3,Station 3,Switzerland North,true
+3,Station 3,UAE North,true
+3,Station 3,UK South,true
+4,Station 4,Brazil South,true
+4,Station 4,East Asia,true
+4,Station 4,East US,true
+4,Station 4,Japan West,true
+4,Station 4,North Europe,true
+4,Station 4,UAE Central,true
+4,Station 4,UK West,true
+5,Station 5,Central US,true
+5,Station 5,West Europe,true
+5,Station 5,West US,true
+6,Station 6,China,true
+6,Station 6,DoD,true
+6,Station 6,Government Community Cloud,true

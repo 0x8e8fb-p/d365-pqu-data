@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://0x8e8fb-p.github.io/d365-pqu-data/schemas/version.schema.json",
+  "title": "D365 PQU build versions",
+  "type": "object",
+  "required": ["dataset", "schema_version", "generated_at", "source", "count", "records"],
+  "properties": {
+    "dataset": { "const": "d365-finops-pqu" },
+    "schema_version": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "source": { "type": "object" },
+    "count": { "type": "integer", "minimum": 0 },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pqu_id", "application_version", "pqu_train", "release_number", "status"],
+        "properties": {
+          "pqu_id": { "type": "string" },
+          "application_version": { "type": "string" },
+          "pqu_train": { "type": "string" },
+          "release_number": { "type": "integer" },
+          "status": { "type": "string" },
+          "application_build": { "type": ["string", "null"] },
+          "platform_build": { "type": ["string", "null"] },
+          "uep_version": { "type": ["string", "null"] },
+          "change_cutoff_date": { "type": ["string", "null"] },
+          "train_start_date": { "type": ["string", "null"] },
+          "train_end_date": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,590 @@
+{
+  "dataset": "d365-finops-pqu",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-09-24T12:48:45.947948Z",
+  "source": {
+    "publisher": "Microsoft",
+    "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+    "branch": "main",
+    "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+    "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "markdown_date": "2026-09-21",
+    "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
+    "retrieved_at": "2026-09-24T12:48:45.947948Z"
+  },
+  "count": 30,
+  "records": [
+    {
+      "pqu_id": "10.0.46-PQU-8",
+      "application_version": "10.0.46",
+      "pqu_train": "PQU-8",
+      "release_number": 8,
+      "station": 1,
+      "station_label": "Station 1",
+      "sandbox_start_date": "2026-08-31",
+      "sandbox_end_date": "2026-09-03",
+      "production_start_date": null,
+      "production_end_date": null,
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.46-PQU-8",
+      "application_version": "10.0.46",
+      "pqu_train": "PQU-8",
+      "release_number": 8,
+      "station": 2,
+      "station_label": "Station 2",
+      "sandbox_start_date": "2026-09-07",
+      "sandbox_end_date": "2026-09-10",
+      "production_start_date": "2026-09-19",
+      "production_end_date": "2026-09-20",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.46-PQU-8",
+      "application_version": "10.0.46",
+      "pqu_train": "PQU-8",
+      "release_number": 8,
+      "station": 3,
+      "station_label": "Station 3",
+      "sandbox_start_date": "2026-09-08",
+      "sandbox_end_date": "2026-09-11",
+      "production_start_date": "2026-09-19",
+      "production_end_date": "2026-09-20",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.46-PQU-8",
+      "application_version": "10.0.46",
+      "pqu_train": "PQU-8",
+      "release_number": 8,
+      "station": 4,
+      "station_label": "Station 4",
+      "sandbox_start_date": "2026-09-14",
+      "sandbox_end_date": "2026-09-17",
+      "production_start_date": "2026-09-26",
+      "production_end_date": "2026-09-27",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.46-PQU-8",
+      "application_version": "10.0.46",
+      "pqu_train": "PQU-8",
+      "release_number": 8,
+      "station": 5,
+      "station_label": "Station 5",
+      "sandbox_start_date": "2026-09-21",
+      "sandbox_end_date": "2026-09-24",
+      "production_start_date": "2026-10-03",
+      "production_end_date": "2026-10-04",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.46-PQU-8",
+      "application_version": "10.0.46",
+      "pqu_train": "PQU-8",
+      "release_number": 8,
+      "station": 6,
+      "station_label": "Station 6",
+      "sandbox_start_date": "2026-09-22",
+      "sandbox_end_date": "2026-09-25",
+      "production_start_date": "2026-10-03",
+      "production_end_date": "2026-10-04",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.47-PQU-12",
+      "application_version": "10.0.47",
+      "pqu_train": "PQU-12",
+      "release_number": 12,
+      "station": 1,
+      "station_label": "Station 1",
+      "sandbox_start_date": "2026-09-09",
+      "sandbox_end_date": "2026-09-12",
+      "production_start_date": null,
+      "production_end_date": null,
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.47-PQU-12",
+      "application_version": "10.0.47",
+      "pqu_train": "PQU-12",
+      "release_number": 12,
+      "station": 2,
+      "station_label": "Station 2",
+      "sandbox_start_date": "2026-09-14",
+      "sandbox_end_date": "2026-09-17",
+      "production_start_date": "2026-09-19",
+      "production_end_date": "2026-09-20",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.47-PQU-12",
+      "application_version": "10.0.47",
+      "pqu_train": "PQU-12",
+      "release_number": 12,
+      "station": 3,
+      "station_label": "Station 3",
+      "sandbox_start_date": "2026-09-14",
+      "sandbox_end_date": "2026-09-17",
+      "production_start_date": "2026-09-19",
+      "production_end_date": "2026-09-20",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.47-PQU-12",
+      "application_version": "10.0.47",
+      "pqu_train": "PQU-12",
+      "release_number": 12,
+      "station": 4,
+      "station_label": "Station 4",
+      "sandbox_start_date": "2026-09-21",
+      "sandbox_end_date": "2026-09-24",
+      "production_start_date": "2026-09-26",
+      "production_end_date": "2026-09-27",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.47-PQU-12",
+      "application_version": "10.0.47",
+      "pqu_train": "PQU-12",
+      "release_number": 12,
+      "station": 5,
+      "station_label": "Station 5",
+      "sandbox_start_date": "2026-09-28",
+      "sandbox_end_date": "2026-10-01",
+      "production_start_date": "2026-10-03",
+      "production_end_date": "2026-10-04",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.47-PQU-12",
+      "application_version": "10.0.47",
+      "pqu_train": "PQU-12",
+      "release_number": 12,
+      "station": 6,
+      "station_label": "Station 6",
+      "sandbox_start_date": "2026-09-28",
+      "sandbox_end_date": "2026-10-01",
+      "production_start_date": "2026-10-03",
+      "production_end_date": "2026-10-04",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.47-PQU-13",
+      "application_version": "10.0.47",
+      "pqu_train": "PQU-13",
+      "release_number": 13,
+      "station": 1,
+      "station_label": "Station 1",
+      "sandbox_start_date": "2026-09-23",
+      "sandbox_end_date": "2026-09-26",
+      "production_start_date": null,
+      "production_end_date": null,
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.47-PQU-13",
+      "application_version": "10.0.47",
+      "pqu_train": "PQU-13",
+      "release_number": 13,
+      "station": 2,
+      "station_label": "Station 2",
+      "sandbox_start_date": "2026-09-28",
+      "sandbox_end_date": "2026-10-01",
+      "production_start_date": "2026-10-03",
+      "production_end_date": "2026-10-04",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.47-PQU-13",
+      "application_version": "10.0.47",
+      "pqu_train": "PQU-13",
+      "release_number": 13,
+      "station": 3,
+      "station_label": "Station 3",
+      "sandbox_start_date": "2026-09-28",
+      "sandbox_end_date": "2026-10-01",
+      "production_start_date": "2026-10-03",
+      "production_end_date": "2026-10-04",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.47-PQU-13",
+      "application_version": "10.0.47",
+      "pqu_train": "PQU-13",
+      "release_number": 13,
+      "station": 4,
+      "station_label": "Station 4",
+      "sandbox_start_date": "2026-10-05",
+      "sandbox_end_date": "2026-10-08",
+      "production_start_date": "2026-10-10",
+      "production_end_date": "2026-10-11",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.47-PQU-13",
+      "application_version": "10.0.47",
+      "pqu_train": "PQU-13",
+      "release_number": 13,
+      "station": 5,
+      "station_label": "Station 5",
+      "sandbox_start_date": "2026-10-12",
+      "sandbox_end_date": "2026-10-15",
+      "production_start_date": "2026-10-17",
+      "production_end_date": "2026-10-18",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.47-PQU-13",
+      "application_version": "10.0.47",
+      "pqu_train": "PQU-13",
+      "release_number": 13,
+      "station": 6,
+      "station_label": "Station 6",
+      "sandbox_start_date": "2026-10-12",
+      "sandbox_end_date": "2026-10-15",
+      "production_start_date": "2026-10-17",
+      "production_end_date": "2026-10-18",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.48-PQU-5",
+      "application_version": "10.0.48",
+      "pqu_train": "PQU-5",
+      "release_number": 5,
+      "station": 1,
+      "station_label": "Station 1",
+      "sandbox_start_date": "2026-09-02",
+      "sandbox_end_date": "2026-09-05",
+      "production_start_date": null,
+      "production_end_date": null,
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.48-PQU-5",
+      "application_version": "10.0.48",
+      "pqu_train": "PQU-5",
+      "release_number": 5,
+      "station": 2,
+      "station_label": "Station 2",
+      "sandbox_start_date": "2026-09-07",
+      "sandbox_end_date": "2026-09-10",
+      "production_start_date": "2026-09-12",
+      "production_end_date": "2026-09-13",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.48-PQU-5",
+      "application_version": "10.0.48",
+      "pqu_train": "PQU-5",
+      "release_number": 5,
+      "station": 3,
+      "station_label": "Station 3",
+      "sandbox_start_date": "2026-09-07",
+      "sandbox_end_date": "2026-09-10",
+      "production_start_date": "2026-09-12",
+      "production_end_date": "2026-09-13",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.48-PQU-5",
+      "application_version": "10.0.48",
+      "pqu_train": "PQU-5",
+      "release_number": 5,
+      "station": 4,
+      "station_label": "Station 4",
+      "sandbox_start_date": "2026-09-14",
+      "sandbox_end_date": "2026-09-17",
+      "production_start_date": "2026-09-19",
+      "production_end_date": "2026-09-20",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.48-PQU-5",
+      "application_version": "10.0.48",
+      "pqu_train": "PQU-5",
+      "release_number": 5,
+      "station": 5,
+      "station_label": "Station 5",
+      "sandbox_start_date": "2026-09-21",
+      "sandbox_end_date": "2026-09-24",
+      "production_start_date": "2026-09-26",
+      "production_end_date": "2026-09-27",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.48-PQU-5",
+      "application_version": "10.0.48",
+      "pqu_train": "PQU-5",
+      "release_number": 5,
+      "station": 6,
+      "station_label": "Station 6",
+      "sandbox_start_date": "2026-09-21",
+      "sandbox_end_date": "2026-09-24",
+      "production_start_date": "2026-09-26",
+      "production_end_date": "2026-09-27",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.48-PQU-6",
+      "application_version": "10.0.48",
+      "pqu_train": "PQU-6",
+      "release_number": 6,
+      "station": 1,
+      "station_label": "Station 1",
+      "sandbox_start_date": "2026-09-16",
+      "sandbox_end_date": "2026-09-19",
+      "production_start_date": null,
+      "production_end_date": null,
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.48-PQU-6",
+      "application_version": "10.0.48",
+      "pqu_train": "PQU-6",
+      "release_number": 6,
+      "station": 2,
+      "station_label": "Station 2",
+      "sandbox_start_date": "2026-09-21",
+      "sandbox_end_date": "2026-09-24",
+      "production_start_date": "2026-09-26",
+      "production_end_date": "2026-09-27",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.48-PQU-6",
+      "application_version": "10.0.48",
+      "pqu_train": "PQU-6",
+      "release_number": 6,
+      "station": 3,
+      "station_label": "Station 3",
+      "sandbox_start_date": "2026-09-21",
+      "sandbox_end_date": "2026-09-24",
+      "production_start_date": "2026-09-26",
+      "production_end_date": "2026-09-27",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.48-PQU-6",
+      "application_version": "10.0.48",
+      "pqu_train": "PQU-6",
+      "release_number": 6,
+      "station": 4,
+      "station_label": "Station 4",
+      "sandbox_start_date": "2026-09-28",
+      "sandbox_end_date": "2026-10-01",
+      "production_start_date": "2026-10-03",
+      "production_end_date": "2026-10-04",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.48-PQU-6",
+      "application_version": "10.0.48",
+      "pqu_train": "PQU-6",
+      "release_number": 6,
+      "station": 5,
+      "station_label": "Station 5",
+      "sandbox_start_date": "2026-10-05",
+      "sandbox_end_date": "2026-10-08",
+      "production_start_date": "2026-10-10",
+      "production_end_date": "2026-10-11",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    },
+    {
+      "pqu_id": "10.0.48-PQU-6",
+      "application_version": "10.0.48",
+      "pqu_train": "PQU-6",
+      "release_number": 6,
+      "station": 6,
+      "station_label": "Station 6",
+      "sandbox_start_date": "2026-10-05",
+      "sandbox_end_date": "2026-10-08",
+      "production_start_date": "2026-10-10",
+      "production_end_date": "2026-10-11",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      }
+    }
+  ]
+}

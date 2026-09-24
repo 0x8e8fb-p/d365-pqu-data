@@ -1,0 +1,41 @@
+{
+  "dataset": "d365-finops-pqu",
+  "schema_version": "1.0.0",
+  "pipeline_revision": "1.0.0",
+  "generated_at": "2026-09-24T12:48:45.947948Z",
+  "first_published_at": "2026-09-24T12:00:00Z",
+  "last_published_at": "2026-09-24T12:48:45.947948Z",
+  "record_count": 59,
+  "station_schedule_count": 30,
+  "region_count": 31,
+  "status_counts": {
+    "Completed": 21,
+    "In-Progress": 5,
+    "Canceled": 1,
+    "Not Started": 32
+  },
+  "current_count": 5,
+  "upcoming_count": 32,
+  "latest_pqu_id": "10.0.48-PQU-6",
+  "source": {
+    "publisher": "Microsoft",
+    "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+    "branch": "main",
+    "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "commit": "deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd",
+    "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/deb37ecf6bc37a4862d78515fa35d8a4dc38bcdd/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "markdown_date": "2026-09-21",
+    "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
+    "retrieved_at": "2026-09-24T12:48:45.947948Z"
+  },
+  "links": {
+    "repository": "https://github.com/0x8e8fb-p/d365-pqu-data",
+    "pages": "https://0x8e8fb-p.github.io/d365-pqu-data/",
+    "api_pqu": "https://0x8e8fb-p.github.io/d365-pqu-data/api/pqu.json",
+    "api_csv": "https://0x8e8fb-p.github.io/d365-pqu-data/api/pqu.csv",
+    "raw_pqu": "https://raw.githubusercontent.com/0x8e8fb-p/d365-pqu-data/main/data/pqu.json",
+    "workbook": "https://0x8e8fb-p.github.io/d365-pqu-data/downloads/D365-PQU-Tracker.xlsx",
+    "raw_workbook": "https://raw.githubusercontent.com/0x8e8fb-p/d365-pqu-data/main/excel/D365-PQU-Tracker.xlsx"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://0x8e8fb-p.github.io/d365-pqu-data/schemas/pqu.schema.json",
+  "title": "D365 PQU dataset",
+  "type": "object",
+  "required": ["dataset", "schema_version", "generated_at", "source", "count", "records"],
+  "properties": {
+    "dataset": { "const": "d365-finops-pqu" },
+    "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "latest_pqu_id": { "type": ["string", "null"] },
+    "source": { "$ref": "#/$defs/source" },
+    "count": { "type": "integer", "minimum": 0 },
+    "records": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/record" }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": [
+        "publisher",
+        "repository",
+        "branch",
+        "file_path",
+        "commit",
+        "article_url",
+        "raw_url",
+        "sha256",
+        "retrieved_at"
+      ],
+      "properties": {
+        "publisher": { "type": "string" },
+        "repository": { "type": "string" },
+        "branch": { "type": "string" },
+        "file_path": { "type": "string" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "article_url": { "type": "string", "format": "uri" },
+        "raw_url": { "type": "string", "format": "uri" },
+        "markdown_date": { "type": ["string", "null"], "format": "date" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "retrieved_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "record_source": {
+      "type": "object",
+      "required": ["publisher", "repository", "commit", "url", "raw_url"],
+      "properties": {
+        "publisher": { "type": "string" },
+        "repository": { "type": "string" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "url": { "type": "string", "format": "uri" },
+        "raw_url": { "type": "string", "format": "uri" }
+      },
+      "additionalProperties": false
+    },
+    "record": {
+      "type": "object",
+      "required": [
+        "pqu_id",
+        "application_version",
+        "pqu_train",
+        "release_number",
+        "status",
+        "first_seen_at",
+        "last_changed_at",
+        "source"
+      ],
+      "properties": {
+        "pqu_id": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+-PQU-\\d+$" },
+        "application_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "pqu_train": { "type": "string", "pattern": "^PQU-\\d+$" },
+        "release_number": { "type": "integer", "minimum": 1 },
+        "change_cutoff_date": { "type": ["string", "null"], "format": "date" },
+        "train_start_date": { "type": ["string", "null"], "format": "date" },
+        "train_end_date": { "type": ["string", "null"], "format": "date" },
+        "status": { "enum": ["Completed", "In-Progress", "Not Started", "Canceled"] },
+        "application_build": { "type": ["string", "null"] },
+        "platform_build": { "type": ["string", "null"] },
+        "uep_version": { "type": ["string", "null"] },
+        "station_schedule_available": { "type": "boolean" },
+        "first_seen_at": { "type": "string", "format": "date-time" },
+        "last_changed_at": { "type": "string", "format": "date-time" },
+        "source": { "$ref": "#/$defs/record_source" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://0x8e8fb-p.github.io/d365-pqu-data/schemas/metadata.schema.json",
+  "title": "D365 PQU dataset metadata",
+  "type": "object",
+  "required": [
+    "dataset",
+    "schema_version",
+    "pipeline_revision",
+    "generated_at",
+    "first_published_at",
+    "last_published_at",
+    "record_count",
+    "station_schedule_count",
+    "region_count",
+    "status_counts",
+    "current_count",
+    "upcoming_count",
+    "source",
+    "links"
+  ],
+  "properties": {
+    "dataset": { "const": "d365-finops-pqu" },
+    "schema_version": { "type": "string" },
+    "pipeline_revision": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "first_published_at": { "type": "string", "format": "date-time" },
+    "last_published_at": { "type": "string", "format": "date-time" },
+    "record_count": { "type": "integer", "minimum": 0 },
+    "station_schedule_count": { "type": "integer", "minimum": 0 },
+    "region_count": { "type": "integer", "minimum": 0 },
+    "status_counts": { "type": "object", "additionalProperties": { "type": "integer" } },
+    "current_count": { "type": "integer", "minimum": 0 },
+    "upcoming_count": { "type": "integer", "minimum": 0 },
+    "latest_pqu_id": { "type": ["string", "null"] },
+    "source": { "type": "object" },
+    "links": { "type": "object", "additionalProperties": { "type": "string" } }
+  }
+}

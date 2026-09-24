@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>D365 Finance &amp; Operations PQU Dataset</title>
+  <meta name="description" content="Machine-readable dataset and tracker for Microsoft Dynamics 365 Finance and Operations proactive quality updates.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to dataset</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div>
+        <p class="eyebrow">Microsoft Dynamics 365 Finance &amp; Operations</p>
+        <h1>Proactive Quality Update Dataset</h1>
+        <p class="lede">Automatically synchronized from Microsoft's public PQU release schedule. JSON, CSV, and Excel from one validated dataset.</p>
+      </div>
+      <div class="header-actions">
+        <a class="button primary" href="./downloads/D365-PQU-Tracker.xlsx" download>Download Excel tracker</a>
+        <a class="button" href="./api/index.json">API index</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="status-bar" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span>
+      <span id="sync-state">Loading dataset...</span>
+      <span id="sync-time"></span>
+    </section>
+
+    <p id="load-error" class="load-error" hidden></p>
+
+    <section aria-labelledby="summary-heading">
+      <h2 id="summary-heading">Current position</h2>
+      <div class="cards">
+        <article class="card accent">
+          <p class="card-label">Latest active PQU</p>
+          <p class="card-value" id="latest-pqu">-</p>
+          <p class="card-note" id="latest-pqu-note">-</p>
+        </article>
+        <article class="card">
+          <p class="card-label">Active trains</p>
+          <p class="card-value" id="current-count">-</p>
+          <p class="card-note">All trains marked In-Progress</p>
+        </article>
+        <article class="card">
+          <p class="card-label">Next train</p>
+          <p class="card-value" id="next-pqu">-</p>
+          <p class="card-note" id="next-pqu-note">-</p>
+        </article>
+        <article class="card">
+          <p class="card-label">Published records</p>
+          <p class="card-value" id="record-count">-</p>
+          <p class="card-note" id="record-note">-</p>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="table-heading">
+      <div class="section-head">
+        <h2 id="table-heading">PQU schedule</h2>
+        <p class="section-note" id="filter-note"></p>
+      </div>
+      <div class="filters">
+        <label>
+          <span>Search</span>
+          <input id="search" type="search" placeholder="PQU, version, build, status" autocomplete="off">
+        </label>
+        <label>
+          <span>Status</span>
+          <select id="status-filter">
+            <option value="">All statuses</option>
+          </select>
+        </label>
+        <label>
+          <span>Application version</span>
+          <select id="version-filter">
+            <option value="">All versions</option>
+          </select>
+        </label>
+        <button id="reset-filters" class="button small" type="button">Reset</button>
+      </div>
+      <div class="table-wrap">
+        <table id="pqu-table">
+          <caption class="visually-hidden">Proactive quality update trains</caption>
+          <thead>
+            <tr>
+              <th scope="col">PQU ID</th>
+              <th scope="col">App version</th>
+              <th scope="col">Train</th>
+              <th scope="col">Status</th>
+              <th scope="col">Change cutoff</th>
+              <th scope="col">Train start</th>
+              <th scope="col">Train end</th>
+              <th scope="col">Application build</th>
+              <th scope="col">Platform build</th>
+              <th scope="col">UEP</th>
+              <th scope="col">Station schedule</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="stations-heading">
+      <div class="section-head">
+        <h2 id="stations-heading">Station windows</h2>
+        <p class="section-note">Sandbox and production windows Microsoft published for the current schedule sections.</p>
+      </div>
+      <div class="table-wrap">
+        <table id="station-table">
+          <caption class="visually-hidden">Station update windows</caption>
+          <thead>
+            <tr>
+              <th scope="col">PQU ID</th>
+              <th scope="col">Station</th>
+              <th scope="col">Sandbox window</th>
+              <th scope="col">Production window</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="region-heading">
+      <div class="section-head">
+        <h2 id="region-heading">Region lookup</h2>
+        <p class="section-note">Find the station that covers your Dynamics 365 region.</p>
+      </div>
+      <div class="region-picker">
+        <label>
+          <span>Region</span>
+          <select id="region-select">
+            <option value="">Select a region</option>
+          </select>
+        </label>
+        <div class="region-result" id="region-result" aria-live="polite">Select a region to see its station.</div>
+      </div>
+    </section>
+
+    <section aria-labelledby="api-heading">
+      <div class="section-head">
+        <h2 id="api-heading">Public API</h2>
+        <p class="section-note">Machine-readable endpoints for AI agents, Python, Power BI, and other extractors.</p>
+      </div>
+      <ul class="endpoint-list" id="endpoint-list"></ul>
+    </section>
+
+    <section aria-labelledby="source-heading">
+      <div class="section-head">
+        <h2 id="source-heading">Source and quality</h2>
+        <p class="section-note">Every published record carries the Microsoft source revision and retrieval time.</p>
+      </div>
+      <dl class="details">
+        <div><dt>Source</dt><dd id="source-link">-</dd></div>
+        <div><dt>Source revision</dt><dd id="source-commit">-</dd></div>
+        <div><dt>Source markdown date</dt><dd id="source-date">-</dd></div>
+        <div><dt>Last synchronized</dt><dd id="source-synced">-</dd></div>
+        <div><dt>Source SHA-256</dt><dd id="source-hash">-</dd></div>
+      </dl>
+      <div id="quality-block" class="quality" hidden>
+        <h3>Data quality notes</h3>
+        <ul id="quality-list"></ul>
+      </div>
+    </section>
+
+    <noscript>
+      <p class="load-error">This dashboard needs JavaScript to display the dataset. The JSON and Excel files are still available through the API links.</p>
+    </noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Generated from <a href="https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule">Microsoft Learn documentation</a>. Not affiliated with or endorsed by Microsoft. Schedules can change; verify environment-specific notifications in Lifecycle Services.</p>
+      <p><a href="https://github.com/0x8e8fb-p/d365-pqu-data">Source repository</a> · <a href="./api/index.json">API index</a> · <a href="./downloads/D365-PQU-Tracker.xlsx">Excel tracker</a></p>
+    </div>
+  </footer>
+
+  <script src="./assets/app.js" defer></script>
+</body>
+</html>

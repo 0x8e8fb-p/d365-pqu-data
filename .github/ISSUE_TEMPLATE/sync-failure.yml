@@ -1,0 +1,12 @@
+name: D365 PQU synchronization failure
+description: Report a failed or stale Microsoft PQU synchronization.
+title: "[Automation] "
+labels: ["automation"]
+body:
+  | Field | Value |
+  |---|---|
+  | Workflow run | |
+  | Source commit | |
+  | Failure stage | Fetch, parse, validation, artifact generation, commit, or Pages deployment |
+  | Last known good dataset | |
+  | Suggested recovery | Re-run the workflow after reviewing the logs |
