@@ -127,6 +127,7 @@ def test_dashboard_javascript_uses_ist_theme_sorting_and_pagination() -> None:
     assert "aria-sort" in script
     assert "prev-page" in script
     assert "activeStation" in script
+    assert "hasStations" in script
     assert "On-Going" in script
     assert "In-Progress" in script
     assert "Not Started" in script

@@ -395,30 +395,36 @@ function renderRows() {
   const fragment = document.createDocumentFragment();
   for (const record of pageRecords) {
     const detailId = `stations-${record.pqu_id}`;
-    const expanded = state.expanded.includes(record.pqu_id);
-    const toggle = el(
-      "button",
-      {
-        class: "row-toggle",
-        type: "button",
-        "aria-expanded": expanded ? "true" : "false",
-        "aria-controls": detailId,
-        "aria-label": `${expanded ? "Collapse" : "Expand"} station windows for ${record.pqu_id}`
-      },
-      [
-        el("span", { class: "row-toggle-icon", "aria-hidden": "true", text: expanded ? "−" : "+" }),
-        el("span", { text: record.pqu_id })
-      ]
-    );
-    toggle.addEventListener("click", () => {
-      if (state.expanded.includes(record.pqu_id)) {
-        state.expanded = state.expanded.filter((id) => id !== record.pqu_id);
-      } else {
-        state.expanded = [...state.expanded, record.pqu_id];
-      }
-      renderRows();
-    });
-    const idCell = el("td", { class: "mono" }, [toggle]);
+    const hasStations = stationsFor(record.pqu_id).length > 0;
+    const expanded = hasStations && state.expanded.includes(record.pqu_id);
+    let idCell;
+    if (hasStations) {
+      const toggle = el(
+        "button",
+        {
+          class: "row-toggle",
+          type: "button",
+          "aria-expanded": expanded ? "true" : "false",
+          "aria-controls": detailId,
+          "aria-label": `${expanded ? "Collapse" : "Expand"} station windows for ${record.pqu_id}`
+        },
+        [
+          el("span", { class: "row-toggle-icon", "aria-hidden": "true", text: expanded ? "−" : "+" }),
+          el("span", { text: record.pqu_id })
+        ]
+      );
+      toggle.addEventListener("click", () => {
+        if (state.expanded.includes(record.pqu_id)) {
+          state.expanded = state.expanded.filter((id) => id !== record.pqu_id);
+        } else {
+          state.expanded = [...state.expanded, record.pqu_id];
+        }
+        renderRows();
+      });
+      idCell = el("td", { class: "mono" }, [toggle]);
+    } else {
+      idCell = textCell(record.pqu_id, true);
+    }
     const row = el("tr", {}, [
       idCell,
       textCell(record.application_version, true),
