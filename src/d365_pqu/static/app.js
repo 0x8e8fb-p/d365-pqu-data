@@ -527,12 +527,16 @@ function renderRegions() {
   });
 }
 
-function resetRegion() {
+function resetAllFilters() {
   state.activeStation = null;
-  const select = document.getElementById("region-select");
-  if (select) {
-    select.value = "";
-  }
+  document.getElementById("search").value = "";
+  document.getElementById("status-filter").value = "";
+  document.getElementById("version-filter").value = "";
+  document.getElementById("region-select").value = "";
+  document.getElementById("page-size").value = "20";
+  state.sort = { key: null, direction: 1 };
+  state.page = 1;
+  state.pageSize = 20;
   setText("region-result", "Select a region to see its station.");
   renderRows();
 }
@@ -600,16 +604,7 @@ async function load() {
   }
 }
 
-function resetSchedule() {
-  document.getElementById("search").value = "";
-  document.getElementById("status-filter").value = "";
-  document.getElementById("version-filter").value = "";
-  document.getElementById("page-size").value = "20";
-  state.sort = { key: null, direction: 1 };
-  state.page = 1;
-  state.pageSize = 20;
-  renderRows();
-}
+
 
 function wireControls() {
   applyTheme(currentTheme(), false);
@@ -639,7 +634,7 @@ function wireControls() {
     state.page = 1;
     renderRows();
   });
-  document.getElementById("reset-filters").addEventListener("click", resetSchedule);
+  document.getElementById("reset-filters").addEventListener("click", resetAllFilters);
   document.querySelectorAll("#pqu-table .th-sort").forEach((button) => {
     button.addEventListener("click", () => {
       const key = button.dataset.sort;
@@ -660,7 +655,6 @@ function wireControls() {
     state.page += 1;
     renderRows();
   });
-  document.getElementById("reset-region").addEventListener("click", resetRegion);
 }
 
 wireControls();

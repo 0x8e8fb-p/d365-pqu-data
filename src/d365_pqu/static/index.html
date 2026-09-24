@@ -56,21 +56,8 @@
     <div class="workspace">
       <aside class="filters-rail" aria-labelledby="filters-heading">
         <h2 id="filters-heading">Filters</h2>
-        <fieldset class="filter-group" aria-label="Find a region station">
-          <legend>Region</legend>
-          <label class="field">
-            <span>Region</span>
-            <select id="region-select">
-              <option value="">Select a region</option>
-            </select>
-          </label>
-          <div class="lookup-result">
-            <p id="region-result" aria-live="polite">Select a region to see its station.</p>
-          </div>
-          <button id="reset-region" class="button small rail-button" type="button">Clear region</button>
-        </fieldset>
-        <fieldset class="filter-group" aria-label="Filter PQU trains">
-          <legend>Trains</legend>
+        <fieldset class="filter-group" aria-label="Refine dashboard results">
+          <legend>Refine</legend>
           <label class="field field-search">
             <span>Search</span>
             <input id="search" type="search" placeholder="PQU, version, build, or status" autocomplete="off">
@@ -88,6 +75,15 @@
             </select>
           </label>
           <label class="field">
+            <span>Region</span>
+            <select id="region-select">
+              <option value="">Select a region</option>
+            </select>
+          </label>
+          <div class="lookup-result">
+            <p id="region-result" aria-live="polite">Select a region to see its station.</p>
+          </div>
+          <label class="field">
             <span>Rows</span>
             <select id="page-size">
               <option value="10">10</option>
@@ -95,7 +91,7 @@
               <option value="50">50</option>
             </select>
           </label>
-          <button id="reset-filters" class="button small rail-button" type="button">Reset train filters</button>
+          <button id="reset-filters" class="button small rail-button" type="button">Reset all filters</button>
         </fieldset>
       </aside>
 

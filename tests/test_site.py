@@ -86,7 +86,6 @@ def test_dashboard_shell_supports_dark_first_console() -> None:
     assert 'id="theme-toggle"' in html
     assert 'id="page-size"' in html
     assert 'id="prev-page"' in html
-    assert 'id="reset-region"' in html
     assert "aria-sort" in html
     assert "overview-heading" not in html
     assert "latest-pqu" not in html
@@ -112,9 +111,18 @@ def test_dashboard_shell_supports_dark_first_console() -> None:
         "reset-filters",
         "region-select",
         "region-result",
-        "reset-region",
     ):
         assert html.count(f'id="{control_id}"') == 1
+    assert "reset-region" not in html
+    order = [
+        html.index('id="search"'),
+        html.index('id="status-filter"'),
+        html.index('id="version-filter"'),
+        html.index('id="region-select"'),
+        html.index('id="page-size"'),
+        html.index('id="reset-filters"'),
+    ]
+    assert order == sorted(order)
     assert "http://" not in html
     assert "fonts.googleapis" not in html
     assert "Public API" not in html
@@ -139,7 +147,10 @@ def test_dashboard_javascript_uses_ist_theme_sorting_and_pagination() -> None:
     assert "aria-expanded" in script
     assert "aria-controls" in script
     assert "station-detail" in script
-    assert "reset-region" in script
+    assert "resetAllFilters" in script
+    assert "Reset all filters" in (STATIC_ROOT / "index.html").read_text(encoding="utf-8")
+    assert "reset-region" not in script
+    assert "resetSchedule" not in script
     assert "renderStations" not in script
     assert "station-pqu-filter" not in script
     assert "station-search" not in script
