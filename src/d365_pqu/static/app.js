@@ -258,12 +258,20 @@ function compareRecords(a, b, key, direction) {
   return String(left).localeCompare(String(right), "en", { numeric: true }) * direction;
 }
 
+const STATUS_GROUPS = {
+  "On-Going": ["In-Progress", "Not Started"]
+};
+
 function filteredRecords() {
   const search = (document.getElementById("search").value || "").trim().toLowerCase();
   const status = document.getElementById("status-filter").value;
   const version = document.getElementById("version-filter").value;
   const matches = state.records.filter((record) => {
-    if (status && record.status !== status) {
+    if (status === "On-Going") {
+      if (!STATUS_GROUPS["On-Going"].includes(record.status)) {
+        return false;
+      }
+    } else if (status && record.status !== status) {
       return false;
     }
     if (version && record.application_version !== version) {
@@ -320,15 +328,7 @@ function orderedStations(pquId) {
   if (state.activeStation === null) {
     return rows;
   }
-  return [...rows].sort((a, b) => {
-    if (a.station === state.activeStation && b.station !== state.activeStation) {
-      return -1;
-    }
-    if (b.station === state.activeStation && a.station !== state.activeStation) {
-      return 1;
-    }
-    return a.station - b.station;
-  });
+  return rows.filter((row) => row.station === state.activeStation);
 }
 
 function stationWindow(row, startKey, endKey) {
@@ -340,9 +340,13 @@ function stationWindow(row, startKey, endKey) {
 
 function stationDetailRow(record) {
   const detailId = `stations-${record.pqu_id}`;
+  const title =
+    state.activeStation === null
+      ? `Station windows · ${record.pqu_id}`
+      : `Station ${state.activeStation} window · ${record.pqu_id}`;
   const cell = el("td", {}, [
     el("div", { class: "station-detail-body", id: detailId }, [
-      el("p", { class: "detail-title", text: `Station windows · ${record.pqu_id}` })
+      el("p", { class: "detail-title", text: title })
     ])
   ]);
   cell.colSpan = 11;
@@ -525,11 +529,10 @@ function renderSummary() {
 function renderFilters() {
   const statusFilter = document.getElementById("status-filter");
   const versionFilter = document.getElementById("version-filter");
-  const statuses = [...new Set(state.records.map((record) => record.status))];
   const versions = [...new Set(state.records.map((record) => record.application_version))].sort(
     compareVersions
   );
-  for (const status of statuses) {
+  for (const status of ["On-Going", "Completed", "Canceled"]) {
     statusFilter.append(el("option", { value: status, text: status }));
   }
   for (const version of versions) {
@@ -560,7 +563,7 @@ function renderRegions() {
       .map((row) => row.region)
       .sort((a, b) => a.localeCompare(b));
     state.activeStation = match.station;
-    result.textContent = `${match.region} is covered by Station ${match.station}. Also in Station ${match.station}: ${peers.join(", ")}. Expanded trains highlight this station first.`;
+    result.textContent = `${match.region} is covered by Station ${match.station}. Also in Station ${match.station}: ${peers.join(", ")}. Expanded trains show only this station.`;
     renderRows();
   });
 }
