@@ -86,9 +86,15 @@ def test_dashboard_shell_supports_dark_first_console() -> None:
     assert 'id="theme-toggle"' in html
     assert 'id="page-size"' in html
     assert 'id="prev-page"' in html
-    assert 'id="station-pqu-filter"' in html
-    assert 'id="show-station"' in html
+    assert 'id="reset-region"' in html
     assert "aria-sort" in html
+    assert "stations-heading" not in html
+    assert "station-table" not in html
+    assert "station-note" not in html
+    assert "station-pqu-filter" not in html
+    assert "station-search" not in html
+    assert "reset-stations" not in html
+    assert "show-station" not in html
     assert "Asia/Kolkata" in html
     assert 'class="workspace"' in html
     assert 'class="filters-rail"' in html
@@ -100,12 +106,9 @@ def test_dashboard_shell_supports_dark_first_console() -> None:
         "version-filter",
         "page-size",
         "reset-filters",
-        "station-pqu-filter",
-        "station-search",
-        "reset-stations",
         "region-select",
         "region-result",
-        "show-station",
+        "reset-region",
     ):
         assert html.count(f'id="{control_id}"') == 1
     assert "http://" not in html
@@ -123,7 +126,14 @@ def test_dashboard_javascript_uses_ist_theme_sorting_and_pagination() -> None:
     assert "d365-pqu-theme" in script
     assert "aria-sort" in script
     assert "prev-page" in script
-    assert "station-pqu-filter" in script
+    assert "activeStation" in script
+    assert "aria-expanded" in script
+    assert "aria-controls" in script
+    assert "station-detail" in script
+    assert "reset-region" in script
+    assert "renderStations" not in script
+    assert "station-pqu-filter" not in script
+    assert "station-search" not in script
     assert "isDueSoon" in script
     assert "Due soon" in script
     assert "due-soon" in script
@@ -140,6 +150,8 @@ def test_dashboard_css_uses_responsive_dark_light_tokens() -> None:
     assert '[data-theme="light"]' in css
     assert "--bg:" in css
     assert "tabular-nums" in css
+    assert ".row-toggle" in css
+    assert ".station-detail" in css
     assert "@media (max-width:" in css
     assert "prefers-reduced-motion" in css
     assert "http://" not in css

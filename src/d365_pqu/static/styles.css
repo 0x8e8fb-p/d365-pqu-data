@@ -526,6 +526,77 @@ tbody tr.due-soon {
   box-shadow: inset 2px 0 0 var(--warning);
 }
 
+.row-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.row-toggle:hover {
+  color: var(--accent);
+}
+
+.row-toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--bg-subtle);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.station-detail > td {
+  padding: 0;
+  background: var(--bg-subtle);
+  white-space: normal;
+}
+
+.station-detail-body {
+  padding: 12px 14px 14px;
+  border-top: 1px dashed var(--border-strong);
+}
+
+.detail-title {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.detail-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.station-detail-table {
+  font-size: 12.5px;
+}
+
+.station-detail-table th,
+.station-detail-table td {
+  white-space: normal;
+}
+
+.station-active {
+  background: var(--accent-soft);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
 .due {
   display: block;
   margin-top: 3px;

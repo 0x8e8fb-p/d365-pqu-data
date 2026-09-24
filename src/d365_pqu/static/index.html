@@ -88,6 +88,19 @@
     <div class="workspace">
       <aside class="filters-rail" aria-labelledby="filters-heading">
         <h2 id="filters-heading">Filters</h2>
+        <fieldset class="filter-group" aria-label="Find a region station">
+          <legend>Region</legend>
+          <label class="field">
+            <span>Region</span>
+            <select id="region-select">
+              <option value="">Select a region</option>
+            </select>
+          </label>
+          <div class="lookup-result">
+            <p id="region-result" aria-live="polite">Select a region to see its station.</p>
+          </div>
+          <button id="reset-region" class="button small rail-button" type="button">Clear region</button>
+        </fieldset>
         <fieldset class="filter-group" aria-label="Filter PQU trains">
           <legend>Trains</legend>
           <label class="field field-search">
@@ -115,33 +128,6 @@
             </select>
           </label>
           <button id="reset-filters" class="button small rail-button" type="button">Reset train filters</button>
-        </fieldset>
-        <fieldset class="filter-group" aria-label="Filter station windows">
-          <legend>Rollout</legend>
-          <label class="field">
-            <span>PQU train</span>
-            <select id="station-pqu-filter">
-              <option value="">All scheduled trains</option>
-            </select>
-          </label>
-          <label class="field field-search">
-            <span>Search stations</span>
-            <input id="station-search" type="search" placeholder="PQU, station, or date" autocomplete="off">
-          </label>
-          <button id="reset-stations" class="button small rail-button" type="button">Reset station filters</button>
-        </fieldset>
-        <fieldset class="filter-group" aria-label="Find a region station">
-          <legend>Region</legend>
-          <label class="field">
-            <span>Region</span>
-            <select id="region-select">
-              <option value="">Select a region</option>
-            </select>
-          </label>
-          <div class="lookup-result">
-            <p id="region-result" aria-live="polite">Select a region to see its station.</p>
-            <button id="show-station" class="button small rail-button" type="button" hidden>Show station schedule</button>
-          </div>
         </fieldset>
       </aside>
 
@@ -183,32 +169,6 @@
             <button id="prev-page" class="button small" type="button">Previous</button>
             <button id="next-page" class="button small" type="button">Next</button>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="stations-heading">
-      <div class="section-head">
-        <div>
-          <p class="kicker">Rollout</p>
-          <h2 id="stations-heading">Station windows</h2>
-        </div>
-        <p class="section-note" id="station-note" aria-live="polite"></p>
-      </div>
-      <div class="table-panel">
-        <div class="table-scroll table-scroll-short">
-          <table id="station-table">
-            <caption class="visually-hidden">Sandbox and production station update windows. Dates are shown in IST.</caption>
-            <thead>
-              <tr>
-                <th scope="col">PQU ID</th>
-                <th scope="col">Station</th>
-                <th scope="col">Sandbox window</th>
-                <th scope="col">Production window</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
         </div>
       </div>
     </section>

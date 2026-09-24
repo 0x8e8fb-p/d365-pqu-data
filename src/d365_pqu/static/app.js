@@ -27,8 +27,8 @@ const state = {
   sort: { key: null, direction: 1 },
   page: 1,
   pageSize: 20,
-  stationPqu: "",
-  stationQuery: ""
+  activeStation: null,
+  expanded: []
 };
 
 function el(tag, props = {}, children = []) {
@@ -309,6 +309,77 @@ function updateSortIndicators() {
   });
 }
 
+function stationsFor(pquId) {
+  return state.stations
+    .filter((row) => row.pqu_id === pquId)
+    .sort((a, b) => a.station - b.station);
+}
+
+function orderedStations(pquId) {
+  const rows = stationsFor(pquId);
+  if (state.activeStation === null) {
+    return rows;
+  }
+  return [...rows].sort((a, b) => {
+    if (a.station === state.activeStation && b.station !== state.activeStation) {
+      return -1;
+    }
+    if (b.station === state.activeStation && a.station !== state.activeStation) {
+      return 1;
+    }
+    return a.station - b.station;
+  });
+}
+
+function stationWindow(row, startKey, endKey) {
+  if (!row[startKey]) {
+    return "N/A";
+  }
+  return `${formatDate(row[startKey])} to ${formatDate(row[endKey])}`;
+}
+
+function stationDetailRow(record) {
+  const detailId = `stations-${record.pqu_id}`;
+  const cell = el("td", {}, [
+    el("div", { class: "station-detail-body", id: detailId }, [
+      el("p", { class: "detail-title", text: `Station windows · ${record.pqu_id}` })
+    ])
+  ]);
+  cell.colSpan = 11;
+  const body = cell.firstChild;
+  const rows = orderedStations(record.pqu_id);
+  if (rows.length === 0) {
+    body.append(el("p", { class: "detail-empty", text: "No detailed station schedule published." }));
+    return el("tr", { class: "station-detail" }, [cell]);
+  }
+  const tableBody = el("tbody", {}, []);
+  for (const row of rows) {
+    const stationRow = el("tr", {}, [
+      textCell(row.station_label, true),
+      textCell(stationWindow(row, "sandbox_start_date", "sandbox_end_date")),
+      textCell(stationWindow(row, "production_start_date", "production_end_date"))
+    ]);
+    if (row.station === state.activeStation) {
+      stationRow.classList.add("station-active");
+    }
+    tableBody.append(stationRow);
+  }
+  body.append(
+    el("table", { class: "station-detail-table" }, [
+      el("caption", { class: "visually-hidden", text: `Station windows for ${record.pqu_id}` }),
+      el("thead", {}, [
+        el("tr", {}, [
+          el("th", { scope: "col", text: "Station" }),
+          el("th", { scope: "col", text: "Sandbox window" }),
+          el("th", { scope: "col", text: "Production window" })
+        ])
+      ]),
+      tableBody
+    ])
+  );
+  return el("tr", { class: "station-detail" }, [cell]);
+}
+
 function renderRows() {
   const body = document.querySelector("#pqu-table tbody");
   const records = filteredRecords();
@@ -319,8 +390,33 @@ function renderRows() {
   body.replaceChildren();
   const fragment = document.createDocumentFragment();
   for (const record of pageRecords) {
+    const detailId = `stations-${record.pqu_id}`;
+    const expanded = state.expanded.includes(record.pqu_id);
+    const toggle = el(
+      "button",
+      {
+        class: "row-toggle",
+        type: "button",
+        "aria-expanded": expanded ? "true" : "false",
+        "aria-controls": detailId,
+        "aria-label": `${expanded ? "Collapse" : "Expand"} station windows for ${record.pqu_id}`
+      },
+      [
+        el("span", { class: "row-toggle-icon", "aria-hidden": "true", text: expanded ? "−" : "+" }),
+        el("span", { text: record.pqu_id })
+      ]
+    );
+    toggle.addEventListener("click", () => {
+      if (state.expanded.includes(record.pqu_id)) {
+        state.expanded = state.expanded.filter((id) => id !== record.pqu_id);
+      } else {
+        state.expanded = [...state.expanded, record.pqu_id];
+      }
+      renderRows();
+    });
+    const idCell = el("td", { class: "mono" }, [toggle]);
     const row = el("tr", {}, [
-      textCell(record.pqu_id, true),
+      idCell,
       textCell(record.application_version, true),
       textCell(record.pqu_train, true),
       statusCell(record),
@@ -339,6 +435,9 @@ function renderRows() {
       row.classList.add("due-soon");
     }
     fragment.append(row);
+    if (expanded) {
+      fragment.append(stationDetailRow(record));
+    }
   }
   body.append(fragment);
   updateSortIndicators();
@@ -348,7 +447,8 @@ function renderRows() {
   setText(
     "filter-note",
     `${records.length} of ${state.records.length} trains shown` +
-      (dueCount > 0 ? ` · ${dueCount} due soon` : "")
+      (dueCount > 0 ? ` · ${dueCount} due soon` : "") +
+      (state.activeStation !== null ? ` · Station ${state.activeStation} context` : "")
   );
   setText("page-info", `Page ${state.page} of ${pageCount} · ${first}–${last} of ${records.length}`);
   const prev = document.getElementById("prev-page");
@@ -359,76 +459,6 @@ function renderRows() {
   if (next) {
     next.disabled = state.page >= pageCount;
   }
-}
-
-function filteredStations() {
-  const query = (document.getElementById("station-search").value || "").trim().toLowerCase();
-  return state.stations.filter((row) => {
-    if (state.stationPqu && row.pqu_id !== state.stationPqu) {
-      return false;
-    }
-    if (!query) {
-      return true;
-    }
-    const haystack = [
-      row.pqu_id,
-      row.station_label,
-      `station ${row.station}`,
-      row.sandbox_start_date,
-      row.sandbox_end_date,
-      row.production_start_date,
-      row.production_end_date
-    ]
-      .join(" ")
-      .toLowerCase();
-    return haystack.includes(query);
-  });
-}
-
-function renderStationFilters() {
-  const select = document.getElementById("station-pqu-filter");
-  if (select.options.length <= 1 && state.stations.length > 0) {
-    const trains = [...new Map(state.stations.map((row) => [row.pqu_id, row])).values()].sort(
-      (a, b) =>
-        compareVersions(a.application_version, b.application_version) ||
-        a.release_number - b.release_number
-    );
-    for (const train of trains) {
-      select.append(el("option", { value: train.pqu_id, text: train.pqu_id }));
-    }
-  }
-  select.value = state.stationPqu;
-}
-
-function renderStations() {
-  renderStationFilters();
-  const body = document.querySelector("#station-table tbody");
-  const rows = filteredStations().sort((a, b) => {
-    const version = compareVersions(a.application_version, b.application_version);
-    return version !== 0 ? version : a.release_number - b.release_number || a.station - b.station;
-  });
-  body.replaceChildren();
-  const fragment = document.createDocumentFragment();
-  for (const row of rows) {
-    fragment.append(
-      el("tr", {}, [
-        textCell(row.pqu_id, true),
-        textCell(row.station_label, true),
-        textCell(
-          row.sandbox_start_date
-            ? `${formatDate(row.sandbox_start_date)} to ${formatDate(row.sandbox_end_date)}`
-            : "N/A"
-        ),
-        textCell(
-          row.production_start_date
-            ? `${formatDate(row.production_start_date)} to ${formatDate(row.production_end_date)}`
-            : "N/A"
-        )
-      ])
-    );
-  }
-  body.append(fragment);
-  setText("station-note", `${rows.length} of ${state.stations.length} station windows shown`);
 }
 
 function renderSummary() {
@@ -510,7 +540,6 @@ function renderFilters() {
 function renderRegions() {
   const select = document.getElementById("region-select");
   const result = document.getElementById("region-result");
-  const showStation = document.getElementById("show-station");
   const regions = state.regions.filter((row) => row.is_region);
   const unique = [...new Set(regions.map((row) => row.region))].sort((a, b) =>
     a.localeCompare(b)
@@ -521,31 +550,29 @@ function renderRegions() {
   select.addEventListener("change", () => {
     const match = regions.find((row) => row.region === select.value);
     if (!match) {
+      state.activeStation = null;
       result.textContent = "Select a region to see its station.";
-      showStation.hidden = true;
+      renderRows();
       return;
     }
     const peers = regions
       .filter((row) => row.station === match.station)
       .map((row) => row.region)
       .sort((a, b) => a.localeCompare(b));
-    result.textContent = `${match.region} is covered by Station ${match.station}. Also in Station ${match.station}: ${peers.join(", ")}.`;
-    showStation.hidden = false;
-    showStation.onclick = () => {
-      state.stationPqu = "";
-      state.stationQuery = `Station ${match.station}`;
-      const stationSelect = document.getElementById("station-pqu-filter");
-      const stationSearch = document.getElementById("station-search");
-      if (stationSelect) {
-        stationSelect.value = "";
-      }
-      if (stationSearch) {
-        stationSearch.value = state.stationQuery;
-      }
-      renderStations();
-      document.getElementById("stations-heading").scrollIntoView({ block: "start" });
-    };
+    state.activeStation = match.station;
+    result.textContent = `${match.region} is covered by Station ${match.station}. Also in Station ${match.station}: ${peers.join(", ")}. Expanded trains highlight this station first.`;
+    renderRows();
   });
+}
+
+function resetRegion() {
+  state.activeStation = null;
+  const select = document.getElementById("region-select");
+  if (select) {
+    select.value = "";
+  }
+  setText("region-result", "Select a region to see its station.");
+  renderRows();
 }
 
 function renderQuality() {
@@ -600,7 +627,6 @@ async function load() {
     renderSummary();
     renderFilters();
     renderRows();
-    renderStations();
     renderRegions();
     renderQuality();
   } catch (error) {
@@ -623,20 +649,6 @@ function resetSchedule() {
   renderRows();
 }
 
-function resetStations() {
-  state.stationPqu = "";
-  state.stationQuery = "";
-  const select = document.getElementById("station-pqu-filter");
-  const search = document.getElementById("station-search");
-  if (select) {
-    select.value = "";
-  }
-  if (search) {
-    search.value = "";
-  }
-  renderStations();
-}
-
 function wireControls() {
   applyTheme(currentTheme(), false);
   const themeToggle = document.getElementById("theme-toggle");
@@ -645,7 +657,11 @@ function wireControls() {
       applyTheme(currentTheme() === "dark" ? "light" : "dark");
     });
   }
-  for (const id of ["search", "status-filter", "version-filter"]) {
+  document.getElementById("search").addEventListener("input", () => {
+    state.page = 1;
+    renderRows();
+  });
+  for (const id of ["status-filter", "version-filter"]) {
     const control = document.getElementById(id);
     control.addEventListener("input", () => {
       state.page = 1;
@@ -682,15 +698,7 @@ function wireControls() {
     state.page += 1;
     renderRows();
   });
-  document.getElementById("station-pqu-filter").addEventListener("change", (event) => {
-    state.stationPqu = event.target.value;
-    renderStations();
-  });
-  document.getElementById("station-search").addEventListener("input", (event) => {
-    state.stationQuery = event.target.value;
-    renderStations();
-  });
-  document.getElementById("reset-stations").addEventListener("click", resetStations);
+  document.getElementById("reset-region").addEventListener("click", resetRegion);
 }
 
 wireControls();
