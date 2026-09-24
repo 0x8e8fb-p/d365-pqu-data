@@ -14,6 +14,8 @@ from d365_pqu.models import SourceDocument
 from d365_pqu.pipeline import build_site, run_sync
 from d365_pqu.source import parse_markdown_date
 
+STATIC_ROOT = Path(__file__).resolve().parents[1] / "src" / "d365_pqu" / "static"
+
 
 def _paths(tmp_path: Path) -> Paths:
     return Paths(
@@ -76,6 +78,42 @@ def test_site_has_no_external_cdn_assets(tmp_path: Path) -> None:
     assert "http://" not in html
     assert "cdn." not in html
     assert "fonts.googleapis" not in html
+
+
+def test_dashboard_shell_supports_dark_first_console() -> None:
+    html = (STATIC_ROOT / "index.html").read_text(encoding="utf-8")
+    assert '<html lang="en" data-theme="dark">' in html
+    assert 'id="theme-toggle"' in html
+    assert 'id="page-size"' in html
+    assert 'id="prev-page"' in html
+    assert 'id="station-pqu-filter"' in html
+    assert 'id="show-station"' in html
+    assert "aria-sort" in html
+    assert "Asia/Kolkata" in html
+    assert "http://" not in html
+    assert "fonts.googleapis" not in html
+
+
+def test_dashboard_javascript_uses_ist_theme_sorting_and_pagination() -> None:
+    script = (STATIC_ROOT / "app.js").read_text(encoding="utf-8")
+    assert "Asia/Kolkata" in script
+    assert "d365-pqu-theme" in script
+    assert "aria-sort" in script
+    assert "prev-page" in script
+    assert "station-pqu-filter" in script
+    assert "navigator.clipboard" in script
+    assert "innerHTML" not in script
+
+
+def test_dashboard_css_uses_responsive_dark_light_tokens() -> None:
+    css = (STATIC_ROOT / "styles.css").read_text(encoding="utf-8")
+    assert ":root" in css
+    assert '[data-theme="light"]' in css
+    assert "--bg:" in css
+    assert "tabular-nums" in css
+    assert "@media (max-width:" in css
+    assert "prefers-reduced-motion" in css
+    assert "http://" not in css
 
 
 def test_app_javascript_is_valid_when_node_is_available(tmp_path: Path) -> None:

@@ -13,6 +13,9 @@ dist/
 build/
 !build/site/
 
+# Brainstorming mockups
+.superpowers/
+
 # OS and editor
 .DS_Store
 Thumbs.db
