@@ -142,19 +142,34 @@ a:hover {
 
 .brand-mark {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
   flex: none;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
-  background: var(--surface-raised);
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+}
+
+.brand-mark svg {
+  display: block;
+  width: 36px;
+  height: 36px;
+}
+
+.brand-tile {
+  fill: #0b1220;
+}
+
+.brand-mark-lines {
+  stroke: #7dd3fc;
+}
+
+html[data-theme="light"] .brand-tile {
+  fill: #0b3d5c;
+}
+
+html[data-theme="light"] .brand-mark-lines {
+  stroke: #f4f4f5;
 }
 
 .eyebrow {

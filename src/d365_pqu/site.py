@@ -42,8 +42,12 @@ SCHEMA_FILES = (
     "metadata.schema.json",
     "health.schema.json",
 )
-STATIC_FILES = ("index.html", "404.html", "styles.css", "app.js", "robots.txt")
-VERSIONED_ASSETS = (("styles.css", "styles", ".css"), ("app.js", "app", ".js"))
+STATIC_FILES = ("index.html", "404.html", "styles.css", "app.js", "icon.svg", "robots.txt")
+VERSIONED_ASSETS = (
+    ("styles.css", "styles", ".css"),
+    ("app.js", "app", ".js"),
+    ("icon.svg", "icon", ".svg"),
+)
 
 
 def _copy(source: Path, target: Path) -> None:
@@ -134,9 +138,11 @@ def generate_site(
             "index.html": {
                 "./assets/styles.css": f"./assets/{versioned['styles.css']}",
                 "./assets/app.js": f"./assets/{versioned['app.js']}",
+                "./assets/icon.svg": f"./assets/{versioned['icon.svg']}",
             },
             "404.html": {
                 "./assets/styles.css": f"./assets/{versioned['styles.css']}",
+                "./assets/icon.svg": f"./assets/{versioned['icon.svg']}",
             },
         }
         for name, replacements in html_replacements.items():

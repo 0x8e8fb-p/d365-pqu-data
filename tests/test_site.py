@@ -55,6 +55,7 @@ def test_site_contains_api_schemas_and_downloads(tmp_path: Path) -> None:
     assert (site / "404.html").exists()
     assert not (site / "assets" / "styles.css").exists()
     assert not (site / "assets" / "app.js").exists()
+    assert not (site / "assets" / "icon.svg").exists()
     assert (site / "api" / "pqu.json").exists()
     assert (site / "api" / "pqu.csv").exists()
     assert (site / "api" / "metadata.json").exists()
@@ -71,10 +72,13 @@ def test_site_versions_dashboard_assets(tmp_path: Path) -> None:
     html = (site / "index.html").read_text(encoding="utf-8")
     css_match = re.search(r"\./assets/(styles\.[0-9a-f]{12}\.css)", html)
     js_match = re.search(r"\./assets/(app\.[0-9a-f]{12}\.js)", html)
+    icon_match = re.search(r"\./assets/(icon\.[0-9a-f]{12}\.svg)", html)
     assert css_match is not None
     assert js_match is not None
+    assert icon_match is not None
     assert (site / "assets" / css_match.group(1)).exists()
     assert (site / "assets" / js_match.group(1)).exists()
+    assert (site / "assets" / icon_match.group(1)).exists()
     assert "./assets/styles.css" not in html
     assert "./assets/app.js" not in html
     built_js = (site / "assets" / js_match.group(1)).read_text(encoding="utf-8")
@@ -108,6 +112,10 @@ def test_dashboard_shell_supports_dark_first_console() -> None:
     assert 'id="theme-toggle"' in html
     assert 'id="page-size"' in html
     assert 'id="prev-page"' in html
+    assert 'rel="icon"' in html
+    assert 'rel="mask-icon"' in html
+    assert 'name="theme-color"' in html
+    assert "./assets/icon.svg" in html
     assert "aria-sort" in html
     assert "overview-heading" not in html
     assert "latest-pqu" not in html
@@ -155,6 +163,18 @@ def test_dashboard_shell_supports_dark_first_console() -> None:
     assert "api/index.json" not in html
     assert "api/pqu.json" not in html
     assert "api/pqu.csv" not in html
+
+
+def test_brand_icon_is_valid_self_contained_svg() -> None:
+    import xml.etree.ElementTree as ET
+
+    text = (STATIC_ROOT / "icon.svg").read_text(encoding="utf-8")
+    root = ET.fromstring(text)
+    assert root.tag == "{http://www.w3.org/2000/svg}svg"
+    assert root.attrib.get("viewBox") == "0 0 64 64"
+    assert len(root.findall(".//{http://www.w3.org/2000/svg}path")) >= 2
+    assert "xlink:href" not in text
+    assert "<image" not in text
 
 
 def test_dashboard_javascript_uses_ist_theme_sorting_and_pagination() -> None:
