@@ -144,6 +144,36 @@ function applyTheme(theme, persist = true) {
   }
 }
 
+function todayIstIso(now = Date.now()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(new Date(now));
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function addDaysIso(isoDate, days) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate);
+  const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+function isDueSoon(record, todayIso = todayIstIso()) {
+  if (!record || record.status !== "Not Started") {
+    return false;
+  }
+  if (!/^(\d{4})-(\d{2})-(\d{2})$/.exec(record.train_start_date || "")) {
+    return false;
+  }
+  return (
+    record.train_start_date >= todayIso && record.train_start_date <= addDaysIso(todayIso, 7)
+  );
+}
+
 function statusClass(status) {
   return (
     "badge " +
@@ -151,8 +181,19 @@ function statusClass(status) {
   );
 }
 
-function statusCell(status) {
-  return el("td", {}, [el("span", { class: statusClass(status), text: status })]);
+function statusCell(record) {
+  const cell = el("td", {}, [
+    el("span", { class: statusClass(record.status), text: record.status })
+  ]);
+  if (isDueSoon(record)) {
+    cell.append(
+      el("span", {
+        class: "due",
+        text: `Due soon · starts ${formatDate(record.train_start_date)}`
+      })
+    );
+  }
+  return cell;
 }
 
 function textCell(value, mono = false) {
@@ -238,7 +279,8 @@ function filteredRecords() {
       record.status,
       record.application_build,
       record.platform_build,
-      record.uep_version
+      record.uep_version,
+      isDueSoon(record) ? "due soon" : ""
     ]
       .join(" ")
       .toLowerCase();
@@ -281,7 +323,7 @@ function renderRows() {
       textCell(record.pqu_id, true),
       textCell(record.application_version, true),
       textCell(record.pqu_train, true),
-      statusCell(record.status),
+      statusCell(record),
       textCell(formatDate(record.change_cutoff_date)),
       textCell(formatDate(record.train_start_date)),
       textCell(formatDate(record.train_end_date)),
@@ -293,13 +335,21 @@ function renderRows() {
     if (record.pqu_id === (state.metadata || {}).latest_pqu_id) {
       row.classList.add("latest");
     }
+    if (isDueSoon(record)) {
+      row.classList.add("due-soon");
+    }
     fragment.append(row);
   }
   body.append(fragment);
   updateSortIndicators();
   const first = records.length === 0 ? 0 : start + 1;
   const last = Math.min(start + state.pageSize, records.length);
-  setText("filter-note", `${records.length} of ${state.records.length} trains shown`);
+  const dueCount = records.filter((record) => isDueSoon(record)).length;
+  setText(
+    "filter-note",
+    `${records.length} of ${state.records.length} trains shown` +
+      (dueCount > 0 ? ` · ${dueCount} due soon` : "")
+  );
   setText("page-info", `Page ${state.page} of ${pageCount} · ${first}–${last} of ${records.length}`);
   const prev = document.getElementById("prev-page");
   const next = document.getElementById("next-page");
@@ -408,10 +458,19 @@ function renderSummary() {
   );
   setText("current-count", String(current.length));
   setText("next-pqu", next ? next.pqu_id : "None");
+  const nextDueSoon = next ? isDueSoon(next) : false;
   setText(
     "next-pqu-note",
-    next ? `Cutoff ${formatDate(next.change_cutoff_date)}` : "No upcoming train published"
+    next
+      ? nextDueSoon
+        ? `Due soon · starts ${formatDate(next.train_start_date)}`
+        : `Cutoff ${formatDate(next.change_cutoff_date)}`
+      : "No upcoming train published"
   );
+  const nextStat = document.getElementById("next-stat");
+  if (nextStat) {
+    nextStat.classList.toggle("stat-alert", nextDueSoon);
+  }
   setText("record-count", String(state.records.length));
   setText(
     "record-note",

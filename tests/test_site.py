@@ -106,6 +106,10 @@ def test_dashboard_javascript_uses_ist_theme_sorting_and_pagination() -> None:
     assert "aria-sort" in script
     assert "prev-page" in script
     assert "station-pqu-filter" in script
+    assert "isDueSoon" in script
+    assert "Due soon" in script
+    assert "due-soon" in script
+    assert "next-stat" in script
     assert "api/index.json" not in script
     assert "endpoint-list" not in script
     assert "navigator.clipboard" not in script
