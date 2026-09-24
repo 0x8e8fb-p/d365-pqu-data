@@ -90,6 +90,24 @@ def test_dashboard_shell_supports_dark_first_console() -> None:
     assert 'id="show-station"' in html
     assert "aria-sort" in html
     assert "Asia/Kolkata" in html
+    assert 'class="workspace"' in html
+    assert 'class="filters-rail"' in html
+    assert 'class="filter-group"' in html
+    assert 'class="toolbar' not in html
+    for control_id in (
+        "search",
+        "status-filter",
+        "version-filter",
+        "page-size",
+        "reset-filters",
+        "station-pqu-filter",
+        "station-search",
+        "reset-stations",
+        "region-select",
+        "region-result",
+        "show-station",
+    ):
+        assert html.count(f'id="{control_id}"') == 1
     assert "http://" not in html
     assert "fonts.googleapis" not in html
     assert "Public API" not in html

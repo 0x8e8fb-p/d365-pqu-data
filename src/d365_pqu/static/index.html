@@ -85,34 +85,28 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="schedule-heading">
-      <div class="section-head">
-        <div>
-          <p class="kicker">Schedule</p>
-          <h2 id="schedule-heading">PQU trains</h2>
-        </div>
-        <p class="section-note" id="filter-note" aria-live="polite"></p>
-      </div>
-
-      <div class="toolbar" role="search" aria-label="Filter PQU trains">
-        <label class="field field-search">
-          <span>Search</span>
-          <input id="search" type="search" placeholder="PQU, version, build, or status" autocomplete="off">
-        </label>
-        <label class="field">
-          <span>Status</span>
-          <select id="status-filter">
-            <option value="">All statuses</option>
-          </select>
-        </label>
-        <label class="field">
-          <span>Application version</span>
-          <select id="version-filter">
-            <option value="">All versions</option>
-          </select>
-        </label>
-        <div class="toolbar-actions">
-          <label class="field field-compact">
+    <div class="workspace">
+      <aside class="filters-rail" aria-labelledby="filters-heading">
+        <h2 id="filters-heading">Filters</h2>
+        <fieldset class="filter-group" aria-label="Filter PQU trains">
+          <legend>Trains</legend>
+          <label class="field field-search">
+            <span>Search</span>
+            <input id="search" type="search" placeholder="PQU, version, build, or status" autocomplete="off">
+          </label>
+          <label class="field">
+            <span>Status</span>
+            <select id="status-filter">
+              <option value="">All statuses</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Application version</span>
+            <select id="version-filter">
+              <option value="">All versions</option>
+            </select>
+          </label>
+          <label class="field">
             <span>Rows</span>
             <select id="page-size">
               <option value="10">10</option>
@@ -120,13 +114,50 @@
               <option value="50">50</option>
             </select>
           </label>
-          <button id="reset-filters" class="button small" type="button">Reset</button>
-        </div>
-      </div>
+          <button id="reset-filters" class="button small rail-button" type="button">Reset train filters</button>
+        </fieldset>
+        <fieldset class="filter-group" aria-label="Filter station windows">
+          <legend>Rollout</legend>
+          <label class="field">
+            <span>PQU train</span>
+            <select id="station-pqu-filter">
+              <option value="">All scheduled trains</option>
+            </select>
+          </label>
+          <label class="field field-search">
+            <span>Search stations</span>
+            <input id="station-search" type="search" placeholder="PQU, station, or date" autocomplete="off">
+          </label>
+          <button id="reset-stations" class="button small rail-button" type="button">Reset station filters</button>
+        </fieldset>
+        <fieldset class="filter-group" aria-label="Find a region station">
+          <legend>Region</legend>
+          <label class="field">
+            <span>Region</span>
+            <select id="region-select">
+              <option value="">Select a region</option>
+            </select>
+          </label>
+          <div class="lookup-result">
+            <p id="region-result" aria-live="polite">Select a region to see its station.</p>
+            <button id="show-station" class="button small rail-button" type="button" hidden>Show station schedule</button>
+          </div>
+        </fieldset>
+      </aside>
 
-      <div class="table-panel">
-        <div class="table-scroll">
-          <table id="pqu-table">
+      <div class="workspace-main">
+        <section class="section" aria-labelledby="schedule-heading">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Schedule</p>
+              <h2 id="schedule-heading">PQU trains</h2>
+            </div>
+            <p class="section-note" id="filter-note" aria-live="polite"></p>
+          </div>
+
+          <div class="table-panel">
+            <div class="table-scroll">
+              <table id="pqu-table">
             <caption class="visually-hidden">Proactive quality update trains. Dates and times are shown in IST.</caption>
             <thead>
               <tr>
@@ -164,21 +195,6 @@
         </div>
         <p class="section-note" id="station-note" aria-live="polite"></p>
       </div>
-      <div class="toolbar toolbar-compact" role="search" aria-label="Filter station windows">
-        <label class="field">
-          <span>PQU train</span>
-          <select id="station-pqu-filter">
-            <option value="">All scheduled trains</option>
-          </select>
-        </label>
-        <label class="field field-search">
-          <span>Search stations</span>
-          <input id="station-search" type="search" placeholder="PQU, station, or date" autocomplete="off">
-        </label>
-        <div class="toolbar-actions">
-          <button id="reset-stations" class="button small" type="button">Reset</button>
-        </div>
-      </div>
       <div class="table-panel">
         <div class="table-scroll table-scroll-short">
           <table id="station-table">
@@ -197,27 +213,8 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="region-heading">
-      <div class="section-head">
-        <div>
-          <p class="kicker">Environment</p>
-          <h2 id="region-heading">Region lookup</h2>
-        </div>
-        <p class="section-note">Find the station covering a Dynamics 365 region.</p>
       </div>
-      <div class="lookup-panel">
-        <label class="field">
-          <span>Region</span>
-          <select id="region-select">
-            <option value="">Select a region</option>
-          </select>
-        </label>
-        <div class="lookup-result">
-          <p id="region-result" aria-live="polite">Select a region to see its station.</p>
-          <button id="show-station" class="button small" type="button" hidden>Show station schedule</button>
-        </div>
-      </div>
-    </section>
+    </div>
 
     <section class="section" aria-labelledby="source-heading">
       <div class="section-head">
