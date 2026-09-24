@@ -473,53 +473,6 @@ function renderRows() {
 
 function renderSummary() {
   const metadata = state.metadata || {};
-  const current = state.records.filter((record) => record.status === "In-Progress");
-  const upcoming = state.records.filter((record) => record.status === "Not Started");
-  const latest = state.records.find((record) => record.pqu_id === metadata.latest_pqu_id) || null;
-  const sortedUpcoming = [...upcoming].sort((a, b) => {
-    const aDate = a.train_start_date || "9999-12-31";
-    const bDate = b.train_start_date || "9999-12-31";
-    if (aDate !== bDate) {
-      return aDate.localeCompare(bDate);
-    }
-    return (
-      compareVersions(a.application_version, b.application_version) ||
-      a.release_number - b.release_number
-    );
-  });
-  const next = sortedUpcoming[0] || null;
-
-  setText("latest-pqu", latest ? latest.pqu_id : "None");
-  setText(
-    "latest-pqu-note",
-    latest
-      ? `${latest.application_build || "Build pending"} · ${latest.platform_build || "Platform pending"}`
-      : "No active train in the published schedule"
-  );
-  setText("current-count", String(current.length));
-  setText("next-pqu", next ? next.pqu_id : "None");
-  const nextDueSoon = next ? isDueSoon(next) : false;
-  setText(
-    "next-pqu-note",
-    next
-      ? nextDueSoon
-        ? `Due soon · starts ${formatDate(next.train_start_date)}`
-        : `Cutoff ${formatDate(next.change_cutoff_date)}`
-      : "No upcoming train published"
-  );
-  const nextStat = document.getElementById("next-stat");
-  if (nextStat) {
-    nextStat.classList.toggle("stat-alert", nextDueSoon);
-  }
-  setText("record-count", String(state.records.length));
-  setText(
-    "record-note",
-    `${current.length} active · ${upcoming.length} upcoming · ${metadata.station_schedule_count || state.stations.length} station rows`
-  );
-  setText(
-    "overview-note",
-    `Last synchronized ${formatTimestamp(metadata.last_published_at || metadata.generated_at)}`
-  );
   setTime("sync-time", (state.health || {}).checked_at || metadata.last_published_at || metadata.generated_at);
   setText("source-date", formatDate(metadata.source ? metadata.source.markdown_date : null));
   setText("source-synced", formatTimestamp(metadata.generated_at));

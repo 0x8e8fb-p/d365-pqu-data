@@ -88,6 +88,10 @@ def test_dashboard_shell_supports_dark_first_console() -> None:
     assert 'id="prev-page"' in html
     assert 'id="reset-region"' in html
     assert "aria-sort" in html
+    assert "overview-heading" not in html
+    assert "latest-pqu" not in html
+    assert "next-stat" not in html
+    assert "record-count" not in html
     assert "stations-heading" not in html
     assert "station-table" not in html
     assert "station-note" not in html
@@ -142,7 +146,8 @@ def test_dashboard_javascript_uses_ist_theme_sorting_and_pagination() -> None:
     assert "isDueSoon" in script
     assert "Due soon" in script
     assert "due-soon" in script
-    assert "next-stat" in script
+    assert "next-stat" not in script
+    assert "latest-pqu" not in script
     assert "api/index.json" not in script
     assert "endpoint-list" not in script
     assert "navigator.clipboard" not in script
@@ -157,6 +162,9 @@ def test_dashboard_css_uses_responsive_dark_light_tokens() -> None:
     assert "tabular-nums" in css
     assert ".row-toggle" in css
     assert ".station-detail" in css
+    assert "max-width: 760px" in css
+    assert "table-layout: fixed" in css
+    assert ".stats" not in css
     assert "@media (max-width:" in css
     assert "prefers-reduced-motion" in css
     assert "http://" not in css

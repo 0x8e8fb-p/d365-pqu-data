@@ -320,50 +320,6 @@ h3 {
   font-size: 13px;
 }
 
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-3);
-}
-
-.stat {
-  margin: 0;
-  padding: var(--space-4);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
-  box-shadow: var(--shadow);
-  min-width: 0;
-}
-
-.stat-primary {
-  border-color: var(--border-strong);
-  background: var(--surface-raised);
-}
-
-.stat h3 {
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
-.stat-value {
-  margin: 8px 0 4px;
-  font-size: 26px;
-  font-weight: 650;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  overflow-wrap: anywhere;
-}
-
-.stat-note {
-  margin: 0;
-  color: var(--muted);
-  font-size: 12.5px;
-}
-
 .workspace {
   display: grid;
   grid-template-columns: 288px minmax(0, 1fr);
@@ -564,6 +520,7 @@ tbody tr.due-soon {
 }
 
 .station-detail-body {
+  max-width: 760px;
   padding: 12px 14px 14px;
   border-top: 1px dashed var(--border-strong);
 }
@@ -584,12 +541,28 @@ tbody tr.due-soon {
 }
 
 .station-detail-table {
+  table-layout: fixed;
+  width: 100%;
   font-size: 12.5px;
 }
 
 .station-detail-table th,
 .station-detail-table td {
+  padding: 7px 10px;
   white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.station-detail-table th:first-child,
+.station-detail-table td:first-child {
+  width: 24%;
+}
+
+.station-detail-table th:nth-child(2),
+.station-detail-table td:nth-child(2),
+.station-detail-table th:nth-child(3),
+.station-detail-table td:nth-child(3) {
+  width: 38%;
 }
 
 .station-active {
@@ -604,10 +577,6 @@ tbody tr.due-soon {
   font-size: 11px;
   font-weight: 650;
   white-space: nowrap;
-}
-
-.stat-alert {
-  border-color: var(--warning);
 }
 
 .th-sort {
@@ -824,10 +793,6 @@ td.mono,
 }
 
 @media (max-width: 1020px) {
-  .stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .workspace {
     grid-template-columns: 1fr;
   }
@@ -857,7 +822,6 @@ td.mono,
     justify-content: space-between;
   }
 
-  .stats,
   .details {
     grid-template-columns: 1fr;
   }
