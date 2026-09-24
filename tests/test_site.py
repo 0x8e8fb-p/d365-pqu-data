@@ -114,6 +114,9 @@ def test_dashboard_shell_supports_dark_first_console() -> None:
     ):
         assert html.count(f'id="{control_id}"') == 1
     assert "reset-region" not in html
+    assert "quality-block" not in html
+    assert "quality-list" not in html
+    assert "Data quality" not in html
     order = [
         html.index('id="search"'),
         html.index('id="status-filter"'),
@@ -151,6 +154,10 @@ def test_dashboard_javascript_uses_ist_theme_sorting_and_pagination() -> None:
     assert "Reset all filters" in (STATIC_ROOT / "index.html").read_text(encoding="utf-8")
     assert "reset-region" not in script
     assert "resetSchedule" not in script
+    assert "quality-report.json" not in script
+    assert "quality-block" not in script
+    assert "quality-list" not in script
+    assert "warning(s)" not in script
     assert "renderStations" not in script
     assert "station-pqu-filter" not in script
     assert "station-search" not in script
@@ -176,6 +183,7 @@ def test_dashboard_css_uses_responsive_dark_light_tokens() -> None:
     assert "max-width: 760px" in css
     assert "table-layout: fixed" in css
     assert ".stats" not in css
+    assert ".quality" not in css
     assert "@media (max-width:" in css
     assert "prefers-reduced-motion" in css
     assert "http://" not in css

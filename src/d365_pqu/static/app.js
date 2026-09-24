@@ -22,7 +22,6 @@ const state = {
   stations: [],
   regions: [],
   metadata: null,
-  quality: null,
   health: null,
   sort: { key: null, direction: 1 },
   page: 1,
@@ -543,52 +542,25 @@ function resetAllFilters() {
 
 function renderQuality() {
   const statusBar = document.querySelector(".sync");
-  const quality = state.quality;
-  const warnings = quality && Array.isArray(quality.records) ? quality.records : [];
-  const fatal = warnings.filter((item) => item.severity === "error");
   if (statusBar) {
     statusBar.classList.remove("is-warn", "is-error");
-  }
-  if (fatal.length > 0) {
-    if (statusBar) {
-      statusBar.classList.add("is-error");
-    }
-    setText("sync-label", `Dataset has ${fatal.length} validation issue(s)`);
-    return;
-  }
-  if (warnings.length > 0) {
-    if (statusBar) {
-      statusBar.classList.add("is-warn");
-    }
-    setText("sync-label", `Healthy with ${warnings.length} warning(s)`);
-    const block = document.getElementById("quality-block");
-    const list = document.getElementById("quality-list");
-    block.hidden = false;
-    list.replaceChildren();
-    for (const item of warnings) {
-      const prefix = item.pqu_id ? `${item.pqu_id}: ` : "";
-      list.append(el("li", { text: `${prefix}${item.message}` }));
-    }
-    return;
   }
   setText("sync-label", "Dataset healthy");
 }
 
 async function load() {
   try {
-    const [metadata, pqu, stations, regions, quality, health] = await Promise.all([
+    const [metadata, pqu, stations, regions, health] = await Promise.all([
       fetchJson("./api/metadata.json"),
       fetchJson("./api/pqu.json"),
       fetchJson("./api/stations.json"),
       fetchJson("./api/regions.json"),
-      fetchJson("./api/quality-report.json"),
       fetchJson("./api/health.json")
     ]);
     state.metadata = metadata;
     state.records = pqu.records || [];
     state.stations = stations.records || [];
     state.regions = regions.records || [];
-    state.quality = quality;
     state.health = health;
     renderSummary();
     renderFilters();
