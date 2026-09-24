@@ -92,6 +92,11 @@ def test_dashboard_shell_supports_dark_first_console() -> None:
     assert "Asia/Kolkata" in html
     assert "http://" not in html
     assert "fonts.googleapis" not in html
+    assert "Public API" not in html
+    assert "endpoint-list" not in html
+    assert "api/index.json" not in html
+    assert "api/pqu.json" not in html
+    assert "api/pqu.csv" not in html
 
 
 def test_dashboard_javascript_uses_ist_theme_sorting_and_pagination() -> None:
@@ -101,7 +106,9 @@ def test_dashboard_javascript_uses_ist_theme_sorting_and_pagination() -> None:
     assert "aria-sort" in script
     assert "prev-page" in script
     assert "station-pqu-filter" in script
-    assert "navigator.clipboard" in script
+    assert "api/index.json" not in script
+    assert "endpoint-list" not in script
+    assert "navigator.clipboard" not in script
     assert "innerHTML" not in script
 
 

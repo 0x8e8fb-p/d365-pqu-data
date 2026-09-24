@@ -24,7 +24,6 @@ const state = {
   metadata: null,
   quality: null,
   health: null,
-  apiIndex: null,
   sort: { key: null, direction: 1 },
   page: 1,
   pageSize: 20,
@@ -490,79 +489,6 @@ function renderRegions() {
   });
 }
 
-function absoluteUrl(path) {
-  return new URL(path, document.baseURI).href;
-}
-
-async function copyText(value) {
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    await navigator.clipboard.writeText(value);
-    return;
-  }
-  const area = document.createElement("textarea");
-  area.value = value;
-  area.setAttribute("readonly", "");
-  area.style.position = "absolute";
-  area.style.left = "-9999px";
-  document.body.append(area);
-  area.select();
-  document.execCommand("copy");
-  area.remove();
-}
-
-function renderEndpoints() {
-  const list = document.getElementById("endpoint-list");
-  const index = state.apiIndex;
-  list.replaceChildren();
-  if (!index || !Array.isArray(index.endpoints)) {
-    list.append(el("li", {}, [el("p", { text: "API index unavailable." })]));
-    return;
-  }
-  for (const endpoint of index.endpoints) {
-    const jsonPath = "./api/" + String(endpoint.path).replace(/^\.\//, "");
-    const item = el("li", {}, [
-      el("strong", { text: endpoint.name }),
-      el("p", { text: endpoint.description }),
-      el("div", { class: "endpoint-links" }, [
-        el("div", { class: "endpoint-link-row" }, [
-          el("code", {}, [el("a", { href: jsonPath, text: jsonPath })]),
-          el("button", { class: "button small", type: "button", text: "Copy" })
-        ])
-      ])
-    ]);
-    const copyButton = item.querySelector("button");
-    copyButton.setAttribute("aria-label", `Copy ${endpoint.name} JSON URL`);
-    copyButton.addEventListener("click", async () => {
-      try {
-        await copyText(absoluteUrl(jsonPath));
-        setText("copy-note", `${endpoint.name} JSON URL copied.`);
-      } catch (error) {
-        setText("copy-note", `Copy unavailable for ${endpoint.name}; use the link instead.`);
-      }
-    });
-    if (endpoint.csv) {
-      const csvPath = "./api/" + String(endpoint.csv).replace(/^\.\//, "");
-      const csvRow = el("div", { class: "endpoint-link-row" }, [
-        el("code", {}, [el("a", { href: csvPath, text: csvPath })]),
-        el("button", { class: "button small", type: "button", text: "Copy" })
-      ]);
-      const csvButton = csvRow.querySelector("button");
-      csvButton.setAttribute("aria-label", `Copy ${endpoint.name} CSV URL`);
-      csvButton.addEventListener("click", async () => {
-        try {
-          await copyText(absoluteUrl(csvPath));
-          setText("copy-note", `${endpoint.name} CSV URL copied.`);
-        } catch (error) {
-          setText("copy-note", `Copy unavailable for ${endpoint.name}; use the link instead.`);
-        }
-      });
-      item.querySelector(".endpoint-links").append(csvRow);
-    }
-    list.append(item);
-  }
-  setText("copy-note", "Copy any endpoint URL.");
-}
-
 function renderQuality() {
   const statusBar = document.querySelector(".sync");
   const quality = state.quality;
@@ -598,8 +524,7 @@ function renderQuality() {
 
 async function load() {
   try {
-    const [index, metadata, pqu, stations, regions, quality, health] = await Promise.all([
-      fetchJson("./api/index.json"),
+    const [metadata, pqu, stations, regions, quality, health] = await Promise.all([
       fetchJson("./api/metadata.json"),
       fetchJson("./api/pqu.json"),
       fetchJson("./api/stations.json"),
@@ -607,7 +532,6 @@ async function load() {
       fetchJson("./api/quality-report.json"),
       fetchJson("./api/health.json")
     ]);
-    state.apiIndex = index;
     state.metadata = metadata;
     state.records = pqu.records || [];
     state.stations = stations.records || [];
@@ -619,7 +543,6 @@ async function load() {
     renderRows();
     renderStations();
     renderRegions();
-    renderEndpoints();
     renderQuality();
   } catch (error) {
     const banner = document.getElementById("load-error");
