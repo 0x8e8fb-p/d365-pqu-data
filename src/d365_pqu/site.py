@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import os
 import shutil
 import uuid
@@ -42,11 +43,33 @@ SCHEMA_FILES = (
     "health.schema.json",
 )
 STATIC_FILES = ("index.html", "404.html", "styles.css", "app.js", "robots.txt")
+VERSIONED_ASSETS = (("styles.css", "styles", ".css"), ("app.js", "app", ".js"))
 
 
 def _copy(source: Path, target: Path) -> None:
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(source, target)
+
+
+def _content_hash(path: Path) -> str:
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    return digest[:12]
+
+
+def _write_versioned_asset(source: Path, assets: Path, prefix: str, suffix: str) -> str:
+    name = f"{prefix}.{_content_hash(source)}{suffix}"
+    _copy(source, assets / name)
+    return name
+
+
+def _write_versioned_text(source: Path, target: Path, replacements: dict[str, str]) -> None:
+    text = source.read_text(encoding="utf-8")
+    for old, new in replacements.items():
+        if old not in text:
+            raise PublishError(f"{source.name} is missing expected asset reference: {old}")
+        text = text.replace(old, new)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(text, encoding="utf-8")
 
 
 def _preflight(data_dir: Path, schema_dir: Path, workbook_path: Path, static_dir: Path) -> None:
@@ -99,10 +122,31 @@ def generate_site(
         for schema_name in SCHEMA_FILES:
             _copy(schema_dir / schema_name, schema_target / schema_name)
         _copy(workbook_path, downloads / workbook_path.name)
-        for name in STATIC_FILES:
-            source = static_dir / name
-            target = assets / name if name in {"styles.css", "app.js"} else staging / name
-            _copy(source, target)
+        versioned = {}
+        for source_name, prefix, suffix in VERSIONED_ASSETS:
+            versioned[source_name] = _write_versioned_asset(
+                static_dir / source_name, assets, prefix, suffix
+            )
+        asset_version = (
+            f"{versioned['app.js'].split('.')[1]}-{versioned['styles.css'].split('.')[1]}"
+        )
+        html_replacements = {
+            "index.html": {
+                "./assets/styles.css": f"./assets/{versioned['styles.css']}",
+                "./assets/app.js": f"./assets/{versioned['app.js']}",
+            },
+            "404.html": {
+                "./assets/styles.css": f"./assets/{versioned['styles.css']}",
+            },
+        }
+        for name, replacements in html_replacements.items():
+            _write_versioned_text(static_dir / name, staging / name, replacements)
+        _write_versioned_text(
+            static_dir / "app.js",
+            assets / versioned["app.js"],
+            {"__ASSET_VERSION__": asset_version},
+        )
+        _copy(static_dir / "robots.txt", staging / "robots.txt")
         _write_api_index(api_dir / "index.json", metadata)
         (staging / ".nojekyll").write_text("", encoding="utf-8")
         _replace_site(staging, site_dir)

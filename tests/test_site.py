@@ -53,14 +53,36 @@ def test_site_contains_api_schemas_and_downloads(tmp_path: Path) -> None:
     assert (site / ".nojekyll").exists()
     assert (site / "index.html").exists()
     assert (site / "404.html").exists()
-    assert (site / "assets" / "styles.css").exists()
-    assert (site / "assets" / "app.js").exists()
+    assert not (site / "assets" / "styles.css").exists()
+    assert not (site / "assets" / "app.js").exists()
     assert (site / "api" / "pqu.json").exists()
     assert (site / "api" / "pqu.csv").exists()
     assert (site / "api" / "metadata.json").exists()
     assert (site / "api" / "index.json").exists()
     assert (site / "schemas" / "pqu.schema.json").exists()
     assert (site / "downloads" / "D365-PQU-Tracker.xlsx").exists()
+
+
+def test_site_versions_dashboard_assets(tmp_path: Path) -> None:
+    import re
+
+    paths = _sync_and_site(tmp_path)
+    site = paths.site_dir
+    html = (site / "index.html").read_text(encoding="utf-8")
+    css_match = re.search(r"\./assets/(styles\.[0-9a-f]{12}\.css)", html)
+    js_match = re.search(r"\./assets/(app\.[0-9a-f]{12}\.js)", html)
+    assert css_match is not None
+    assert js_match is not None
+    assert (site / "assets" / css_match.group(1)).exists()
+    assert (site / "assets" / js_match.group(1)).exists()
+    assert "./assets/styles.css" not in html
+    assert "./assets/app.js" not in html
+    built_js = (site / "assets" / js_match.group(1)).read_text(encoding="utf-8")
+    assert "__ASSET_VERSION__" not in built_js
+    assert "requireElement" in built_js
+    assert "showLoadError" in built_js
+    not_found = (site / "404.html").read_text(encoding="utf-8")
+    assert css_match.group(0) in not_found or f"./assets/{css_match.group(1)}" in not_found
 
 
 def test_site_api_index_lists_endpoints(tmp_path: Path) -> None:
@@ -143,6 +165,7 @@ def test_dashboard_javascript_uses_ist_theme_sorting_and_pagination() -> None:
     assert "prev-page" in script
     assert "activeStation" in script
     assert "hasStations" in script
+    assert "__ASSET_VERSION__" in script
     assert "On-Going" in script
     assert "In-Progress" in script
     assert "Not Started" in script
@@ -194,8 +217,10 @@ def test_app_javascript_is_valid_when_node_is_available(tmp_path: Path) -> None:
     if not node:
         pytest.skip("node is not installed")
     paths = _sync_and_site(tmp_path)
+    built_scripts = sorted((paths.site_dir / "assets").glob("app.*.js"))
+    assert len(built_scripts) == 1
     result = subprocess.run(
-        [node, "--check", str(paths.site_dir / "assets" / "app.js")],
+        [node, "--check", str(built_scripts[0])],
         capture_output=True,
         text=True,
         check=False,

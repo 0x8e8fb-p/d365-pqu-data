@@ -3,6 +3,7 @@
 const TIME_ZONE = "Asia/Kolkata";
 const TIME_ZONE_LABEL = "IST";
 const THEME_KEY = "d365-pqu-theme";
+const ASSET_VERSION = "__ASSET_VERSION__";
 const DATE_FORMATTER = new Intl.DateTimeFormat("en-IN", {
   timeZone: TIME_ZONE,
   day: "2-digit",
@@ -96,6 +97,26 @@ function formatTimestamp(value) {
     return String(value);
   }
   return `${DATE_FORMATTER.format(date)} · ${TIME_FORMATTER.format(date)} ${TIME_ZONE_LABEL}`;
+}
+
+function requireElement(id) {
+  const node = document.getElementById(id);
+  if (!node) {
+    throw new Error(`Dashboard is missing required element: ${id} (assets ${ASSET_VERSION})`);
+  }
+  return node;
+}
+
+function showLoadError(error) {
+  const banner = document.getElementById("load-error");
+  const message = `The dataset could not be loaded: ${error.message} (assets ${ASSET_VERSION})`;
+  if (!banner) {
+    return;
+  }
+  banner.hidden = false;
+  banner.textContent = message;
+  setText("sync-label", "Dataset unavailable");
+  setTime("sync-time", null);
 }
 
 function setTime(id, value) {
@@ -485,8 +506,8 @@ function renderSummary() {
 }
 
 function renderFilters() {
-  const statusFilter = document.getElementById("status-filter");
-  const versionFilter = document.getElementById("version-filter");
+  const statusFilter = requireElement("status-filter");
+  const versionFilter = requireElement("version-filter");
   const versions = [...new Set(state.records.map((record) => record.application_version))].sort(
     compareVersions
   );
@@ -499,8 +520,8 @@ function renderFilters() {
 }
 
 function renderRegions() {
-  const select = document.getElementById("region-select");
-  const result = document.getElementById("region-result");
+  const select = requireElement("region-select");
+  const result = requireElement("region-result");
   const regions = state.regions.filter((row) => row.is_region);
   const unique = [...new Set(regions.map((row) => row.region))].sort((a, b) =>
     a.localeCompare(b)
@@ -568,11 +589,7 @@ async function load() {
     renderRegions();
     renderQuality();
   } catch (error) {
-    const banner = document.getElementById("load-error");
-    banner.hidden = false;
-    banner.textContent = `The dataset could not be loaded: ${error.message}`;
-    setText("sync-label", "Dataset unavailable");
-    setTime("sync-time", null);
+    showLoadError(error);
   }
 }
 
@@ -580,18 +597,16 @@ async function load() {
 
 function wireControls() {
   applyTheme(currentTheme(), false);
-  const themeToggle = document.getElementById("theme-toggle");
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      applyTheme(currentTheme() === "dark" ? "light" : "dark");
-    });
-  }
-  document.getElementById("search").addEventListener("input", () => {
+  const themeToggle = requireElement("theme-toggle");
+  themeToggle.addEventListener("click", () => {
+    applyTheme(currentTheme() === "dark" ? "light" : "dark");
+  });
+  requireElement("search").addEventListener("input", () => {
     state.page = 1;
     renderRows();
   });
   for (const id of ["status-filter", "version-filter"]) {
-    const control = document.getElementById(id);
+    const control = requireElement(id);
     control.addEventListener("input", () => {
       state.page = 1;
       renderRows();
@@ -601,12 +616,12 @@ function wireControls() {
       renderRows();
     });
   }
-  document.getElementById("page-size").addEventListener("change", (event) => {
+  requireElement("page-size").addEventListener("change", (event) => {
     state.pageSize = Number(event.target.value) || 20;
     state.page = 1;
     renderRows();
   });
-  document.getElementById("reset-filters").addEventListener("click", resetAllFilters);
+  requireElement("reset-filters").addEventListener("click", resetAllFilters);
   document.querySelectorAll("#pqu-table .th-sort").forEach((button) => {
     button.addEventListener("click", () => {
       const key = button.dataset.sort;
@@ -619,15 +634,19 @@ function wireControls() {
       renderRows();
     });
   });
-  document.getElementById("prev-page").addEventListener("click", () => {
+  requireElement("prev-page").addEventListener("click", () => {
     state.page = Math.max(1, state.page - 1);
     renderRows();
   });
-  document.getElementById("next-page").addEventListener("click", () => {
+  requireElement("next-page").addEventListener("click", () => {
     state.page += 1;
     renderRows();
   });
 }
 
-wireControls();
-load();
+try {
+  wireControls();
+  void load();
+} catch (error) {
+  showLoadError(error);
+}
