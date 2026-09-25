@@ -1,18 +1,18 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.0.0",
-  "generated_at": "2026-09-25T05:02:58.124992Z",
+  "generated_at": "2026-09-25T21:34:10.649390Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
     "branch": "main",
     "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
-    "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+    "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
     "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
     "markdown_date": "2026-09-21",
     "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
-    "retrieved_at": "2026-09-25T05:02:58.124992Z"
+    "retrieved_at": "2026-09-25T21:34:10.649390Z"
   },
   "count": 32,
   "records": [
@@ -34,9 +34,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -57,9 +57,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -80,9 +80,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -103,9 +103,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -126,9 +126,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -149,9 +149,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -172,9 +172,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -195,9 +195,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -218,9 +218,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -241,9 +241,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -264,9 +264,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -287,9 +287,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -310,9 +310,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -333,9 +333,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -356,9 +356,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -379,9 +379,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -402,9 +402,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -425,9 +425,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -448,9 +448,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -471,9 +471,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -494,9 +494,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -517,9 +517,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -540,9 +540,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -563,9 +563,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -586,9 +586,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -609,9 +609,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -632,9 +632,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -655,9 +655,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -678,9 +678,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -701,9 +701,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -724,9 +724,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     },
     {
@@ -747,9 +747,9 @@
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
-        "commit": "b9cc4ebd5957b88060059dc2a7e3b08364ab3dca",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
         "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b9cc4ebd5957b88060059dc2a7e3b08364ab3dca/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
       }
     }
   ]
