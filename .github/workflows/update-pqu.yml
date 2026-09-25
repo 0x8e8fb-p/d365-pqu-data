@@ -79,10 +79,15 @@ jobs:
 
       - name: Push verified dataset commit
         if: steps.commit.outputs.changed == 'true'
-        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          git -c http.extraheader="AUTHORIZATION: bearer ${GITHUB_TOKEN}" push origin HEAD:main
+          if ! git -c http.extraheader="AUTHORIZATION: bearer ${GH_TOKEN}" push origin HEAD:main; then
+            git fetch --no-tags --depth=1 origin main
+            git rebase FETCH_HEAD
+            git -c http.extraheader="AUTHORIZATION: bearer ${GH_TOKEN}" push origin HEAD:main
+          fi
 
       - name: Verify committed artifacts
         run: python -m d365_pqu verify
