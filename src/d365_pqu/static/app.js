@@ -494,6 +494,16 @@ function renderRows() {
 function renderSummary() {
   const metadata = state.metadata || {};
   setTime("sync-time", (state.health || {}).checked_at || metadata.last_published_at || metadata.generated_at);
+  const sourceDate = document.getElementById("source-date");
+  if (sourceDate) {
+    const raw = (metadata.source || {}).markdown_date || null;
+    sourceDate.textContent = formatDate(raw);
+    if (raw) {
+      sourceDate.setAttribute("datetime", String(raw));
+    } else {
+      sourceDate.removeAttribute("datetime");
+    }
+  }
 }
 
 function renderFilters() {
