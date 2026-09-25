@@ -83,10 +83,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if ! git -c http.extraheader="AUTHORIZATION: bearer ${GH_TOKEN}" push origin HEAD:main; then
+          header="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 | tr -d '\n')"
+          if ! git -c http.extraheader="$header" push origin HEAD:main; then
             git fetch --no-tags --depth=1 origin main
             git rebase FETCH_HEAD
-            git -c http.extraheader="AUTHORIZATION: bearer ${GH_TOKEN}" push origin HEAD:main
+            git -c http.extraheader="$header" push origin HEAD:main
           fi
 
       - name: Verify committed artifacts
