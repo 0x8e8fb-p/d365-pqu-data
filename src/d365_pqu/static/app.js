@@ -494,15 +494,6 @@ function renderRows() {
 function renderSummary() {
   const metadata = state.metadata || {};
   setTime("sync-time", (state.health || {}).checked_at || metadata.last_published_at || metadata.generated_at);
-  setText("source-date", formatDate(metadata.source ? metadata.source.markdown_date : null));
-  setText("source-synced", formatTimestamp(metadata.generated_at));
-  setText("source-hash", metadata.source ? metadata.source.sha256 : null);
-  setText("source-commit", metadata.source ? metadata.source.commit : null);
-  const sourceLink = document.getElementById("source-link");
-  if (sourceLink && metadata.source) {
-    sourceLink.textContent = "Microsoft Learn";
-    sourceLink.href = metadata.source.article_url;
-  }
 }
 
 function renderFilters() {
