@@ -1,0 +1,2497 @@
+{
+  "dataset": "d365-finops-pqu",
+  "schema_version": "1.1.0",
+  "generated_at": "2026-09-28T04:01:44.646801Z",
+  "source": {
+    "publisher": "Microsoft",
+    "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+    "branch": "main",
+    "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+    "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "markdown_date": "2026-09-21",
+    "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
+    "retrieved_at": "2026-09-25T21:34:10.649390Z"
+  },
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "attribution": "Text from Microsoft Learn documentation by Microsoft, published in MicrosoftDocs/dynamics-365-unified-operations-public.",
+    "changes": "Converted to structured text; images, includes, embedded HTML, and tables that are published as datasets were removed; links were resolved to Microsoft Learn URLs."
+  },
+  "count": 5,
+  "articles": [
+    {
+      "key": "schedule",
+      "title": "Release schedule for proactive quality updates",
+      "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+      "sections": [
+        {
+          "id": "intro",
+          "anchor": null,
+          "aliases": [],
+          "title": "Release schedule for proactive quality updates",
+          "level": 1,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+          "text_sha256": "8b042c7500c7d2c4115c48aefb25ab1fff10348d93ba8b3edbc7d6f7eebd7149",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "This article provides the release schedule for proactive quality updates (PQUs)."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "The detailed schedule for each PQU train and its corresponding build app version number is published five days before the start of the PQU train. Five days before the start of release train, Microsoft sends a notification to customers who use the environments that receive the update."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Station 1 is the first release station. It consists of customers who opt in to have their sandbox environments receive the update before all other stations. More details are published after this functionality is made generally available in May 2023."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "To determine when your Microsoft Dynamics Lifecycle Service environment is updated, find the region and the station-to-region mapping. Cross-reference the region and station-to-region mapping information with the upcoming PQU train for a service update."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "For information about the maintenance windows for each region, see "
+                },
+                {
+                  "text": "What are the planned maintenance windows by region?",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#windows"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "station-to-region-mapping",
+          "anchor": "station-to-region-mapping",
+          "aliases": [],
+          "title": "Station-to-region mapping",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule#station-to-region-mapping",
+          "text_sha256": "15ed46262db1fd83d9ad49fbf319f14ae50ae2b7ff779a0f1ec401803d5bfe58",
+          "blocks": [
+            {
+              "type": "dataset",
+              "name": "regions"
+            },
+            {
+              "type": "callout",
+              "kind": "important",
+              "blocks": [
+                {
+                  "type": "list",
+                  "ordered": true,
+                  "items": [
+                    [
+                      {
+                        "type": "paragraph",
+                        "runs": [
+                          {
+                            "text": "The PQU build for every train is typically published to Lifecycle Services after the change cutoff date that shows in the following high-level PQU train schedule. In this way, customers can download and self-apply the build as needed, to frontload any testing requirements."
+                          }
+                        ]
+                      }
+                    ],
+                    [
+                      {
+                        "type": "paragraph",
+                        "runs": [
+                          {
+                            "text": "Standard performance test (tier-4) sandbox environments, Premium performance test (tier-5) sandbox environments, and production environments receive PQUs on weekends. If a PQU of production environment, Standard performance test (tier4) sandbox, or Premium performance test (tier5) sandbox didn't complete on the scheduled weekend then the operation gets rescheduled to the next weekend."
+                          }
+                        ]
+                      }
+                    ],
+                    [
+                      {
+                        "type": "paragraph",
+                        "runs": [
+                          {
+                            "text": "Standard performance test (tier-4) sandbox environments, Premium performance test (tier-5) sandbox environments opted-in for the First release program (station 1) receive updates on the following weekend of the station 1 schedule."
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "high-level-pqu-train-schedule",
+          "anchor": "high-level-pqu-train-schedule",
+          "aliases": [],
+          "title": "High-level PQU train schedule",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule#high-level-pqu-train-schedule",
+          "text_sha256": "f69d121898431056a5c424d33067fc9fd8e2b131b64325223ad6a3a34fbb24df",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "The following table shows the high-level train schedule. It includes a description of the service update that pertains to the train, the cutoff date after which new changes are no longer accepted, and the development duration for the PQU train."
+                }
+              ]
+            },
+            {
+              "type": "dataset",
+              "name": "trains"
+            },
+            {
+              "type": "callout",
+              "kind": "note",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "Any new finance and operations apps environment that is provisioned after August 17th, 2023 is automatically signed up to receive PQUs per the schedule as applicable. Canceled* - PQU will occur only on Station-1. Releases for other stations have been canceled due to the holiday deployment freeze, and the build will be available for manual uptake. For environments configured with a weekday update schedule, updates are applied on the selected weekday following the published rollout schedule."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "schedule",
+          "anchor": "schedule",
+          "aliases": [],
+          "title": "Detailed station schedules",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule#schedule",
+          "text_sha256": "662be673a631566194da5e33bd5fdfd0ee7b898b5205d40204b13a8979d8e4de",
+          "blocks": [
+            {
+              "type": "dataset",
+              "name": "stations"
+            },
+            {
+              "type": "callout",
+              "kind": "important",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "At least five days in advance, Microsoft updates the preceding schedule and send a notification for the set of environments that are scheduled to receive these quality updates. The preceding schedule is applicable only to environments that are notified about an upcoming update. For information on the dark hours for each region, see "
+                    },
+                    {
+                      "text": "What are the planned maintenance windows by region?",
+                      "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#windows"
+                    },
+                    {
+                      "text": "."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "For each region group, or "
+                    },
+                    {
+                      "text": "station",
+                      "em": true
+                    },
+                    {
+                      "text": ", where a quality update is currently scheduled to roll out, the schedule shows a range of four days. Quality updates start with only sandbox environments. Then, as the percentage of successfully deployed sandboxes increases, deployment to production environments begins with advance notifications to customers."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "Quality updates always occur in a rolling manner that enables us to target a set of environments per schedule and complete all the sets by the end of the fourth day for a station. However, this doesn't mean that an environment update spans four days. It just means that we can't predetermine which set of environments is updated on a given day within the four-day range. All updates are done during dark hours, with near-zero downtime. Updates definitively end within the dark-hour window of a given region."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+      "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+      "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
+      "markdown_date": "2026-09-21",
+      "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+    },
+    {
+      "key": "service_updates",
+      "title": "Service update availability",
+      "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases",
+      "sections": [
+        {
+          "id": "intro",
+          "anchor": null,
+          "aliases": [],
+          "title": "Service update availability",
+          "level": 1,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases",
+          "text_sha256": "69f4d920d6d9d549f102fde9237c48d05542b3b10e7ac19a328e738661146473",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Microsoft is committed to delivering predictable service updates. These service updates are made generally available for self-deployment before Microsoft automatically applies them. The timing of the package release for self-update relative to the production autoupdates varies. Customers can choose from two autoupdate windows that are four weeks apart for each service update. Organizations can select the update window that better accommodates their validation process and operational schedules. To determine the timing of self-update and autoupdates for upcoming releases, including the second autoupdate window see, "
+                },
+                {
+                  "text": "Targeted release schedule (dates subject to change)",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases#targeted-release-schedule-dates-subject-to-change"
+                },
+                {
+                  "text": ". To learn more about twice autoupdate window options, see "
+                },
+                {
+                  "text": "One Version service updates FAQ",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/one-version"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Customers can take up to four service updates per year and are required to take a minimum of two per year. Customers can choose to pause one update at a time. A pause of a service update can apply to the designated user acceptance testing (UAT) sandbox environment, the production environment, or both environments. After the pause window ends, if the customer hasn't self-updated to a supported service update, Microsoft automatically applies the latest update, based on the configuration in Microsoft Dynamics Lifecycle Services. To learn more about how to pause service updates, see "
+                },
+                {
+                  "text": "Pause service updates through Lifecycle Services",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/lifecycle-services/pause-service-updates"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "note",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "Service updates are provided four times annually. Autoupdates occur in February, April, July, and October."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "targeted-release-schedule-dates-subject-to-change",
+          "anchor": "targeted-release-schedule-dates-subject-to-change",
+          "aliases": [],
+          "title": "Targeted release schedule (dates subject to change)",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases#targeted-release-schedule-dates-subject-to-change",
+          "text_sha256": "021c624a18c2f71c97e45351252ccad39143369fb3e71b83403d4958f17724ba",
+          "blocks": [
+            {
+              "type": "callout",
+              "kind": "important",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "Microsoft releases four service updates annually, in February, April, July, and October. The maximum number of consecutive updates that can be paused is one and taking a minimum of two service updates per year is required. For answers to common questions about how these changes affect the release process, see "
+                    },
+                    {
+                      "text": "One Version service updates FAQ",
+                      "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/one-version"
+                    },
+                    {
+                      "text": "."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "note",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "A sandbox autoupdate occurs seven days before the production update."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "In the following table:"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "An asterisk (*) in the \"Release version\" column denotes a major release."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "The \"autoupdate schedule production start date\" column refers to the autoupdate schedule that's configured in the update settings in Lifecycle Services. See "
+                      },
+                      {
+                        "text": "Configure service updates through Lifecycle Services",
+                        "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/lifecycle-services/configure-service-updates"
+                      },
+                      {
+                        "text": "."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "The \"End of service\" column indicates the date when no new cumulative service updates are provided."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "dataset",
+              "name": "service_updates"
+            },
+            {
+              "type": "callout",
+              "kind": "note",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "The "
+                    },
+                    {
+                      "text": "Software lifecycle policy",
+                      "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/migration-upgrade/versions-update-policy"
+                    },
+                    {
+                      "text": " applies to customers who are enrolled in the First Release program and to the date when the service update is made generally available."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "Release naming convention as of the 10.0.38 release",
+                      "strong": true
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "The first half of the release label refers to the calendar year and quarter when the auto update production start date is scheduled. The second part is the product version as it appears in Lifecycle Services. An asterisk (*) at the end of the label indicates a major release. For example: "
+                    },
+                    {
+                      "text": "CY25Q4: 10.0.45*",
+                      "strong": true
+                    },
+                    {
+                      "text": " is product version 10.0.45 that's made available for autoupdate in the fourth quarter of 2025. It's a major update (the \"October\" release)."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "Previews and preview updates are available as a deployable package in the Shared asset library in Lifecycle Services. For more information, see "
+                    },
+                    {
+                      "text": "One Version service updates FAQ",
+                      "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/one-version"
+                    },
+                    {
+                      "text": "."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "service-update-overview",
+          "anchor": "service-update-overview",
+          "aliases": [],
+          "title": "Service update overview",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases#service-update-overview",
+          "text_sha256": "b056d9d40b9a9c237e9e34dd5f44e3ee75afdd07802bac6be6bfffda92d8967d",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Service updates are continuous, touchless updates that provide new features and functionality. They eliminate the need to do expensive upgrades every few years. Because service updates maintain backward compatibility, there's no need to \"merge your code.\" We recommend that you use tools such as the Regression suite automation tool (RSAT) for regression testing."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "You're in control and manage how your organization receives these updates. For example, you can sign up for the First Release program so that your organization receives updates first. You can manually apply the updates to any of your environments (self-update). Alternatively, you can remain on the default release schedule and receive the autoupdates when you schedule them by using Lifecycle Services."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Service updates contain both application changes and platform changes that are critical to the service, including regulatory updates. For more information, see "
+                },
+                {
+                  "text": "Service updates",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/one-version#service-updates"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "release-processes",
+          "anchor": "release-processes",
+          "aliases": [],
+          "title": "Release processes",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases#release-processes",
+          "text_sha256": "4fa3a1496459d9b396e41af589f5564a83fe0c3d64051fea8dcc19073ee51e22",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "The Dynamics 365 team designs, develops, and validates each new release. Extensive testing is done on various test topologies. A compatibility checker also runs tests to ensure backward compatibility."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "All customers who take advantage of the preview have early access to the upcoming service update. The preview service update is used to validate customizations, learn about new features, and provide feedback to Microsoft. During the preview phase, customers must deploy the service update in a development/test environment. The preview release can't be used in production. After release, customers can download the package from the Shared Asset Library in Lifecycle Services. Customers must agree to the program terms at the time of installation. Sign up for access to preview packages is no longer required. One scheduled update to the preview build is included as standard with every release."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "The First Release program is available to all finance and operations apps customers. There are two ways to participate:"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Microsoft Managed Update",
+                        "strong": true
+                      },
+                      {
+                        "text": "s: Fill out the "
+                      },
+                      {
+                        "text": "First Release Program: Microsoft Dynamics 365 Finance and Operations applications",
+                        "href": "https://aka.ms/FirstReleaseFnO"
+                      },
+                      {
+                        "text": " form and receive a service update that Microsoft automatically deploys, first in a UAT sandbox and then in production after seven days. It isn't possible to pause these updates."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Customer Initiated Updates",
+                        "strong": true
+                      },
+                      {
+                        "text": ": Customers can pull the First Release build into their UAT sandbox from Lifecycle Services for testing and into production, without autodeployment from Microsoft."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Typically, the First Release build is the same as the generally available (GA) build. However, if critical issues arise that can't be fixed with a hot fix, a new First Release build is declared, and customers are informed through various communication channels, including Viva Engage and Lifecycle Services. Microsoft restarts the sandbox and production environments and deploy any newly declared First Release build for customers that receive Microsoft managed updates. Customers that initiate updates should deploy newly declared First Release builds that are available on Lifecycle Services."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "The service update is made generally available through the Action Center in Lifecycle Services. When the service update is available, customers can manually apply it to all environments, including production. If the service update isn't applied to the designated sandbox or production environment, Microsoft automatically applies it, based on the update settings for the Lifecycle Services project. To learn more, see "
+                },
+                {
+                  "text": "Configure service updates through Lifecycle Services",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/lifecycle-services/configure-service-updates"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "file_path": "articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
+      "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+      "sha256": "7faa5cb88f216fce19c4a5292a7af0c727bb18d1a057f64e4e72b0967b2fdaf1",
+      "markdown_date": "2026-06-04",
+      "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md"
+    },
+    {
+      "key": "maintenance",
+      "title": "Maintenance in self-service environments FAQ",
+      "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice",
+      "sections": [
+        {
+          "id": "intro",
+          "anchor": null,
+          "aliases": [],
+          "title": "Maintenance in self-service environments FAQ",
+          "level": 1,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice",
+          "text_sha256": "671d0dcaa7ae53b395f7b73f83a0f54ba6b0388ffcc6489326dbeb001cc23f01",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Because of the changing nature of technology, the continual appearance of new security threats, and compliance requirements, you must update environments with all critical security and quality updates. Microsoft built a framework for performing all maintenance activity during the dark hours of the geographic region where your environment is deployed. This maintenance activity includes operating system patching, deployment of security hotfixes, and deployment of quality updates. To minimize application downtime, upgrades occur in batches. Therefore, most capacity is always online, and only a subset is upgraded at a time. This approach enables servicing that involves a small window of service degradation instead of complete downtime."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "infrastructure-maintenance-in-self-service-environments",
+          "anchor": "infrastructure-maintenance-in-self-service-environments",
+          "aliases": [],
+          "title": "Infrastructure maintenance in self-service environments",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#infrastructure-maintenance-in-self-service-environments",
+          "text_sha256": "6615eef87ce49fffcff14abc3c82dab0728e46e9497d9e05a26255cf59bf7bfa",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Infrastructure maintenance is the process of updating the environments with the latest security updates and critical hotfixes. Microsoft must complete this process on your environments to ensure security, availability, and reliability. This article provides answers to frequently asked questions about Microsoft planned maintenance in self-service environments."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "what-types-of-planned-maintenance-activities-does-microsoft-perform-on-an-environment",
+          "anchor": "what-types-of-planned-maintenance-activities-does-microsoft-perform-on-an-environment",
+          "aliases": [],
+          "title": "What types of planned maintenance activities does Microsoft perform on an environment?",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#what-types-of-planned-maintenance-activities-does-microsoft-perform-on-an-environment",
+          "text_sha256": "dc48dd7c8c9827ec8b433af4ab5ced055307c589c30422228fdb11fceacb948c",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Some common planned maintenance activities that Microsoft performs include:"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Operating system (OS) security updates"
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Security hotfixes"
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Microsoft quality updates"
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "what-are-the-planned-maintenance-windows",
+          "anchor": "what-are-the-planned-maintenance-windows",
+          "aliases": [
+            "windows"
+          ],
+          "title": "What are the planned maintenance windows?",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#what-are-the-planned-maintenance-windows",
+          "text_sha256": "f2f9b8d89fc76634f4fa6f4055192330bb1327afb3c26974db0d23b29a1ee214",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "A planned maintenance window typically occurs during the dark hours of the geographic region where your environment is deployed. The following table lists the maintenance windows for each geography in Coordinated Universal Time (UTC)."
+                }
+              ]
+            },
+            {
+              "type": "dataset",
+              "name": "maintenance_windows"
+            }
+          ]
+        },
+        {
+          "id": "what-is-the-schedule-for-proactive-quality-updates",
+          "anchor": "what-is-the-schedule-for-proactive-quality-updates",
+          "aliases": [],
+          "title": "What is the schedule for proactive quality updates?",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#what-is-the-schedule-for-proactive-quality-updates",
+          "text_sha256": "071d4e55dbf136a7470f4140a5b2177a8bf1673de3431e98f826079f4a639850",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "For information on the upcoming proactive quality update schedule, see the "
+                },
+                {
+                  "text": "Release schedule for proactive quality updates",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/fin-ops/get-started/quality-updates-schedule"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "note",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "From August 2022 through October 2022, Microsoft rolls out updates to the production environment during any weekend, and outside of normal business hours, to help minimize any potential impact on your environments. All sandbox environments are updated during any night, outside of business hours."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "All the maintenance activity (system updates, security hotfixes, and quality updates) is performed during the dark-hour window to provide a near-zero-downtime experience."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "what-does-near-zero-downtime-maintenance-mean",
+          "anchor": "what-does-near-zero-downtime-maintenance-mean",
+          "aliases": [],
+          "title": "What does near-zero-downtime maintenance mean?",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#what-does-near-zero-downtime-maintenance-mean",
+          "text_sha256": "04e3ecc4a004d7fabe27b4b1c5b592ea3bfc65b45fcb4fe67a2624c05b6bd46f",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "You can continue to operate the system during the maintenance activity. You might experience brief interruptions or disconnects during this window, but you don't need full downtime."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "what-is-the-experience-during-the-near-zero-downtime-maintenance-window",
+          "anchor": "what-is-the-experience-during-the-near-zero-downtime-maintenance-window",
+          "aliases": [],
+          "title": "What is the experience during the near-zero-downtime maintenance window?",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#what-is-the-experience-during-the-near-zero-downtime-maintenance-window",
+          "text_sha256": "13e77ced7983212ac97c9a6cece213b577d8a3a3bf563ab3ceb2701f0a60ce0a",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Upgrades occur in batches. Therefore, most capacity is always online, and only a subset is upgraded at a time to help eliminate complete downtime. Adopt "
+                },
+                {
+                  "text": "priority-based scheduling",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/sysadmin/priority-based-batch-scheduling"
+                },
+                {
+                  "text": " of batch jobs. Priority-based scheduling eliminates the stickiness of batch jobs that are associated with a batch server and enables near-zero-downtime servicing for security patching and quality updates. By design, all Tier 2 and Tier 3 environments might experience approximately 30 minutes of downtime during the servicing or maintenance operations."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "interactive-usage",
+          "anchor": "interactive-usage",
+          "aliases": [],
+          "title": "Interactive usage",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#interactive-usage",
+          "text_sha256": "0c187dbc26d44834c748acb8d9eb8ca485071cccec5fa1ab9fe3917dfd4b00ca",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Users who are connected to the environment might experience a brief disconnection of less than 60 seconds a few times during the servicing window. After recovery, users might experience one of the following outcomes:"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "The session recovers gracefully, and the user either goes to the page that they were working on, or redirects to the root/workspace/home page and receives the following message: \"Something went wrong. But we were able to recover your session.\""
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Session recovery fails, and the user who is working on a details page is redirected to the root/workspace/home page and receives the following message: \"Something went wrong, and we were unable to recover your session. You've been redirected.\""
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "For example, the user might be working on a sales order creating lines or posting. After the interruption, the user might return to the Sales workspace, but the new order and lines should still be available. Users should go back to the main form and check their work."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "batch-service",
+          "anchor": "batch-service",
+          "aliases": [],
+          "title": "Batch service",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#batch-service",
+          "text_sha256": "712ef6bf9605343c49e53b520a601d690d160b45d274a1dfaea9956410d040d2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Individual batch servers aren't available for up to 30 minutes. The following activities occur:"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "The service terminates any running batch jobs."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "The service automatically restarts jobs that it terminated. Set the maximum number of retries to "
+                      },
+                      {
+                        "text": "0",
+                        "strong": true
+                      },
+                      {
+                        "text": " (zero) for any jobs that shouldn't be restarted automatically."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "list",
+                    "ordered": false,
+                    "items": [
+                      [
+                        {
+                          "type": "paragraph",
+                          "runs": [
+                            {
+                              "text": "Check printing"
+                            }
+                          ]
+                        }
+                      ],
+                      [
+                        {
+                          "type": "paragraph",
+                          "runs": [
+                            {
+                              "text": "Statement posting"
+                            }
+                          ]
+                        }
+                      ]
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "For more information about batch retry, see "
+                },
+                {
+                  "text": "Retry for any error or batch server restart",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/sysadmin/retryable-batch#retry-for-any-error-or-batch-server-restart"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "priority-based-scheduling",
+          "anchor": "priority-based-scheduling",
+          "aliases": [],
+          "title": "Priority-based scheduling",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#priority-based-scheduling",
+          "text_sha256": "2af2c83d90bbcd4af17cd812fadcf086b66b92bd7e92e6744e2e4b732e847fa3",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "If you enable priority-based scheduling, users experience reduced Application Object Server (AOS) capacity during the maintenance window. The available AOS instances serve batch jobs. Therefore, there's never complete downtime during the servicing window."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "If you don't enable priority-based scheduling, any batch groups that you configure with AOS instances experience downtime until the associated AOS instances are updated and back in rotation."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "note",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "Microsoft is working to reduce the downtime for batch service to a few minutes. Achievement of this goal requires that customers adopt priority-based scheduling of batch jobs."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "is-it-possible-to-reschedule-near-zero-downtime-operating-system-maintenance",
+          "anchor": "is-it-possible-to-reschedule-near-zero-downtime-operating-system-maintenance",
+          "aliases": [],
+          "title": "Is it possible to reschedule near-zero-downtime operating system maintenance?",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#is-it-possible-to-reschedule-near-zero-downtime-operating-system-maintenance",
+          "text_sha256": "0a0d00fd112392fe1b24261d486dba907e1eb6e827b3474670058518b53cd13c",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "No. To meet regulatory and security compliance standards, Microsoft performs the planned maintenance during the dark hours of the geographic region where your environment is deployed. The main objective of planned maintenance is to regularly patch environments to remediate security vulnerabilities and apply critical quality updates. If you delay updates, you put data security, availability, and reliability at risk."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "file_path": "articles/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice.md",
+      "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+      "sha256": "42bd0d1421111af1816835a7f1a7c78028a84192e9be80de442462107855fc97",
+      "markdown_date": "2026-04-02",
+      "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice.md"
+    },
+    {
+      "key": "pqu_overview",
+      "title": "Proactive quality updates overview",
+      "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates",
+      "sections": [
+        {
+          "id": "intro",
+          "anchor": null,
+          "aliases": [],
+          "title": "Proactive quality updates overview",
+          "level": 1,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates",
+          "text_sha256": "2bbf6e53d323f94831cc9e8477d81f5afc42ec55dd5450d7a222b4f56818622a",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "This article provides information about proactive quality updates (PQUs). It explains what they are and why they're used, and describes some of their benefits."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "what-are-pqus",
+          "anchor": "what-are-pqus",
+          "aliases": [],
+          "title": "What are PQUs?",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates#what-are-pqus",
+          "text_sha256": "5e39f77006415a01b776a35e303f66f2168aa060b6e849d14b6bd0645cf69826",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "PQUs are cumulative builds of hotfixes that Microsoft delivers with "
+                },
+                {
+                  "text": "near-zero downtime",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#what-does-near-zero-downtime-maintenance-mean"
+                },
+                {
+                  "text": ". PQUs follow a push model, where Microsoft applies updates to a Microsoft Dynamics Lifecycle Services environment in the background with minimal impact on customers. Microsoft deploys every PQU region by region, following a \"safe deployment process\" that tracks problems found within each region during deployment. The safe deployment process helps identify and fix problems before the PQU is deployed to more regions. PQUs are fully automated and contain important bug fixes and high-priority product features that are ready after the service update is generally available."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "why-is-microsoft-introducing-pqus",
+          "anchor": "why-is-microsoft-introducing-pqus",
+          "aliases": [],
+          "title": "Why is Microsoft introducing PQUs?",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates#why-is-microsoft-introducing-pqus",
+          "text_sha256": "529a95dd1e7811e6b263b8745647e5efe9929f256fd4b309013354438d80b8b6",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Before the introduction of PQUs, most customers didn't receive fixes for service problems until they deployed their next service update. Therefore, businesses could be unnecessarily affected by service problems that a fix was already available for. PQUs get fixes to customers more quickly."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "what-investments-is-microsoft-making-to-enable-safe-deployments-of-pqus",
+          "anchor": "what-investments-is-microsoft-making-to-enable-safe-deployments-of-pqus",
+          "aliases": [],
+          "title": "What investments is Microsoft making to enable safe deployments of PQUs?",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates#what-investments-is-microsoft-making-to-enable-safe-deployments-of-pqus",
+          "text_sha256": "b90b04ce6318423794aeb0eddfbacf2467a7715addf91fd3f8c564797daa776b",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Microsoft invested in the following technologies and processes to make the PQU process nondisruptive:"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Higher-quality concise payloads",
+                        "strong": true
+                      },
+                      {
+                        "text": " – The changes that PQU payloads contain are limited to bug fixes and regulatory changes that flighting supports. Microsoft applies extra diligence when backporting changes into a PQU, to further reduce the risk of unintended regressions."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Safe deployment rollout process",
+                        "strong": true
+                      },
+                      {
+                        "text": " – Deployment of PQUs follows a safe deployment process. Microsoft first delivers each PQU to a single region that contains a small group of customers who have the highest tolerance for risk. Then, if no regressions are identified, the process continues through a broader group of customers, based on geographies (stations), until all customers are using the new version. Microsoft uses this deployment model across its online services to help build confidence in an update as it's delivered to more customers, and to help minimize the impact if unforeseen problems are detected."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Fallback via flighting",
+                        "strong": true
+                      },
+                      {
+                        "text": " – Flighting is used to enable or disable changes that PQUs introduce. If a change must be turned off after a PQU deployment, the flight system can turn it off to help reduce the impact."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates.md",
+      "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+      "sha256": "c9bc5f7d1468ff3f96a9ab067b0db33cf13df8c699599ee2f05d152157ec33ed",
+      "markdown_date": "2026-03-26",
+      "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates.md"
+    },
+    {
+      "key": "pqu_faq",
+      "title": "Proactive quality updates (PQU) - FAQ",
+      "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq",
+      "sections": [
+        {
+          "id": "intro",
+          "anchor": null,
+          "aliases": [],
+          "title": "Proactive quality updates (PQU) - FAQ",
+          "level": 1,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq",
+          "text_sha256": "c6900a8cb41e74dcc6a667725adff235cdb6ae4976fba337b5417bd0512f3d24",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "This article provides answers to frequently asked questions about proactive quality updates (PQUs), new biweekly proactive quality updates, and the optional weekday update schedule."
+                }
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "note",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "The weekday update schedule option isn't supported in sovereign cloud environments at this time."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "what-is-the-biweekly-cadence-for-pqu",
+          "anchor": "what-is-the-biweekly-cadence-for-pqu",
+          "aliases": [],
+          "title": "What is the biweekly cadence for PQU?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#what-is-the-biweekly-cadence-for-pqu",
+          "text_sha256": "8c1b5394b623742a0271e3486160aa9791f5eca0bfe10ccc6efd5721df94ab41",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "The biweekly cadence introduces a more frequent release cycle for proactive quality updates."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Starting with version "
+                },
+                {
+                  "text": "10.0.47",
+                  "strong": true
+                },
+                {
+                  "text": ", PQUs move from the previous 28‑day schedule to a "
+                },
+                {
+                  "text": "two‑week cadence",
+                  "strong": true
+                },
+                {
+                  "text": ", helping customers receive fixes and improvements sooner while maintaining a predictable update rhythm."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Each biweekly cycle includes:"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "A release cut of the latest platform and application updates"
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Deployment to all stations - Trail, OnlineDev, Sandbox, and Live environments"
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "You can view the upcoming rollout calendar here: "
+                },
+                {
+                  "text": "PQU Release Calendar",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule#high-level-pqu-train-schedule"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "why-is-the-rollout-schedule-changing-from-28-days-to-a-biweekly-cadence",
+          "anchor": "why-is-the-rollout-schedule-changing-from-28-days-to-a-biweekly-cadence",
+          "aliases": [],
+          "title": "Why is the rollout schedule changing from 28 days to a biweekly cadence?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#why-is-the-rollout-schedule-changing-from-28-days-to-a-biweekly-cadence",
+          "text_sha256": "acf6032e71f6816aecec16c48afca8606ed5335db5b239e101b03c5b7958cd55",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "This change ensures that customers receive fixes and improvements faster. A biweekly cadence helps:"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Reduce waiting time for important fixes."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Provide more frequent validation cycles in Sandbox."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Improve service stability through faster delivery."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Keep customer environments closer to the most reliable build."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "what-does-weekday-schedule-mean-for-pqu",
+          "anchor": "what-does-weekday-schedule-mean-for-pqu",
+          "aliases": [],
+          "title": "What does \"weekday schedule\" mean for PQU?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#what-does-weekday-schedule-mean-for-pqu",
+          "text_sha256": "649d94081c62ba58e495dccdc5540ebf1ea496a87339c39b18a4ab87f3a99fb3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Previously, Live environments received PQUs only during weekend maintenance windows. By using the new enhancement, you can now opt to receive updates on weekdays as well."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Benefits of combining the biweekly cadence with weekday scheduling include:"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Greater flexibility in selecting maintenance windows."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "More buffer time to validate PQU updates in Sandbox."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Better alignment with internal release and testing cycles."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Improved control over update timing."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "how-do-i-configure-my-production-environment-to-receive-pqu-updates-on-weekdays",
+          "anchor": "how-do-i-configure-my-production-environment-to-receive-pqu-updates-on-weekdays",
+          "aliases": [],
+          "title": "How do I configure my production environment to receive PQU updates on weekdays?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#how-do-i-configure-my-production-environment-to-receive-pqu-updates-on-weekdays",
+          "text_sha256": "cd13e669be0409e0a4d9bb1507d546770cb27cb9fc91c90a9640104b0de3ed6e",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Follow these steps in the Power Platform Admin Center (PPAC):"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Sign in to PPAC."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Select your production environment."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Select "
+                      },
+                      {
+                        "text": "Settings",
+                        "strong": true
+                      },
+                      {
+                        "text": "."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "In the "
+                      },
+                      {
+                        "text": "Updates",
+                        "strong": true
+                      },
+                      {
+                        "text": " section, select "
+                      },
+                      {
+                        "text": "Maintenance Settings",
+                        "strong": true
+                      },
+                      {
+                        "text": "."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Choose your preferred days to receive PQUs by updating "
+                      },
+                      {
+                        "text": "Maintenance window days",
+                        "strong": true
+                      },
+                      {
+                        "text": " under "
+                      },
+                      {
+                        "text": "Finance and Operations Maintenance Settings",
+                        "strong": true
+                      },
+                      {
+                        "text": " section."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Select "
+                      },
+                      {
+                        "text": "Save",
+                        "strong": true
+                      },
+                      {
+                        "text": "."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "callout",
+                    "kind": "note",
+                    "blocks": [
+                      {
+                        "type": "paragraph",
+                        "runs": [
+                          {
+                            "text": "Production environments always receive updates at least five days after sandbox environments. This process remains unchanged under the biweekly cadence."
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "which-day-should-i-choose-for-receiving-pqu-updates",
+          "anchor": "which-day-should-i-choose-for-receiving-pqu-updates",
+          "aliases": [],
+          "title": "Which day should I choose for receiving PQU updates?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#which-day-should-i-choose-for-receiving-pqu-updates",
+          "text_sha256": "07de80e282fb733bfc9dcdbf039e758c268906fe18359bc58c4d56d0a1904ca3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Choose any day that aligns with your organization’s internal operations and testing cycles."
+                }
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "Selecting multiple weekdays ensures greater flexibility and reduces the risk of delays if one maintenance window is missed."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "whats-the-minimum-timeline-between-sandbox-and-production-under-the-biweekly-cadence",
+          "anchor": "whats-the-minimum-timeline-between-sandbox-and-production-under-the-biweekly-cadence",
+          "aliases": [],
+          "title": "What's the minimum timeline between sandbox and production under the biweekly cadence?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#whats-the-minimum-timeline-between-sandbox-and-production-under-the-biweekly-cadence",
+          "text_sha256": "3faa569f0730fbc708d880e5bdb4adb2e35b52525e6c95c45d34ef5ae4b852c6",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "The process always maintains a minimum five-day gap between when the PQU is applied to sandbox (UAT) and when it becomes eligible for live (production)."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "You expect this version difference. It doesn't affect your ability to deploy custom packages, as long as you follow compatibility best practices."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "can-customers-request-exclusions-from-the-new-biweekly-cadence",
+          "anchor": "can-customers-request-exclusions-from-the-new-biweekly-cadence",
+          "aliases": [],
+          "title": "Can customers request exclusions from the new biweekly cadence?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#can-customers-request-exclusions-from-the-new-biweekly-cadence",
+          "text_sha256": "b45168299fee3535c0e8e9ac65485afdb181204603a0f8ae9167211eeaaf44b1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "No. Exclusions aren't supported. The standardized biweekly cadence ensures consistent servicing, predictable timelines, and compliance with platform servicing requirements."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "how-does-the-biweekly-cadence-work-can-you-provide-an-example",
+          "anchor": "how-does-the-biweekly-cadence-work-can-you-provide-an-example",
+          "aliases": [],
+          "title": "How does the biweekly cadence work? Can you provide an example?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#how-does-the-biweekly-cadence-work-can-you-provide-an-example",
+          "text_sha256": "7d4d6fd8ea5b798b92358bcd0ea246dfe4d417b622f0364165503de941542c27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Yes. Consider this example: If PQU-1 rolls out to Station-2 on April 13–14, 2026: For customers using the default weekend-only schedule:"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "PQU applied on April 13 → Live receives the update on April 18, 2026 (sandbox + 5 days)"
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "PQU applied on April 14 → Live receives the update on April 19, 2026 (sandbox + 5 days)"
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "For customers who enabled weekday updates: Live receives the update on the next available selected weekday, starting after the required 5-day minimum window. Example: For a PQU applied on April 13, the earliest eligible date is April 18, 2026, and the system selects the next chosen weekday from your maintenance settings."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "how-are-the-maintenance-windows-handled-for-customers-who-have-one-finance-and-operations-apps-instance-but-are-active-in-multiple-time-zones",
+          "anchor": "how-are-the-maintenance-windows-handled-for-customers-who-have-one-finance-and-operations-apps-instance-but-are-active-in-multiple-time-zones",
+          "aliases": [],
+          "title": "How are the maintenance windows handled for customers who have one finance and operations apps instance but are active in multiple time zones?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#how-are-the-maintenance-windows-handled-for-customers-who-have-one-finance-and-operations-apps-instance-but-are-active-in-multiple-time-zones",
+          "text_sha256": "2c1aed78ef8c0bd3f9a26c5380b825614f1155ac0bf1da2dd76891775cae5ca0",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Aside from the currently supported maintenance windows, there are no special schedules for cases where an instance of finance and operations apps exists, because the rollout of PQUs involves a minimally disruptive manner that involves "
+                },
+                {
+                  "text": "near-zero downtime",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#what-does-near-zero-downtime-maintenance-mean"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "can-customers-delay-reschedule-or-pause-a-pqu",
+          "anchor": "can-customers-delay-reschedule-or-pause-a-pqu",
+          "aliases": [],
+          "title": "Can customers delay, reschedule, or pause a PQU?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#can-customers-delay-reschedule-or-pause-a-pqu",
+          "text_sha256": "faaea8a82dba08d1476d79d70617f995ec8bfb55f313c152dc7787b760b116d3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "No. PQUs help ensure that fundamentals such as security, privacy, reliability, availability, and performance continuously improve for customers."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "how-do-i-know-what-set-of-changes-a-pqu-includes",
+          "anchor": "how-do-i-know-what-set-of-changes-a-pqu-includes",
+          "aliases": [],
+          "title": "How do I know what set of changes a PQU includes?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#how-do-i-know-what-set-of-changes-a-pqu-includes",
+          "text_sha256": "004c080468bf2145465303fe1dc058d39cb9e1f9bf5df6d5a6fc11bd6a5387eb",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "To identify the changes that a PQU includes, follow these steps. This example uses the 10.0.28 PQU train and related app version 10.0.1265.89."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "In Microsoft Dynamics Lifecycle Services, open the "
+                      },
+                      {
+                        "text": "Environment details",
+                        "strong": true
+                      },
+                      {
+                        "text": " page for your sandbox environment."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "In the "
+                      },
+                      {
+                        "text": "Available Updates",
+                        "strong": true
+                      },
+                      {
+                        "text": " section, select "
+                      },
+                      {
+                        "text": "View Update",
+                        "strong": true
+                      },
+                      {
+                        "text": " for the latest quality update build."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Export the build to a comma-separated values (CSV) or Excel file."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "In the exported file, filter for and select the build version that's less than or equal to build number 10.0.1265.89. You can now review the delta payload."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "note",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "runs": [
+                    {
+                      "text": "You must export to a CSV or Excel file before you update the environment. Otherwise, you can follow the preceding steps for an environment that has a similar configuration but doesn't have the update installed."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "whats-the-process-if-a-critical-issue-is-found-after-a-pqu",
+          "anchor": "whats-the-process-if-a-critical-issue-is-found-after-a-pqu",
+          "aliases": [],
+          "title": "What's the process if a critical issue is found after a PQU?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#whats-the-process-if-a-critical-issue-is-found-after-a-pqu",
+          "text_sha256": "360188d68652e37ec40c5eab8f472e9e42dcdb8d5c9e7e16c5244c6058f29da9",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "A critical issue is one or more events that cause multiple customers to have a degraded experience with one or more of Microsoft's services. These problems can cause unplanned downtime, including unavailability, performance degradation, and interference with service management. If an issue with a PQU causes customer impact, Microsoft stops the rollout of that PQU until it can communicate and fix the problem. Typically, the next PQU includes the fix that's required to resume the rollout."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "If the problem affects only one customer environment, contact Microsoft support to open a support ticket. Based on the justification, Microsoft stops the rollout of the PQU to other customer environments in that project until the issue is mitigated."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "how-do-i-see-notifications-about-a-pqu",
+          "anchor": "how-do-i-see-notifications-about-a-pqu",
+          "aliases": [],
+          "title": "How do I see notifications about a PQU?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#how-do-i-see-notifications-about-a-pqu",
+          "text_sha256": "300b68f493080585c5fa233e68ab750e53f7e4cefbbd77238b43314c62d07ea0",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "You can see notifications for PQUs in the message center in Microsoft 365 admin center. For more information, see "
+                },
+                {
+                  "text": "Track new and changed features in the Microsoft 365 Message center",
+                  "href": "https://learn.microsoft.com/en-us/admin/manage/message-center"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "can-customers-manually-apply-hotfix-updates-from-lifecycle-services",
+          "anchor": "can-customers-manually-apply-hotfix-updates-from-lifecycle-services",
+          "aliases": [],
+          "title": "Can customers manually apply hotfix updates from Lifecycle Services?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#can-customers-manually-apply-hotfix-updates-from-lifecycle-services",
+          "text_sha256": "d67712af4863e0ec6121e9127dcbe2e3dc23084b161bc697b988ddc72b87c22e",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Yes. To ensure ongoing parity in the way that hotfixes work, customers can still apply hotfix updates to their environments in Lifecycle Services. PQUs are cumulative builds and continue to be available on Lifecycle Services as they're published. PQUs are published to Lifecycle Services for manual application according to the change cutoff schedule."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Hotfixes that are deployed as part of a PQU go through a rigorous safe deployment practice before the update is deployed. Because PQUs are more reliable, and involve minimal disruption and "
+                },
+                {
+                  "text": "reduced downtime",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice#what-does-near-zero-downtime-maintenance-mean"
+                },
+                {
+                  "text": ", use a PQU instead of manually applying an update."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "can-customers-proactively-install-a-pqu-ahead-of-the-schedule",
+          "anchor": "can-customers-proactively-install-a-pqu-ahead-of-the-schedule",
+          "aliases": [],
+          "title": "Can customers proactively install a PQU ahead of the schedule?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#can-customers-proactively-install-a-pqu-ahead-of-the-schedule",
+          "text_sha256": "834fb3a81508dba869bce43f713daae63c29be86a219e7640da650687bd9b856",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Yes. You can proactively install a PQU. Microsoft skips the update if the environment's current build version is equal to or more than the PQU that's being deployed. If you apply the PQU manually the "
+                },
+                {
+                  "text": "customers AOT package will also be promoted.",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/updateenvironment-newinfrastructure#things-to-consider-about-production-updates"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "under-what-circumstances-does-the-system-skip-a-pqu",
+          "anchor": "under-what-circumstances-does-the-system-skip-a-pqu",
+          "aliases": [],
+          "title": "Under what circumstances does the system skip a PQU?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#under-what-circumstances-does-the-system-skip-a-pqu",
+          "text_sha256": "c4ca471b9b297165d57ae4ffbb6c8e124794189d6f4d25444f1276e3134d101f",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "If a service update is scheduled within seven days of a scheduled PQU, the system skips the PQU. For example, a PQU is scheduled on January 28 for a production environment, and a service update is scheduled on February 4 for the same environment. In this case, the system skips the PQU on January 28."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "If a sandbox environment has the same build version as the scheduled PQU, or if it has a later version, the system skips the PQU."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "If a production environment has the same build version as the scheduled PQU, or if it has a later version, the system skips the PQU."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "If a sandbox environment has the same build version or a later version because of a PQU or a manual update to the production environment, the production environment still receives the scheduled version of the PQU."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "If any Lifecycle Services environment or project is under exemption, the system skips PQUs."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "The system skips PQUs for a production environment if the update failed or was skipped in other sandbox environments in the Lifecycle Services project."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "if-an-environment-has-an-upcoming-scheduled-action-and-a-pqu-is-scheduled-within-the-same-maintenance-window-does-the-environment-still-receive-the-pqu",
+          "anchor": "if-an-environment-has-an-upcoming-scheduled-action-and-a-pqu-is-scheduled-within-the-same-maintenance-window-does-the-environment-still-receive-the-pqu",
+          "aliases": [],
+          "title": "If an environment has an upcoming scheduled action, and a PQU is scheduled within the same maintenance window, does the environment still receive the PQU?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#if-an-environment-has-an-upcoming-scheduled-action-and-a-pqu-is-scheduled-within-the-same-maintenance-window-does-the-environment-still-receive-the-pqu",
+          "text_sha256": "11c5bf8b4df7f035b0483d8cffe64fab1169cce90030cda9eca7cf421985f213",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "If there's a conflict with a prescheduled action, such as a point-in-time restore (PITR), the system reschedules the PQU for the next available maintenance window (within four days)."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "can-you-restore-an-environment-to-its-previous-state-if-there-are-problems-after-a-pqu-is-applied",
+          "anchor": "can-you-restore-an-environment-to-its-previous-state-if-there-are-problems-after-a-pqu-is-applied",
+          "aliases": [],
+          "title": "Can you restore an environment to its previous state if there are problems after a PQU is applied?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#can-you-restore-an-environment-to-its-previous-state-if-there-are-problems-after-a-pqu-is-applied",
+          "text_sha256": "0efe4d31ece97c5b9994af3263f50adf74210fae268791a3450f30c217021e89",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "As with other code promotions, you can't roll back after a PQU is applied. For information about how flighting can help mitigate an issue, see "
+                },
+                {
+                  "text": "What investments is Microsoft making to enable safe deployments of PQUs?",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates#what-investments-is-microsoft-making-to-enable-safe-deployments-of-pqus"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "whats-the-guidance-for-customers-who-are-subject-to-us-food-and-drug-administration-fda-regulatory-requirements-and-good-practice-gxp-quality-regulatory-requirements",
+          "anchor": "whats-the-guidance-for-customers-who-are-subject-to-us-food-and-drug-administration-fda-regulatory-requirements-and-good-practice-gxp-quality-regulatory-requirements",
+          "aliases": [],
+          "title": "What's the guidance for customers who are subject to U.S. Food and Drug Administration (FDA) regulatory requirements and \"good practice\" (GxP) quality regulatory requirements?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#whats-the-guidance-for-customers-who-are-subject-to-us-food-and-drug-administration-fda-regulatory-requirements-and-good-practice-gxp-quality-regulatory-requirements",
+          "text_sha256": "f122b140686331696ef230a2cbf95465a6e3afd409b51d4d190671bf9e24e218",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "The plan for customers who are subject to U.S. Food and Drug Administration (FDA) validation and regulations is still evolving. Expect more updates in this space soon. Until Microsoft makes those updates, customers who are subject to FDA regulations and \"good practice\" (GxP) quality regulations are exempt from the PQU process. Customers who are subject to these regulations and don't have an exemption must open a support ticket and provide justification that's related to the regulatory requirement for FDA/GxP to receive an exemption for their Lifecycle Services projects. If Microsoft already confirmed an exemption for these customers, no further action is required at this time. For more information about FDA and GxP regulations, see "
+                },
+                {
+                  "text": "Microsoft Azure GxP Offering",
+                  "href": "https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-gxp"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "whats-the-guidance-for-customers-who-are-subject-to-sarbanes-oxley-sox-requirements",
+          "anchor": "whats-the-guidance-for-customers-who-are-subject-to-sarbanes-oxley-sox-requirements",
+          "aliases": [],
+          "title": "What's the guidance for customers who are subject to Sarbanes-Oxley (SOX) requirements?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#whats-the-guidance-for-customers-who-are-subject-to-sarbanes-oxley-sox-requirements",
+          "text_sha256": "615566bcf3731d06ec9b22009444cd255a8a1ff1d0de3efc2d490fe3d0b8e88c",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Microsoft commissions a full System and Organization Controls (SOC) 1 Type II and SOC 2 Type II examination of Dynamics 365 online services two times each year. Dynamics 365 Finance, Dynamics 365 Project Operations, Dynamics 365 Human Resources, and other Dynamics 365 online services are detailed in the "
+                },
+                {
+                  "text": "Microsoft Azure (including Dynamics 365) SOC 1 Type II report",
+                  "href": "https://servicetrust.microsoft.com/viewpage/SOC"
+                },
+                {
+                  "text": ". This report and others are available in the "
+                },
+                {
+                  "text": "Microsoft Service Trust Portal",
+                  "href": "https://servicetrust.microsoft.com/"
+                },
+                {
+                  "text": ". Customers can use the "
+                },
+                {
+                  "text": "Microsoft Azure (including Dynamics 365) SOC 1 Type II report",
+                  "href": "https://servicetrust.microsoft.com/viewpage/SOC"
+                },
+                {
+                  "text": " when they're pursuing their own financial compliance requirements, such as Sarbanes-Oxley (SOX)."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "which-versions-of-service-updates-are-supported-for-pqus",
+          "anchor": "which-versions-of-service-updates-are-supported-for-pqus",
+          "aliases": [],
+          "title": "Which versions of service updates are supported for PQUs?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#which-versions-of-service-updates-are-supported-for-pqus",
+          "text_sha256": "fed34f333925444094e5517030cdd24dd581fc5fe9adc6e2449a3e7a21bf5c1d",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "The PQU process includes all environments on a supported version."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "typically-finance-and-operations-apps-deployments-that-include-retail-components-require-more-work-and-retail-modern-point-of-sale-mpos-must-be-redeployed-how-do-these-pqus-affect-the-retail-sdk",
+          "anchor": "typically-finance-and-operations-apps-deployments-that-include-retail-components-require-more-work-and-retail-modern-point-of-sale-mpos-must-be-redeployed-how-do-these-pqus-affect-the-retail-sdk",
+          "aliases": [],
+          "title": "Typically, finance and operations apps deployments that include Retail components require more work, and Retail Modern Point of Sale (MPOS) must be redeployed. How do these PQUs affect the Retail SDK?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#typically-finance-and-operations-apps-deployments-that-include-retail-components-require-more-work-and-retail-modern-point-of-sale-mpos-must-be-redeployed-how-do-these-pqus-affect-the-retail-sdk",
+          "text_sha256": "2e4fff7d12df0904a6b7009d11da18d531ef7e8db6d8d559f78cf34779d6db7a",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Because the nature of the hotfix itself doesn't change in the PQU payload, you don't currently anticipate any additional impact on Retail components."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "are-pqus-applied-to-customer-managed-environments-also-known-as-cloud-hosted-environments",
+          "anchor": "are-pqus-applied-to-customer-managed-environments-also-known-as-cloud-hosted-environments",
+          "aliases": [],
+          "title": "Are PQUs applied to customer-managed environments (also known as cloud-hosted environments)?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#are-pqus-applied-to-customer-managed-environments-also-known-as-cloud-hosted-environments",
+          "text_sha256": "387369e9f31d67e4e0ae7e031939846fffc2c2ab9961466946da4758651be095",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Customer-managed environments are out of scope for PQUs, because they're outside the purview of Microsoft."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "are-there-any-integration-issues-with-dataverse",
+          "anchor": "are-there-any-integration-issues-with-dataverse",
+          "aliases": [],
+          "title": "Are there any integration issues with Dataverse?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#are-there-any-integration-issues-with-dataverse",
+          "text_sha256": "2ac922689b6f3ea315b1119e58bfcebf70ad0a2b5d2a8b8b0c264fd0a92248dd",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "There are no known integration issues for the use of PQUs with Dataverse."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "whats-the-purpose-of-station-1-or-the-first-release-program-for-pqus",
+          "anchor": "whats-the-purpose-of-station-1-or-the-first-release-program-for-pqus",
+          "aliases": [],
+          "title": "What's the purpose of Station 1 or the First Release Program for PQUs?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#whats-the-purpose-of-station-1-or-the-first-release-program-for-pqus",
+          "text_sha256": "a4986e0be7c06834f4e095106bbf9aa7ea00a0fddd8195ec58fae2219accf44d",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "The First Release Program (FRP) for PQUs (also known as Station 1) gives all finance and operations apps customers an opportunity to receive PQUs ahead of the other stations. This program is optional and is open to all customers. Customers can take advantage of it by signing up a sandbox environment of their choice to receive PQUs. They can then provide early feedback so that Microsoft can address it before the PQUs are rolled out to the other stations. Customers who participate in the FRP for PQUs are the first select group of customers to receive a PQU in a sandbox environment of their choice. They have the benefit of a shorter feedback cycle and fast response before the rollout to other stations."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "how-do-i-join-the-first-release-program-for-pqus",
+          "anchor": "how-do-i-join-the-first-release-program-for-pqus",
+          "aliases": [],
+          "title": "How do I join the First Release Program for PQUs?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#how-do-i-join-the-first-release-program-for-pqus",
+          "text_sha256": "5388ca1a289f1c5dc0d4d2af559b5ff12b8835cdc0b2cbf5e0c3f32c83482528",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "The program is always open to all finance and operations apps customers. Only sandbox environments qualify for selection. Anyone who has a "
+                },
+                {
+                  "text": "Project owner",
+                  "strong": true
+                },
+                {
+                  "text": " security role for the Lifecycle Services project can select a sandbox environment in the project."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "To select a sandbox environment for the FRP for PQUs, follow these steps:"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "In Lifecycle Services, select the project."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Select "
+                      },
+                      {
+                        "text": "Project Settings",
+                        "strong": true
+                      },
+                      {
+                        "text": " for the project."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "On the "
+                      },
+                      {
+                        "text": "Proactive quality update settings",
+                        "strong": true
+                      },
+                      {
+                        "text": " tab, in the drop-down list, select a sandbox environment. Then select "
+                      },
+                      {
+                        "text": "Save",
+                        "strong": true
+                      },
+                      {
+                        "text": "."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "can-customers-revert-or-change-the-selection-for-station-1",
+          "anchor": "can-customers-revert-or-change-the-selection-for-station-1",
+          "aliases": [],
+          "title": "Can customers revert or change the selection for Station 1?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#can-customers-revert-or-change-the-selection-for-station-1",
+          "text_sha256": "a2a5595732b40fb14f8255424178884b051da26267b19b5bb890f637389a4b1a",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "After a selection, you can modify it at any time. However, if a PQU is already scheduled, the new selection isn't honored for the upcoming PQU. The selection is honored for subsequent PQUs."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "what-does-microsoft-expect-from-customers-who-participate-in-the-first-release-program-for-pqus",
+          "anchor": "what-does-microsoft-expect-from-customers-who-participate-in-the-first-release-program-for-pqus",
+          "aliases": [],
+          "title": "What does Microsoft expect from customers who participate in the First Release Program for PQUs?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#what-does-microsoft-expect-from-customers-who-participate-in-the-first-release-program-for-pqus",
+          "text_sha256": "048ac3556d589183f9712667d859ac6ed672cc11fdf1f19dae1e527af8a9d0fd",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Participants provide feedback about the PQU and receive direct support from Microsoft Dynamics product teams for any problems that the PQUs encounter."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "If a critical problem is found, participants might have to take an additional PQU on short notice."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "Participants shouldn't delay or pause a PQU on the sandbox environment that they selected to receive a PQU in Station 1 or the FRP."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "runs": [
+                      {
+                        "text": "If there's a critical problem, participants should open a support ticket with Microsoft Support to get faster response and action."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "how-soon-does-a-sandbox-environment-receive-a-pqu-after-its-selected-for-station-1",
+          "anchor": "how-soon-does-a-sandbox-environment-receive-a-pqu-after-its-selected-for-station-1",
+          "aliases": [],
+          "title": "How soon does a sandbox environment receive a PQU after it's selected for Station 1?",
+          "level": 3,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#how-soon-does-a-sandbox-environment-receive-a-pqu-after-its-selected-for-station-1",
+          "text_sha256": "55542c9d3fa36f7f4750c7c6583f7b11131e4759b60fe38e66134b6b736d7f6f",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "To learn when the group of sandbox environments in the FRP receive a PQU, see the "
+                },
+                {
+                  "text": "release schedule",
+                  "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule"
+                },
+                {
+                  "text": " for Station 1."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "more-information",
+          "anchor": "more-information",
+          "aliases": [],
+          "title": "More information",
+          "level": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq#more-information",
+          "text_sha256": "73850b5737863c279fd4105c5c5a90a8969301079a077329d00a0c6f4ffbb2c4",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "If you have a question that isn't covered in this article, or if you need clarification about any answer in this article, open a support case."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-faq.md",
+      "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+      "sha256": "666baea3e842976ad09e5869e6abb75df48863df193f1219069a69a070c98558",
+      "markdown_date": "2026-08-10",
+      "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-faq.md"
+    }
+  ]
+}

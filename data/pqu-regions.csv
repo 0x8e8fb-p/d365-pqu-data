@@ -1,32 +1,32 @@
-station,station_label,region,is_region
-1,Station 1,Only for opted-in environments,false
-2,Station 2,Canada Central,true
-2,Station 2,Canada East,true
-2,Station 2,France Central,true
-2,Station 2,India Central,true
-2,Station 2,Norway East,true
-2,Station 2,Switzerland West,true
-3,Station 3,Australia East,true
-3,Station 3,Australia South East,true
-3,Station 3,France South,true
-3,Station 3,India South,true
-3,Station 3,Japan East,true
-3,Station 3,Norway West,true
-3,Station 3,South Africa North,true
-3,Station 3,South East Asia,true
-3,Station 3,Switzerland North,true
-3,Station 3,UAE North,true
-3,Station 3,UK South,true
-4,Station 4,Brazil South,true
-4,Station 4,East Asia,true
-4,Station 4,East US,true
-4,Station 4,Japan West,true
-4,Station 4,North Europe,true
-4,Station 4,UAE Central,true
-4,Station 4,UK West,true
-5,Station 5,Central US,true
-5,Station 5,West Europe,true
-5,Station 5,West US,true
-6,Station 6,China,true
-6,Station 6,DoD,true
-6,Station 6,Government Community Cloud,true
+station,station_label,region,is_region,maintenance_geo
+1,Station 1,Only for opted-in environments,false,
+2,Station 2,Canada Central,true,Canada
+2,Station 2,Canada East,true,Canada
+2,Station 2,France Central,true,France
+2,Station 2,India Central,true,India
+2,Station 2,Norway East,true,Norway
+2,Station 2,Switzerland West,true,Switzerland
+3,Station 3,Australia East,true,Australia
+3,Station 3,Australia South East,true,Australia
+3,Station 3,France South,true,France
+3,Station 3,India South,true,India
+3,Station 3,Japan East,true,Japan
+3,Station 3,Norway West,true,Norway
+3,Station 3,South Africa North,true,South Africa
+3,Station 3,South East Asia,true,Asia
+3,Station 3,Switzerland North,true,Switzerland
+3,Station 3,UAE North,true,United Arab Emirates
+3,Station 3,UK South,true,United Kingdom
+4,Station 4,Brazil South,true,Brazil
+4,Station 4,East Asia,true,Asia
+4,Station 4,East US,true,United States
+4,Station 4,Japan West,true,Japan
+4,Station 4,North Europe,true,Europe
+4,Station 4,UAE Central,true,United Arab Emirates
+4,Station 4,UK West,true,United Kingdom
+5,Station 5,Central US,true,United States
+5,Station 5,West Europe,true,Europe
+5,Station 5,West US,true,United States
+6,Station 6,China,true,China
+6,Station 6,DoD,true,
+6,Station 6,Government Community Cloud,true,

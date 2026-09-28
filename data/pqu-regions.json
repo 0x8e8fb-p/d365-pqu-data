@@ -1,7 +1,7 @@
 {
   "dataset": "d365-finops-pqu",
-  "schema_version": "1.0.0",
-  "generated_at": "2026-09-25T21:34:10.649390Z",
+  "schema_version": "1.1.0",
+  "generated_at": "2026-09-28T04:01:44.646801Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
@@ -20,187 +20,218 @@
       "station": 1,
       "station_label": "Station 1",
       "region": "Only for opted-in environments",
-      "is_region": false
+      "is_region": false,
+      "maintenance_geo": null
     },
     {
       "station": 2,
       "station_label": "Station 2",
       "region": "Canada Central",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Canada"
     },
     {
       "station": 2,
       "station_label": "Station 2",
       "region": "Canada East",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Canada"
     },
     {
       "station": 2,
       "station_label": "Station 2",
       "region": "France Central",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "France"
     },
     {
       "station": 2,
       "station_label": "Station 2",
       "region": "India Central",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "India"
     },
     {
       "station": 2,
       "station_label": "Station 2",
       "region": "Norway East",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Norway"
     },
     {
       "station": 2,
       "station_label": "Station 2",
       "region": "Switzerland West",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Switzerland"
     },
     {
       "station": 3,
       "station_label": "Station 3",
       "region": "Australia East",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Australia"
     },
     {
       "station": 3,
       "station_label": "Station 3",
       "region": "Australia South East",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Australia"
     },
     {
       "station": 3,
       "station_label": "Station 3",
       "region": "France South",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "France"
     },
     {
       "station": 3,
       "station_label": "Station 3",
       "region": "India South",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "India"
     },
     {
       "station": 3,
       "station_label": "Station 3",
       "region": "Japan East",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Japan"
     },
     {
       "station": 3,
       "station_label": "Station 3",
       "region": "Norway West",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Norway"
     },
     {
       "station": 3,
       "station_label": "Station 3",
       "region": "South Africa North",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "South Africa"
     },
     {
       "station": 3,
       "station_label": "Station 3",
       "region": "South East Asia",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Asia"
     },
     {
       "station": 3,
       "station_label": "Station 3",
       "region": "Switzerland North",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Switzerland"
     },
     {
       "station": 3,
       "station_label": "Station 3",
       "region": "UAE North",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "United Arab Emirates"
     },
     {
       "station": 3,
       "station_label": "Station 3",
       "region": "UK South",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "United Kingdom"
     },
     {
       "station": 4,
       "station_label": "Station 4",
       "region": "Brazil South",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Brazil"
     },
     {
       "station": 4,
       "station_label": "Station 4",
       "region": "East Asia",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Asia"
     },
     {
       "station": 4,
       "station_label": "Station 4",
       "region": "East US",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "United States"
     },
     {
       "station": 4,
       "station_label": "Station 4",
       "region": "Japan West",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Japan"
     },
     {
       "station": 4,
       "station_label": "Station 4",
       "region": "North Europe",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Europe"
     },
     {
       "station": 4,
       "station_label": "Station 4",
       "region": "UAE Central",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "United Arab Emirates"
     },
     {
       "station": 4,
       "station_label": "Station 4",
       "region": "UK West",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "United Kingdom"
     },
     {
       "station": 5,
       "station_label": "Station 5",
       "region": "Central US",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "United States"
     },
     {
       "station": 5,
       "station_label": "Station 5",
       "region": "West Europe",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "Europe"
     },
     {
       "station": 5,
       "station_label": "Station 5",
       "region": "West US",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "United States"
     },
     {
       "station": 6,
       "station_label": "Station 6",
       "region": "China",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": "China"
     },
     {
       "station": 6,
       "station_label": "Station 6",
       "region": "DoD",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": null
     },
     {
       "station": 6,
       "station_label": "Station 6",
       "region": "Government Community Cloud",
-      "is_region": true
+      "is_region": true,
+      "maintenance_geo": null
     }
   ]
 }

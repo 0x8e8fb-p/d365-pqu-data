@@ -1,0 +1,16 @@
+geo,start_time_utc,days,duration_hours,duration_text,source_commit,source_url
+Australia,13:00,"[""Friday"",""Saturday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+Asia,16:00,"[""Friday"",""Saturday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+Brazil,04:00,"[""Saturday"",""Sunday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+Canada,04:00,"[""Saturday"",""Sunday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+China,16:00,"[""Friday"",""Saturday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+Europe,22:00,"[""Friday"",""Saturday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+France,22:00,"[""Friday"",""Saturday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+India,18:30,"[""Friday"",""Saturday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+Japan,16:00,"[""Friday"",""Saturday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+Norway,22:00,"[""Friday"",""Saturday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+South Africa,22:00,"[""Friday"",""Saturday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+Switzerland,22:00,"[""Friday"",""Saturday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+United Arab Emirates,18:00,"[""Friday"",""Saturday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+United Kingdom,22:00,"[""Friday"",""Saturday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice
+United States,04:00,"[""Saturday"",""Sunday""]",6,Six hours,d21e69eecf3c47e3a74d992d6e2032b6bd570bb4,https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice

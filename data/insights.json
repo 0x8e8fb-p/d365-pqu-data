@@ -1,0 +1,828 @@
+{
+  "dataset": "d365-finops-pqu",
+  "schema_version": "1.1.0",
+  "generated_at": "2026-09-28T04:01:44.646801Z",
+  "source": {
+    "publisher": "Microsoft",
+    "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+    "branch": "main",
+    "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+    "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "markdown_date": "2026-09-21",
+    "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
+    "retrieved_at": "2026-09-25T21:34:10.649390Z"
+  },
+  "categories": [
+    {
+      "id": "trains",
+      "title": "Train rhythm",
+      "group_label": "Version"
+    },
+    {
+      "id": "stations",
+      "title": "Station rollout",
+      "group_label": "Station"
+    },
+    {
+      "id": "service-updates",
+      "title": "Service update rhythm",
+      "group_label": "Service updates"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "train-cadence",
+      "category": "trains",
+      "title": "Days between train starts",
+      "unit": "days",
+      "statistic": "median",
+      "sample_unit": "intervals",
+      "sources": [
+        "schedule"
+      ],
+      "method": "The trains of each application version are put in train-number order. For each pair of consecutive train numbers, the days between their published start dates are counted, and the figure is the median. A train whose start date has a source warning is left out, together with the intervals next to it.",
+      "excluded": []
+    },
+    {
+      "id": "cutoff-to-start",
+      "category": "trains",
+      "title": "Change cutoff to train start",
+      "unit": "days",
+      "statistic": "median",
+      "sample_unit": "trains",
+      "sources": [
+        "schedule"
+      ],
+      "method": "For each train, the days from its published change cutoff date to its published start date. The figure is the median per application version. Trains with a source warning on either date are left out.",
+      "excluded": []
+    },
+    {
+      "id": "train-length",
+      "category": "trains",
+      "title": "Train length",
+      "unit": "days",
+      "statistic": "median",
+      "sample_unit": "trains",
+      "sources": [
+        "schedule"
+      ],
+      "method": "Calendar days from each train's published start date to its published end date, counting both dates (the same count as “Day X of Y” on the Trains tab). The figure is the median per application version. Trains with a source warning on either date are left out.",
+      "excluded": []
+    },
+    {
+      "id": "trains-by-status",
+      "category": "trains",
+      "title": "Trains in the schedule",
+      "unit": "trains",
+      "statistic": "count",
+      "sample_unit": null,
+      "sources": [
+        "schedule"
+      ],
+      "method": "The number of trains Microsoft lists for each application version, broken down by the status Microsoft publishes.",
+      "excluded": []
+    },
+    {
+      "id": "station-offset",
+      "category": "stations",
+      "title": "Sandbox start after Station 1",
+      "unit": "days",
+      "statistic": "median",
+      "sample_unit": "trains",
+      "sources": [
+        "schedule"
+      ],
+      "method": "For each train with a detailed station schedule, the days from Station 1's sandbox start to each other station's sandbox start. The figure is the median per station. Microsoft's article only lists the most recent detailed schedules, so the sample is small.",
+      "excluded": []
+    },
+    {
+      "id": "sandbox-to-production",
+      "category": "stations",
+      "title": "Production start after sandbox start",
+      "unit": "days",
+      "statistic": "median",
+      "sample_unit": "trains",
+      "sources": [
+        "schedule"
+      ],
+      "method": "For each station window with both a sandbox and a production range, the days from the sandbox start to the production start. The figure is the median per station and across all stations. Station 1 has no production range.",
+      "excluded": []
+    },
+    {
+      "id": "regions-per-station",
+      "category": "stations",
+      "title": "Azure regions",
+      "unit": "regions",
+      "statistic": "count",
+      "sample_unit": null,
+      "sources": [
+        "schedule"
+      ],
+      "method": "The number of Azure regions Microsoft maps to each station.",
+      "excluded": [
+        {
+          "item": "Station 1",
+          "reason": "Only for opted-in environments"
+        }
+      ]
+    },
+    {
+      "id": "service-update-interval",
+      "category": "service-updates",
+      "title": "Days between general availability dates",
+      "unit": "days",
+      "statistic": "median",
+      "sample_unit": "intervals",
+      "sources": [
+        "service_updates"
+      ],
+      "method": "Service updates are put in version order. For each pair of consecutive versions, the days between their general availability dates are counted, and the figure is the median.",
+      "excluded": []
+    },
+    {
+      "id": "preview-to-ga",
+      "category": "service-updates",
+      "title": "Preview to general availability",
+      "unit": "days",
+      "statistic": "median",
+      "sample_unit": "service updates",
+      "sources": [
+        "service_updates"
+      ],
+      "method": "For each service update, the days from preview availability to general availability. The figure is the median.",
+      "excluded": []
+    },
+    {
+      "id": "ga-to-first-autoupdate",
+      "category": "service-updates",
+      "title": "General availability to first autoupdate",
+      "unit": "days",
+      "statistic": "median",
+      "sample_unit": "service updates",
+      "sources": [
+        "service_updates"
+      ],
+      "method": "For each service update, the days from general availability to the first production autoupdate start date. The figure is the median.",
+      "excluded": []
+    },
+    {
+      "id": "first-to-second-autoupdate",
+      "category": "service-updates",
+      "title": "First to second autoupdate",
+      "unit": "days",
+      "statistic": "median",
+      "sample_unit": "service updates",
+      "sources": [
+        "service_updates"
+      ],
+      "method": "For each service update, the days from the first to the second production autoupdate start date. The figure is the median.",
+      "excluded": []
+    },
+    {
+      "id": "ga-to-end-of-service",
+      "category": "service-updates",
+      "title": "General availability to end of service",
+      "unit": "days",
+      "statistic": "median",
+      "sample_unit": "service updates",
+      "sources": [
+        "service_updates"
+      ],
+      "method": "For each service update, the days from general availability to end of service. The figure is the median.",
+      "excluded": []
+    }
+  ],
+  "highlights": [
+    "train-cadence:10.0.49",
+    "sandbox-to-production:all",
+    "service-update-interval:all"
+  ],
+  "count": 37,
+  "records": [
+    {
+      "id": "train-cadence:10.0.46",
+      "metric": "train-cadence",
+      "group": "10.0.46",
+      "label": "10.0.46",
+      "value": 28,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 6,
+      "min": 28,
+      "max": 35,
+      "breakdown": null,
+      "excluded": [
+        {
+          "item": "10.0.46-PQU-1",
+          "reason": "Source warning: Change cutoff 2026-02-04 and train start 2025-02-09 are in different years"
+        }
+      ],
+      "summary": "10.0.46: a new train starts every 28 days, or 4 weeks (median of 6 intervals; range 28–35 days)."
+    },
+    {
+      "id": "train-cadence:10.0.47",
+      "metric": "train-cadence",
+      "group": "10.0.47",
+      "label": "10.0.47",
+      "value": 14,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 16,
+      "min": 14,
+      "max": 21,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "10.0.47: a new train starts every 14 days, or 2 weeks (median of 16 intervals; range 14–21 days)."
+    },
+    {
+      "id": "train-cadence:10.0.48",
+      "metric": "train-cadence",
+      "group": "10.0.48",
+      "label": "10.0.48",
+      "value": 14,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 16,
+      "min": 14,
+      "max": 21,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "10.0.48: a new train starts every 14 days, or 2 weeks (median of 16 intervals; range 14–21 days)."
+    },
+    {
+      "id": "train-cadence:10.0.49",
+      "metric": "train-cadence",
+      "group": "10.0.49",
+      "label": "10.0.49",
+      "value": 14,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 16,
+      "min": 14,
+      "max": 21,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "10.0.49: a new train starts every 14 days, or 2 weeks (median of 16 intervals; range 14–21 days)."
+    },
+    {
+      "id": "cutoff-to-start:10.0.46",
+      "metric": "cutoff-to-start",
+      "group": "10.0.46",
+      "label": "10.0.46",
+      "value": 5,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 7,
+      "min": 5,
+      "max": 10,
+      "breakdown": null,
+      "excluded": [
+        {
+          "item": "10.0.46-PQU-1",
+          "reason": "Source warning: Change cutoff 2026-02-04 and train start 2025-02-09 are in different years"
+        }
+      ],
+      "summary": "10.0.46: the change cutoff is 5 days before the train starts (median of 7 trains; range 5–10 days)."
+    },
+    {
+      "id": "cutoff-to-start:10.0.47",
+      "metric": "cutoff-to-start",
+      "group": "10.0.47",
+      "label": "10.0.47",
+      "value": 0,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 17,
+      "min": 0,
+      "max": 0,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "10.0.47: the change cutoff falls on the train's start date (median of 17 trains)."
+    },
+    {
+      "id": "cutoff-to-start:10.0.48",
+      "metric": "cutoff-to-start",
+      "group": "10.0.48",
+      "label": "10.0.48",
+      "value": 0,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 17,
+      "min": 0,
+      "max": 0,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "10.0.48: the change cutoff falls on the train's start date (median of 17 trains)."
+    },
+    {
+      "id": "cutoff-to-start:10.0.49",
+      "metric": "cutoff-to-start",
+      "group": "10.0.49",
+      "label": "10.0.49",
+      "value": 0,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 17,
+      "min": 0,
+      "max": 0,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "10.0.49: the change cutoff falls on the train's start date (median of 17 trains)."
+    },
+    {
+      "id": "train-length:10.0.46",
+      "metric": "train-length",
+      "group": "10.0.46",
+      "label": "10.0.46",
+      "value": 34,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 7,
+      "min": 34,
+      "max": 35,
+      "breakdown": null,
+      "excluded": [
+        {
+          "item": "10.0.46-PQU-1",
+          "reason": "Source warning: Change cutoff 2026-02-04 and train start 2025-02-09 are in different years"
+        }
+      ],
+      "summary": "10.0.46: a train spans 34 days from its start date to its end date, both included (median of 7 trains; range 34–35 days)."
+    },
+    {
+      "id": "train-length:10.0.47",
+      "metric": "train-length",
+      "group": "10.0.47",
+      "label": "10.0.47",
+      "value": 25,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 17,
+      "min": 25,
+      "max": 25,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "10.0.47: a train spans 25 days from its start date to its end date, both included (median of 17 trains)."
+    },
+    {
+      "id": "train-length:10.0.48",
+      "metric": "train-length",
+      "group": "10.0.48",
+      "label": "10.0.48",
+      "value": 25,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 17,
+      "min": 25,
+      "max": 25,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "10.0.48: a train spans 25 days from its start date to its end date, both included (median of 17 trains)."
+    },
+    {
+      "id": "train-length:10.0.49",
+      "metric": "train-length",
+      "group": "10.0.49",
+      "label": "10.0.49",
+      "value": 25,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 17,
+      "min": 25,
+      "max": 25,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "10.0.49: a train spans 25 days from its start date to its end date, both included (median of 17 trains)."
+    },
+    {
+      "id": "trains-by-status:10.0.46",
+      "metric": "trains-by-status",
+      "group": "10.0.46",
+      "label": "10.0.46",
+      "value": 8,
+      "unit": "trains",
+      "statistic": "count",
+      "sample_size": 8,
+      "min": null,
+      "max": null,
+      "breakdown": {
+        "In-Progress": 1,
+        "Completed": 7
+      },
+      "excluded": [],
+      "summary": "10.0.46: 8 trains: 1 In-Progress, 7 Completed."
+    },
+    {
+      "id": "trains-by-status:10.0.47",
+      "metric": "trains-by-status",
+      "group": "10.0.47",
+      "label": "10.0.47",
+      "value": 17,
+      "unit": "trains",
+      "statistic": "count",
+      "sample_size": 17,
+      "min": null,
+      "max": null,
+      "breakdown": {
+        "In-Progress": 2,
+        "Not Started": 4,
+        "Completed": 10,
+        "Canceled": 1
+      },
+      "excluded": [],
+      "summary": "10.0.47: 17 trains: 2 In-Progress, 4 Not Started, 10 Completed, 1 Canceled."
+    },
+    {
+      "id": "trains-by-status:10.0.48",
+      "metric": "trains-by-status",
+      "group": "10.0.48",
+      "label": "10.0.48",
+      "value": 17,
+      "unit": "trains",
+      "statistic": "count",
+      "sample_size": 17,
+      "min": null,
+      "max": null,
+      "breakdown": {
+        "In-Progress": 2,
+        "Not Started": 11,
+        "Completed": 4
+      },
+      "excluded": [],
+      "summary": "10.0.48: 17 trains: 2 In-Progress, 11 Not Started, 4 Completed."
+    },
+    {
+      "id": "trains-by-status:10.0.49",
+      "metric": "trains-by-status",
+      "group": "10.0.49",
+      "label": "10.0.49",
+      "value": 17,
+      "unit": "trains",
+      "statistic": "count",
+      "sample_size": 17,
+      "min": null,
+      "max": null,
+      "breakdown": {
+        "Not Started": 17
+      },
+      "excluded": [],
+      "summary": "10.0.49: 17 trains: 17 Not Started."
+    },
+    {
+      "id": "station-offset:station-2",
+      "metric": "station-offset",
+      "group": "station-2",
+      "label": "Station 2",
+      "value": 5,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 5,
+      "min": 5,
+      "max": 7,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 2: sandbox updates start 5 days after Station 1 (median of 5 trains; range 5–7 days)."
+    },
+    {
+      "id": "station-offset:station-3",
+      "metric": "station-offset",
+      "group": "station-3",
+      "label": "Station 3",
+      "value": 5,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 5,
+      "min": 5,
+      "max": 8,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 3: sandbox updates start 5 days after Station 1 (median of 5 trains; range 5–8 days)."
+    },
+    {
+      "id": "station-offset:station-4",
+      "metric": "station-offset",
+      "group": "station-4",
+      "label": "Station 4",
+      "value": 12,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 5,
+      "min": 12,
+      "max": 14,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 4: sandbox updates start 12 days after Station 1 (median of 5 trains; range 12–14 days)."
+    },
+    {
+      "id": "station-offset:station-5",
+      "metric": "station-offset",
+      "group": "station-5",
+      "label": "Station 5",
+      "value": 19,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 5,
+      "min": 19,
+      "max": 21,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 5: sandbox updates start 19 days after Station 1 (median of 5 trains; range 19–21 days)."
+    },
+    {
+      "id": "station-offset:station-6",
+      "metric": "station-offset",
+      "group": "station-6",
+      "label": "Station 6",
+      "value": 19,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 5,
+      "min": 19,
+      "max": 22,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 6: sandbox updates start 19 days after Station 1 (median of 5 trains; range 19–22 days)."
+    },
+    {
+      "id": "sandbox-to-production:station-2",
+      "metric": "sandbox-to-production",
+      "group": "station-2",
+      "label": "Station 2",
+      "value": 5,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 5,
+      "min": 5,
+      "max": 12,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 2: production updates start 5 days after sandbox updates (median of 5 trains; range 5–12 days)."
+    },
+    {
+      "id": "sandbox-to-production:station-3",
+      "metric": "sandbox-to-production",
+      "group": "station-3",
+      "label": "Station 3",
+      "value": 5,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 5,
+      "min": 5,
+      "max": 11,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 3: production updates start 5 days after sandbox updates (median of 5 trains; range 5–11 days)."
+    },
+    {
+      "id": "sandbox-to-production:station-4",
+      "metric": "sandbox-to-production",
+      "group": "station-4",
+      "label": "Station 4",
+      "value": 5,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 5,
+      "min": 5,
+      "max": 12,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 4: production updates start 5 days after sandbox updates (median of 5 trains; range 5–12 days)."
+    },
+    {
+      "id": "sandbox-to-production:station-5",
+      "metric": "sandbox-to-production",
+      "group": "station-5",
+      "label": "Station 5",
+      "value": 5,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 5,
+      "min": 5,
+      "max": 12,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 5: production updates start 5 days after sandbox updates (median of 5 trains; range 5–12 days)."
+    },
+    {
+      "id": "sandbox-to-production:station-6",
+      "metric": "sandbox-to-production",
+      "group": "station-6",
+      "label": "Station 6",
+      "value": 5,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 5,
+      "min": 5,
+      "max": 11,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 6: production updates start 5 days after sandbox updates (median of 5 trains; range 5–11 days)."
+    },
+    {
+      "id": "sandbox-to-production:all",
+      "metric": "sandbox-to-production",
+      "group": "all",
+      "label": "All stations",
+      "value": 5,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 25,
+      "min": 5,
+      "max": 12,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Production updates start a median of 5 days after sandbox updates (25 station windows; range 5–12 days)."
+    },
+    {
+      "id": "regions-per-station:station-2",
+      "metric": "regions-per-station",
+      "group": "station-2",
+      "label": "Station 2",
+      "value": 6,
+      "unit": "regions",
+      "statistic": "count",
+      "sample_size": 6,
+      "min": null,
+      "max": null,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 2: 6 Azure regions."
+    },
+    {
+      "id": "regions-per-station:station-3",
+      "metric": "regions-per-station",
+      "group": "station-3",
+      "label": "Station 3",
+      "value": 11,
+      "unit": "regions",
+      "statistic": "count",
+      "sample_size": 11,
+      "min": null,
+      "max": null,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 3: 11 Azure regions."
+    },
+    {
+      "id": "regions-per-station:station-4",
+      "metric": "regions-per-station",
+      "group": "station-4",
+      "label": "Station 4",
+      "value": 7,
+      "unit": "regions",
+      "statistic": "count",
+      "sample_size": 7,
+      "min": null,
+      "max": null,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 4: 7 Azure regions."
+    },
+    {
+      "id": "regions-per-station:station-5",
+      "metric": "regions-per-station",
+      "group": "station-5",
+      "label": "Station 5",
+      "value": 3,
+      "unit": "regions",
+      "statistic": "count",
+      "sample_size": 3,
+      "min": null,
+      "max": null,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 5: 3 Azure regions."
+    },
+    {
+      "id": "regions-per-station:station-6",
+      "metric": "regions-per-station",
+      "group": "station-6",
+      "label": "Station 6",
+      "value": 3,
+      "unit": "regions",
+      "statistic": "count",
+      "sample_size": 3,
+      "min": null,
+      "max": null,
+      "breakdown": null,
+      "excluded": [],
+      "summary": "Station 6: 3 Azure regions."
+    },
+    {
+      "id": "service-update-interval:all",
+      "metric": "service-update-interval",
+      "group": "all",
+      "label": "All service updates",
+      "value": 91,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 6,
+      "min": 77,
+      "max": 105,
+      "breakdown": {
+        "10.0.45 to 10.0.46": 105,
+        "10.0.46 to 10.0.47": 77,
+        "10.0.47 to 10.0.48": 84,
+        "10.0.48 to 10.0.49": 98,
+        "10.0.49 to 10.0.50": 102,
+        "10.0.50 to 10.0.51": 80
+      },
+      "excluded": [],
+      "summary": "A new service update becomes generally available every 91 days, or 13 weeks (median of 6 intervals; range 77–105 days)."
+    },
+    {
+      "id": "preview-to-ga:all",
+      "metric": "preview-to-ga",
+      "group": "all",
+      "label": "All service updates",
+      "value": 46,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 7,
+      "min": 42,
+      "max": 63,
+      "breakdown": {
+        "10.0.45": 46,
+        "10.0.46": 63,
+        "10.0.47": 46,
+        "10.0.48": 42,
+        "10.0.49": 46,
+        "10.0.50": 60,
+        "10.0.51": 46
+      },
+      "excluded": [],
+      "summary": "General availability comes 46 days after preview availability (median of 7 service updates; range 42–63 days)."
+    },
+    {
+      "id": "ga-to-first-autoupdate:all",
+      "metric": "ga-to-first-autoupdate",
+      "group": "all",
+      "label": "All service updates",
+      "value": 21,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 7,
+      "min": 21,
+      "max": 40,
+      "breakdown": {
+        "10.0.45": 21,
+        "10.0.46": 37,
+        "10.0.47": 21,
+        "10.0.48": 28,
+        "10.0.49": 21,
+        "10.0.50": 40,
+        "10.0.51": 21
+      },
+      "excluded": [],
+      "summary": "The first production autoupdate comes 21 days, or 3 weeks, after general availability (median of 7 service updates; range 21–40 days)."
+    },
+    {
+      "id": "first-to-second-autoupdate:all",
+      "metric": "first-to-second-autoupdate",
+      "group": "all",
+      "label": "All service updates",
+      "value": 28,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 7,
+      "min": 28,
+      "max": 30,
+      "breakdown": {
+        "10.0.45": 28,
+        "10.0.46": 28,
+        "10.0.47": 28,
+        "10.0.48": 28,
+        "10.0.49": 30,
+        "10.0.50": 28,
+        "10.0.51": 28
+      },
+      "excluded": [],
+      "summary": "The second autoupdate window comes 28 days, or 4 weeks, after the first (median of 7 service updates; range 28–30 days)."
+    },
+    {
+      "id": "ga-to-end-of-service:all",
+      "metric": "ga-to-end-of-service",
+      "group": "all",
+      "label": "All service updates",
+      "value": 252,
+      "unit": "days",
+      "statistic": "median",
+      "sample_size": 7,
+      "min": 238,
+      "max": 256,
+      "breakdown": {
+        "10.0.45": 252,
+        "10.0.46": 238,
+        "10.0.47": 252,
+        "10.0.48": 256,
+        "10.0.49": 252,
+        "10.0.50": 241,
+        "10.0.51": 252
+      },
+      "excluded": [],
+      "summary": "End of service comes 252 days, or 36 weeks, after general availability (median of 7 service updates; range 238–256 days)."
+    }
+  ]
+}

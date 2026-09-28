@@ -1,13 +1,15 @@
 {
   "dataset": "d365-finops-pqu",
-  "schema_version": "1.0.0",
-  "pipeline_revision": "1.0.0",
-  "generated_at": "2026-09-25T21:34:10.649390Z",
+  "schema_version": "1.1.0",
+  "pipeline_revision": "2.0.0",
+  "generated_at": "2026-09-28T04:01:44.646801Z",
   "first_published_at": "2026-09-24T12:00:00Z",
-  "last_published_at": "2026-09-25T21:34:10.649390Z",
+  "last_published_at": "2026-09-28T04:01:44.646801Z",
   "record_count": 59,
   "station_schedule_count": 30,
   "region_count": 31,
+  "service_update_count": 7,
+  "maintenance_window_count": 15,
   "status_counts": {
     "Completed": 21,
     "In-Progress": 5,
@@ -17,6 +19,7 @@
   "current_count": 5,
   "upcoming_count": 32,
   "latest_pqu_id": "10.0.48-PQU-6",
+  "check_interval_minutes": 60,
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
@@ -28,6 +31,103 @@
     "markdown_date": "2026-09-21",
     "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
     "retrieved_at": "2026-09-25T21:34:10.649390Z"
+  },
+  "sources": {
+    "schedule": {
+      "label": "Release schedule for proactive quality updates",
+      "required": true,
+      "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+      "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+      "state": "current",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "branch": "main",
+        "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+        "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+        "markdown_date": "2026-09-21",
+        "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
+        "retrieved_at": "2026-09-25T21:34:10.649390Z"
+      }
+    },
+    "service_updates": {
+      "label": "Service update availability",
+      "required": false,
+      "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases",
+      "file_path": "articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
+      "state": "current",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "branch": "main",
+        "file_path": "articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+        "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
+        "markdown_date": "2026-06-04",
+        "sha256": "7faa5cb88f216fce19c4a5292a7af0c727bb18d1a057f64e4e72b0967b2fdaf1",
+        "retrieved_at": "2026-09-28T04:01:44.646801Z"
+      }
+    },
+    "maintenance": {
+      "label": "Maintenance in self-service environments FAQ",
+      "required": false,
+      "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice",
+      "file_path": "articles/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice.md",
+      "state": "current",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "branch": "main",
+        "file_path": "articles/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice.md",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+        "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice.md",
+        "markdown_date": "2026-04-02",
+        "sha256": "42bd0d1421111af1816835a7f1a7c78028a84192e9be80de442462107855fc97",
+        "retrieved_at": "2026-09-28T04:01:44.646801Z"
+      }
+    },
+    "pqu_overview": {
+      "label": "Proactive quality updates overview",
+      "required": false,
+      "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates",
+      "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates.md",
+      "state": "current",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "branch": "main",
+        "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates.md",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+        "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates.md",
+        "markdown_date": "2026-03-26",
+        "sha256": "c9bc5f7d1468ff3f96a9ab067b0db33cf13df8c699599ee2f05d152157ec33ed",
+        "retrieved_at": "2026-09-28T04:01:44.646801Z"
+      }
+    },
+    "pqu_faq": {
+      "label": "Proactive quality updates FAQ",
+      "required": false,
+      "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq",
+      "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-faq.md",
+      "state": "current",
+      "source": {
+        "publisher": "Microsoft",
+        "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+        "branch": "main",
+        "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-faq.md",
+        "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+        "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-faq",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-faq.md",
+        "markdown_date": "2026-08-10",
+        "sha256": "666baea3e842976ad09e5869e6abb75df48863df193f1219069a69a070c98558",
+        "retrieved_at": "2026-09-28T04:01:44.646801Z"
+      }
+    }
   },
   "links": {
     "repository": "https://github.com/0x8e8fb-p/d365-pqu-data",

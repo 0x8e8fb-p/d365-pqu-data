@@ -1,7 +1,7 @@
 {
   "dataset": "d365-finops-pqu",
-  "schema_version": "1.0.0",
-  "generated_at": "2026-09-25T21:34:10.649390Z",
+  "schema_version": "1.1.0",
+  "generated_at": "2026-09-28T04:01:44.646801Z",
   "status": "warnings",
   "error_count": 0,
   "warning_count": 1,
@@ -17,7 +17,7 @@
     "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
     "retrieved_at": "2026-09-25T21:34:10.649390Z"
   },
-  "count": 1,
+  "count": 3,
   "records": [
     {
       "code": "cutoff-start-year-mismatch",
@@ -25,6 +25,20 @@
       "message": "Change cutoff 2026-02-04 and train start 2025-02-09 are in different years",
       "pqu_id": "10.0.46-PQU-1",
       "field": "change_cutoff_date"
+    },
+    {
+      "code": "maintenance-geo-unmapped",
+      "severity": "info",
+      "message": "Microsoft's planned maintenance window table does not list a geography for DoD, so no maintenance window is shown for it.",
+      "pqu_id": null,
+      "field": "region.DoD"
+    },
+    {
+      "code": "maintenance-geo-unmapped",
+      "severity": "info",
+      "message": "Microsoft's planned maintenance window table does not list a geography for Government Community Cloud, so no maintenance window is shown for it.",
+      "pqu_id": null,
+      "field": "region.Government Community Cloud"
     }
   ]
 }

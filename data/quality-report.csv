@@ -1,2 +1,4 @@
 code,severity,message,pqu_id,field
 cutoff-start-year-mismatch,warning,Change cutoff 2026-02-04 and train start 2025-02-09 are in different years,10.0.46-PQU-1,change_cutoff_date
+maintenance-geo-unmapped,info,"Microsoft's planned maintenance window table does not list a geography for DoD, so no maintenance window is shown for it.",,region.DoD
+maintenance-geo-unmapped,info,"Microsoft's planned maintenance window table does not list a geography for Government Community Cloud, so no maintenance window is shown for it.",,region.Government Community Cloud

@@ -1,0 +1,172 @@
+{
+  "dataset": "d365-finops-pqu",
+  "schema_version": "1.1.0",
+  "generated_at": "2026-09-28T04:01:44.646801Z",
+  "source_key": "maintenance",
+  "state": "current",
+  "source": {
+    "publisher": "Microsoft",
+    "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
+    "branch": "main",
+    "file_path": "articles/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice.md",
+    "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+    "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/deployment/plannedmaintenance-selfservice.md",
+    "markdown_date": "2026-04-02",
+    "sha256": "42bd0d1421111af1816835a7f1a7c78028a84192e9be80de442462107855fc97",
+    "retrieved_at": "2026-09-28T04:01:44.646801Z"
+  },
+  "count": 15,
+  "records": [
+    {
+      "geo": "Australia",
+      "start_time_utc": "13:00",
+      "days": [
+        "Friday",
+        "Saturday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "Asia",
+      "start_time_utc": "16:00",
+      "days": [
+        "Friday",
+        "Saturday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "Brazil",
+      "start_time_utc": "04:00",
+      "days": [
+        "Saturday",
+        "Sunday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "Canada",
+      "start_time_utc": "04:00",
+      "days": [
+        "Saturday",
+        "Sunday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "China",
+      "start_time_utc": "16:00",
+      "days": [
+        "Friday",
+        "Saturday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "Europe",
+      "start_time_utc": "22:00",
+      "days": [
+        "Friday",
+        "Saturday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "France",
+      "start_time_utc": "22:00",
+      "days": [
+        "Friday",
+        "Saturday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "India",
+      "start_time_utc": "18:30",
+      "days": [
+        "Friday",
+        "Saturday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "Japan",
+      "start_time_utc": "16:00",
+      "days": [
+        "Friday",
+        "Saturday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "Norway",
+      "start_time_utc": "22:00",
+      "days": [
+        "Friday",
+        "Saturday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "South Africa",
+      "start_time_utc": "22:00",
+      "days": [
+        "Friday",
+        "Saturday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "Switzerland",
+      "start_time_utc": "22:00",
+      "days": [
+        "Friday",
+        "Saturday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "United Arab Emirates",
+      "start_time_utc": "18:00",
+      "days": [
+        "Friday",
+        "Saturday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "United Kingdom",
+      "start_time_utc": "22:00",
+      "days": [
+        "Friday",
+        "Saturday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    },
+    {
+      "geo": "United States",
+      "start_time_utc": "04:00",
+      "days": [
+        "Saturday",
+        "Sunday"
+      ],
+      "duration_hours": 6,
+      "duration_text": "Six hours"
+    }
+  ]
+}
