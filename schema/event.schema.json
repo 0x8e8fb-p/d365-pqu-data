@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://0x8e8fb-p.github.io/d365-pqu-data/schemas/event.schema.json",
+  "title": "D365 PQU key dates",
+  "description": "One event per change cutoff, train, station window, and service update milestone, with dates as Microsoft publishes them. Identifiers name the event, not its date, so they stay the same when Microsoft moves a date.",
+  "type": "object",
+  "required": ["dataset", "schema_version", "generated_at", "source", "count", "records"],
+  "properties": {
+    "dataset": { "const": "d365-finops-pqu" },
+    "schema_version": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "source": { "type": "object" },
+    "count": { "type": "integer", "minimum": 0 },
+    "records": { "type": "array", "items": { "$ref": "#/$defs/event" } }
+  },
+  "$defs": {
+    "event": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "category",
+        "title",
+        "start_date",
+        "end_date",
+        "pqu_id",
+        "application_version",
+        "station",
+        "status",
+        "source_key",
+        "url",
+        "warnings"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z_]+:[A-Za-z0-9.:-]+$" },
+        "kind": {
+          "enum": [
+            "change_cutoff",
+            "train_window",
+            "sandbox_window",
+            "production_window",
+            "preview",
+            "preview_latest_update",
+            "general_availability",
+            "autoupdate_first",
+            "autoupdate_second",
+            "end_of_service"
+          ]
+        },
+        "category": { "enum": ["train", "station", "service_update"] },
+        "title": { "type": "string", "minLength": 1 },
+        "start_date": { "type": "string", "format": "date" },
+        "end_date": { "type": "string", "format": "date" },
+        "pqu_id": { "type": ["string", "null"], "pattern": "^\\d+\\.\\d+\\.\\d+-PQU-\\d+$" },
+        "application_version": { "type": ["string", "null"], "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "station": { "type": ["integer", "null"], "minimum": 1, "maximum": 6 },
+        "status": { "type": ["string", "null"] },
+        "source_key": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "pattern": "^https://" },
+        "warnings": {
+          "description": "Codes of source warnings about the dates of this event.",
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

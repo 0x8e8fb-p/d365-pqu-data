@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://0x8e8fb-p.github.io/d365-pqu-data/schemas/insights.schema.json",
+  "title": "D365 PQU calculated figures",
+  "description": "Figures calculated from Microsoft's published dates. Microsoft does not publish them. Each record states its statistic, sample size, and what was left out.",
+  "type": "object",
+  "required": ["dataset", "schema_version", "generated_at", "source", "categories", "metrics", "highlights", "count", "records"],
+  "properties": {
+    "dataset": { "const": "d365-finops-pqu" },
+    "schema_version": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "source": { "type": "object" },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "group_label"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "group_label": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "title", "unit", "statistic", "sample_unit", "sources", "method", "excluded"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "category": { "type": "string" },
+          "title": { "type": "string", "minLength": 1 },
+          "unit": { "type": "string" },
+          "statistic": { "enum": ["median", "count"] },
+          "sample_unit": { "type": ["string", "null"] },
+          "sources": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "method": { "type": "string", "minLength": 1 },
+          "excluded": { "$ref": "#/$defs/excluded" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "highlights": { "type": "array", "items": { "type": "string" } },
+    "count": { "type": "integer", "minimum": 0 },
+    "records": { "type": "array", "items": { "$ref": "#/$defs/record" } }
+  },
+  "$defs": {
+    "excluded": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item", "reason"],
+        "properties": {
+          "item": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "record": {
+      "type": "object",
+      "required": ["id", "metric", "group", "label", "value", "unit", "statistic", "sample_size", "min", "max", "breakdown", "excluded", "summary"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "metric": { "type": "string", "minLength": 1 },
+        "group": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "value": { "type": "number" },
+        "unit": { "type": "string" },
+        "statistic": { "enum": ["median", "count"] },
+        "sample_size": { "type": "integer", "minimum": 0 },
+        "min": { "type": ["number", "null"] },
+        "max": { "type": ["number", "null"] },
+        "breakdown": {
+          "description": "Per-item values behind the figure (days per service update, trains per status), or null.",
+          "type": ["object", "null"],
+          "additionalProperties": { "type": "number" }
+        },
+        "excluded": { "$ref": "#/$defs/excluded" },
+        "summary": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

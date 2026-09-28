@@ -2,6 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' '__INLINE_SCRIPT_HASHES__'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>D365 PQU Console · Finance &amp; Operations updates</title>
   <meta name="description" content="Dark-first operational console for Microsoft Dynamics 365 Finance and Operations proactive quality updates, with JSON, CSV, and Excel from one validated dataset.">
@@ -11,6 +12,7 @@
   <link rel="icon" type="image/svg+xml" href="./assets/icon.svg">
   <link rel="mask-icon" href="./assets/icon.svg" color="#0b5fa5">
   <link rel="stylesheet" href="./assets/styles.css">
+  <link rel="alternate" type="application/atom+xml" title="PQU changes (Atom feed)" href="./feed.xml">
   <script>
     try {
       var storedTheme = window.localStorage.getItem("d365-pqu-theme");
@@ -21,7 +23,7 @@
   </script>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to dataset</a>
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="topbar">
     <div class="wrap topbar-inner">
@@ -33,13 +35,25 @@
         </div>
       </div>
       <div class="topbar-side">
-        <p class="sync" role="status">
-          <span class="dot" aria-hidden="true"></span>
-          <span id="sync-label">Loading dataset…</span>
-          <time id="sync-time" datetime="">—</time>
-        </p>
+        <div class="health">
+          <button id="health-toggle" class="sync" type="button" aria-expanded="false" aria-controls="health-panel" data-state="loading">
+            <span class="dot" aria-hidden="true"></span>
+            <span id="sync-label">Loading dataset…</span>
+            <time id="sync-time"></time>
+          </button>
+          <div id="health-panel" class="health-panel" hidden></div>
+          <p id="health-status" class="visually-hidden" role="status" aria-live="polite"></p>
+        </div>
         <div class="topbar-actions">
-          <button id="theme-toggle" class="icon-button" type="button" aria-pressed="false" aria-label="Switch to light theme">
+          <label class="zone-field" title="Time zone for today and for times">
+            <span class="visually-hidden">Time zone</span>
+            <svg class="zone-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M1.75 8h12.5M8 1.75c1.8 1.7 2.7 3.8 2.7 6.25S9.8 12.55 8 14.25C6.2 12.55 5.3 10.45 5.3 8S6.2 3.45 8 1.75Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+            </svg>
+            <select id="zone-select"></select>
+          </label>
+          <button id="theme-toggle" class="icon-button" type="button" aria-pressed="false" aria-label="Light theme">
             <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M13.5 9.5A5.5 5.5 0 0 1 6.5 2.5a5.5 5.5 0 1 0 7 7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
             </svg>
@@ -52,97 +66,16 @@
         </div>
       </div>
     </div>
+    <nav class="tabs" aria-label="Sections">
+      <div class="wrap tabs-inner" id="tabs"></div>
+    </nav>
   </header>
 
-  <main id="main" class="wrap">
+  <main id="main" class="wrap" tabindex="-1">
     <p id="load-error" class="alert-error" hidden></p>
+    <p id="app-status" class="visually-hidden" role="status" aria-live="polite"></p>
 
-    <div class="workspace">
-      <aside class="filters-rail" aria-labelledby="filters-heading">
-        <h2 id="filters-heading">Filters</h2>
-        <fieldset class="filter-group" aria-label="Refine dashboard results">
-          <legend>Refine</legend>
-          <label class="field field-search">
-            <span>Search</span>
-            <input id="search" type="search" placeholder="PQU, version, build, or status" autocomplete="off">
-          </label>
-          <label class="field">
-            <span>Status</span>
-            <select id="status-filter">
-              <option value="">All statuses</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Application version</span>
-            <select id="version-filter">
-              <option value="">All versions</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Region</span>
-            <select id="region-select">
-              <option value="">Select a region</option>
-            </select>
-          </label>
-          <div class="lookup-result">
-            <p id="region-result" aria-live="polite">Select a region to see its station.</p>
-          </div>
-          <label class="field">
-            <span>Rows</span>
-            <select id="page-size">
-              <option value="10">10</option>
-              <option value="20" selected>20</option>
-              <option value="50">50</option>
-            </select>
-          </label>
-          <button id="reset-filters" class="button small rail-button" type="button">Reset all filters</button>
-        </fieldset>
-      </aside>
-
-      <div class="workspace-main">
-        <section class="section" aria-labelledby="schedule-heading">
-          <div class="section-head">
-            <div>
-              <p class="kicker">Schedule</p>
-              <h2 id="schedule-heading">PQU trains</h2>
-            </div>
-            <p class="section-note" id="filter-note" aria-live="polite"></p>
-          </div>
-
-          <div class="table-panel">
-            <div class="table-scroll">
-              <table id="pqu-table">
-            <caption class="visually-hidden">Proactive quality update trains. Dates and times are shown in Asia/Kolkata (IST).</caption>
-            <thead>
-              <tr>
-                <th scope="col" aria-sort="none"><button type="button" class="th-sort" data-sort="pqu_id">PQU ID <span class="sort-indicator" aria-hidden="true"></span></button></th>
-                <th scope="col" aria-sort="none"><button type="button" class="th-sort" data-sort="application_version">App version <span class="sort-indicator" aria-hidden="true"></span></button></th>
-                <th scope="col" class="col-optional" aria-sort="none"><button type="button" class="th-sort" data-sort="pqu_train">Train <span class="sort-indicator" aria-hidden="true"></span></button></th>
-                <th scope="col" aria-sort="none"><button type="button" class="th-sort" data-sort="status">Status <span class="sort-indicator" aria-hidden="true"></span></button></th>
-                <th scope="col" aria-sort="none"><button type="button" class="th-sort" data-sort="change_cutoff_date">Cutoff <span class="sort-indicator" aria-hidden="true"></span></button></th>
-                <th scope="col" aria-sort="none"><button type="button" class="th-sort" data-sort="train_start_date">Start <span class="sort-indicator" aria-hidden="true"></span></button></th>
-                <th scope="col" aria-sort="none"><button type="button" class="th-sort" data-sort="train_end_date">End <span class="sort-indicator" aria-hidden="true"></span></button></th>
-                <th scope="col" aria-sort="none"><button type="button" class="th-sort" data-sort="application_build">App build <span class="sort-indicator" aria-hidden="true"></span></button></th>
-                <th scope="col" aria-sort="none"><button type="button" class="th-sort" data-sort="platform_build">Platform build <span class="sort-indicator" aria-hidden="true"></span></button></th>
-                <th scope="col" class="col-optional" aria-sort="none"><button type="button" class="th-sort" data-sort="uep_version">UEP <span class="sort-indicator" aria-hidden="true"></span></button></th>
-                <th scope="col" aria-sort="none"><button type="button" class="th-sort" data-sort="station_schedule_available">Stations <span class="sort-indicator" aria-hidden="true"></span></button></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <div class="pager">
-          <p id="page-info" aria-live="polite"></p>
-          <div class="pager-actions">
-            <button id="prev-page" class="button small" type="button">Previous</button>
-            <button id="next-page" class="button small" type="button">Next</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-      </div>
-    </div>
+    <div id="view"></div>
 
     <noscript>
       <section class="section" aria-labelledby="noscript-heading">
@@ -155,7 +88,7 @@
 
   <footer class="site-footer">
     <div class="wrap footer-inner">
-      <p><a href="https://github.com/0x8e8fb-p/d365-pqu-data">Source repository</a> · <a href="./downloads/D365-PQU-Tracker.xlsx">Excel tracker</a> · <span class="footer-meta">Source date <time id="source-date" datetime="">—</time></span></p>
+      <p><a href="https://github.com/0x8e8fb-p/d365-pqu-data">Source repository</a> · <a href="./downloads/D365-PQU-Tracker.xlsx">Excel tracker</a> · <a id="data-link" href="#/data">Data &amp; API</a> · <span class="footer-meta">Source date <time id="source-date" datetime="">—</time></span></p>
       <p class="footer-credit">0x8e8fb</p>
     </div>
   </footer>

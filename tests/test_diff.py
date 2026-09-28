@@ -74,6 +74,43 @@ def test_compute_changes_without_previous_returns_empty() -> None:
     assert changes == []
 
 
+def test_station_changes_name_the_station() -> None:
+    def row(station: int, sandbox_start: str) -> dict[str, object]:
+        return {
+            "pqu_id": "10.0.48-PQU-6",
+            "station": station,
+            "sandbox_start_date": sandbox_start,
+            "sandbox_end_date": "2026-10-01",
+            "production_start_date": "2026-10-03",
+            "production_end_date": "2026-10-04",
+        }
+
+    changed_at = datetime(2026, 9, 24, 12, 0, tzinfo=UTC)
+    changes = compute_changes(
+        [],
+        [],
+        source_commit="c" * 40,
+        changed_at=changed_at,
+        previous_stations=[row(3, "2026-09-21"), row(4, "2026-09-28")],
+        current_stations=[row(4, "2026-09-29"), row(5, "2026-10-05")],
+    )
+    fields = {(change["change_type"], change["field"]) for change in changes}
+    assert fields == {
+        ("added", "station.5"),
+        ("removed", "station.3"),
+        ("modified", "station.4.sandbox_start_date"),
+    }
+    again = compute_changes(
+        [],
+        [],
+        source_commit="d" * 40,
+        changed_at=changed_at,
+        previous_stations=[row(3, "2026-09-21"), row(4, "2026-09-28")],
+        current_stations=[row(4, "2026-09-29"), row(5, "2026-10-05")],
+    )
+    assert [change["change_id"] for change in changes] == [change["change_id"] for change in again]
+
+
 def test_verify_artifacts_requires_committed_output(tmp_path: Path) -> None:
     paths = _paths(tmp_path)
     with pytest.raises(ValidationError):

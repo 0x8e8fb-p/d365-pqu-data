@@ -15,7 +15,7 @@ from openpyxl.worksheet.properties import PageSetupProperties
 from openpyxl.worksheet.table import Table, TableStyleInfo
 from openpyxl.worksheet.worksheet import Worksheet
 
-from d365_pqu.config import DATASET_NAME, SCHEMA_VERSION
+from d365_pqu.config import CHECK_INTERVAL_MINUTES, DATASET_NAME, SCHEMA_VERSION
 from d365_pqu.models import NormalizedDataset
 from d365_pqu.serialization import isoformat
 
@@ -43,6 +43,14 @@ DATE_FIELDS = {
     "sandbox_end_date",
     "production_start_date",
     "production_end_date",
+    "preview_date",
+    "preview_latest_update_date",
+    "general_availability_date",
+    "first_autoupdate_date",
+    "second_autoupdate_date",
+    "end_of_service_date",
+    "start_date",
+    "end_date",
 }
 
 Column = tuple[str, str | Callable[[Mapping[str, Any]], Any], int]
@@ -251,6 +259,20 @@ def _key_value_sheet(
     return ws
 
 
+def _source_rows(dataset: NormalizedDataset) -> list[tuple[str, Any]]:
+    """One state/commit/date line per additional Microsoft article."""
+    rows: list[tuple[str, Any]] = []
+    for key, entry in dataset.sources.items():
+        if key == "schedule":
+            continue
+        source = entry.get("source") or {}
+        label = entry.get("label") or key
+        rows.append((f"{label}: State", entry.get("state")))
+        rows.append((f"{label}: Commit", source.get("commit") or ""))
+        rows.append((f"{label}: Article Date", source.get("markdown_date") or ""))
+    return rows
+
+
 def _status_history_rows(
     dataset: NormalizedDataset, generated_at: datetime
 ) -> list[dict[str, Any]]:
@@ -291,6 +313,8 @@ def generate_workbook(
     metadata: dict[str, Any],
     health: dict[str, Any],
     quality: Mapping[str, Any],
+    insights: Mapping[str, Any] | None = None,
+    events: Mapping[str, Any] | None = None,
 ) -> None:
     wb = Workbook()
     active = wb.active
@@ -317,6 +341,8 @@ def generate_workbook(
         ("Last Updated", "last_changed_at", 24),
         ("First Seen", "first_seen_at", 24),
         ("Last Changed", "last_changed_at", 24),
+        ("New Station Schedule", "station_schedule_new", 20),
+        ("Status Note", "status_note", 60),
     ]
     _write_table_sheet(wb, "01_PQU_MASTER", pqu_columns, dataset.records, table_name="PquMaster")
     _write_table_sheet(
@@ -354,6 +380,7 @@ def generate_workbook(
         ("Station Label", "station_label", 14),
         ("Region", "region", 28),
         ("Is Region", "is_region", 12),
+        ("Maintenance Geo", "maintenance_geo", 22),
     ]
     _write_table_sheet(
         wb, "05_REGION_MAPPING", region_columns, dataset.regions, table_name="RegionMapping"
@@ -452,8 +479,9 @@ def generate_workbook(
             ("Source SHA-256", dataset.source["sha256"]),
             ("Retrieved At", dataset.source["retrieved_at"]),
             ("Generated At", dataset.generated_at.isoformat()),
-            ("Hours Between Checks", 6),
+            ("Check Interval (Minutes)", CHECK_INTERVAL_MINUTES),
             ("Workbook", metadata["links"]["workbook"]),
+            *_source_rows(dataset),
         ],
     )
     _key_value_sheet(
@@ -490,6 +518,93 @@ def generate_workbook(
         quality.get("records", []),
         table_name="DataQuality",
     )
+    service_source = (dataset.sources.get("service_updates") or {}).get("source") or {}
+    _write_table_sheet(
+        wb,
+        "14_SERVICE_UPDATES",
+        [
+            ("Version", "version", 12),
+            ("Release Label", "release_label", 14),
+            ("Major Release", "is_major", 14),
+            ("Preview", "preview_date", 14),
+            ("Preview Latest Update", "preview_latest_update_date", 22),
+            ("General Availability", "general_availability_date", 20),
+            ("First Autoupdate (Production)", "first_autoupdate_date", 28),
+            ("Second Autoupdate (Production)", "second_autoupdate_date", 28),
+            ("End Of Service", "end_of_service_date", 16),
+            ("Source Commit", lambda _record: service_source.get("commit"), 42),
+        ],
+        dataset.service_updates,
+        table_name="ServiceUpdates",
+    )
+    maintenance_source = (dataset.sources.get("maintenance") or {}).get("source") or {}
+    _write_table_sheet(
+        wb,
+        "15_MAINTENANCE_WINDOWS",
+        [
+            ("Geo", "geo", 22),
+            ("Start Time (UTC)", "start_time_utc", 16),
+            ("Days (UTC)", lambda record: ", ".join(record.get("days") or []), 22),
+            ("Duration (Hours)", "duration_hours", 16),
+            ("Duration (As Published)", "duration_text", 22),
+            ("Source Commit", lambda _record: maintenance_source.get("commit"), 42),
+        ],
+        dataset.maintenance_windows,
+        table_name="MaintenanceWindows",
+    )
+    insight_document = insights or {}
+    metric_titles = {
+        str(metric.get("id")): metric for metric in insight_document.get("metrics", [])
+    }
+    _write_table_sheet(
+        wb,
+        "16_INSIGHTS",
+        [
+            ("Figure", lambda record: metric_titles.get(record["metric"], {}).get("title"), 36),
+            ("Group", "label", 20),
+            ("Value", "value", 10),
+            ("Unit", "unit", 10),
+            ("Statistic", "statistic", 12),
+            ("Sample Size", "sample_size", 12),
+            ("Min", "min", 8),
+            ("Max", "max", 8),
+            ("Summary", "summary", 90),
+            (
+                "Left Out",
+                lambda record: "; ".join(
+                    f"{entry['item']}: {entry['reason']}" for entry in record.get("excluded", [])
+                ),
+                60,
+            ),
+            (
+                "How It Is Calculated",
+                lambda r: metric_titles.get(r["metric"], {}).get("method"),
+                90,
+            ),
+            ("Metric ID", "metric", 26),
+        ],
+        insight_document.get("records", []),
+        table_name="Insights",
+    )
+    _write_table_sheet(
+        wb,
+        "17_KEY_DATES",
+        [
+            ("Start Date", "start_date", 14),
+            ("End Date", "end_date", 14),
+            ("Event", "title", 46),
+            ("Kind", "kind", 22),
+            ("PQU ID", "pqu_id", 18),
+            ("Application Version", "application_version", 18),
+            ("Station", "station", 10),
+            ("Microsoft Status", "status", 16),
+            ("Source Warnings", lambda record: ", ".join(record.get("warnings") or []), 28),
+            ("Source", "url", 60),
+            ("Event ID", "id", 44),
+        ],
+        (events or {}).get("records", []),
+        table_name="KeyDates",
+    )
 
     wb.properties.title = "D365 Finance & Operations PQU Tracker"
     wb.properties.subject = "Microsoft Dynamics 365 proactive quality update schedule"
@@ -517,6 +632,10 @@ def generate_workbook(
         wb[name].sheet_properties.tabColor = "B5651D"
     for name in ("11_SOURCE_METADATA", "12_SYNC_HEALTH", "13_DATA_QUALITY"):
         wb[name].sheet_properties.tabColor = "6B7A8F"
+    wb["14_SERVICE_UPDATES"].sheet_properties.tabColor = "7A5AA6"
+    wb["15_MAINTENANCE_WINDOWS"].sheet_properties.tabColor = "2E7D5B"
+    wb["16_INSIGHTS"].sheet_properties.tabColor = "B5651D"
+    wb["17_KEY_DATES"].sheet_properties.tabColor = "12506E"
     path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(path)
 

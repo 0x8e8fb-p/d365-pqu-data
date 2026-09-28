@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from d365_pqu.config import (
+    CHECK_INTERVAL_MINUTES,
     DATASET_NAME,
     DEFAULT_REPO_SLUG,
     PAGES_BASE_URL,
@@ -36,6 +37,8 @@ PQU_CSV_FIELDS = (
     "source_commit",
     "source_url",
     "source_raw_url",
+    "station_schedule_new",
+    "status_note",
 )
 STATION_CSV_FIELDS = (
     "pqu_id",
@@ -52,7 +55,7 @@ STATION_CSV_FIELDS = (
     "source_url",
     "source_raw_url",
 )
-REGION_CSV_FIELDS = ("station", "station_label", "region", "is_region")
+REGION_CSV_FIELDS = ("station", "station_label", "region", "is_region", "maintenance_geo")
 VERSION_CSV_FIELDS = (
     "pqu_id",
     "application_version",
@@ -78,6 +81,58 @@ CHANGE_CSV_FIELDS = (
     "source_commit",
 )
 QUALITY_CSV_FIELDS = ("code", "severity", "message", "pqu_id", "field")
+SERVICE_UPDATE_CSV_FIELDS = (
+    "version",
+    "release_label",
+    "is_major",
+    "preview_date",
+    "preview_latest_update_date",
+    "general_availability_date",
+    "first_autoupdate_date",
+    "second_autoupdate_date",
+    "end_of_service_date",
+    "source_commit",
+    "source_url",
+)
+MAINTENANCE_WINDOW_CSV_FIELDS = (
+    "geo",
+    "start_time_utc",
+    "days",
+    "duration_hours",
+    "duration_text",
+    "source_commit",
+    "source_url",
+)
+INSIGHT_CSV_FIELDS = (
+    "id",
+    "metric",
+    "group",
+    "label",
+    "value",
+    "unit",
+    "statistic",
+    "sample_size",
+    "min",
+    "max",
+    "summary",
+    "breakdown",
+    "excluded",
+)
+EVENT_CSV_FIELDS = (
+    "id",
+    "kind",
+    "category",
+    "title",
+    "start_date",
+    "end_date",
+    "pqu_id",
+    "application_version",
+    "station",
+    "status",
+    "source_key",
+    "url",
+    "warnings",
+)
 
 
 def isoformat(value: datetime) -> str:
@@ -125,6 +180,91 @@ def changes_document(
     changes: Sequence[Mapping[str, Any]], *, source: Mapping[str, Any], generated_at: datetime
 ) -> dict[str, Any]:
     return envelope(changes, source=source, generated_at=generated_at)
+
+
+def learn_document_for(
+    articles: Sequence[Mapping[str, Any]], *, source: Mapping[str, Any], generated_at: datetime
+) -> dict[str, Any]:
+    from d365_pqu.learn import learn_document
+
+    return learn_document(
+        articles,
+        dataset=DATASET_NAME,
+        schema_version=SCHEMA_VERSION,
+        generated_at=isoformat(generated_at),
+        source=source,
+    )
+
+
+def source_dataset_document(
+    records: Sequence[Mapping[str, Any]],
+    *,
+    source_key: str,
+    entry: Mapping[str, Any],
+    generated_at: datetime,
+) -> dict[str, Any]:
+    """Envelope for data taken from one optional article, with that article's own provenance."""
+    return {
+        "dataset": DATASET_NAME,
+        "schema_version": SCHEMA_VERSION,
+        "generated_at": isoformat(generated_at),
+        "source_key": source_key,
+        "state": entry["state"],
+        "source": entry.get("source"),
+        "count": len(records),
+        "records": [dict(record) for record in records],
+    }
+
+
+def flatten_sourced_record(
+    record: Mapping[str, Any], source: Mapping[str, Any] | None
+) -> dict[str, Any]:
+    flat = dict(record)
+    flat["source_commit"] = (source or {}).get("commit")
+    flat["source_url"] = (source or {}).get("article_url")
+    return flat
+
+
+def insights_document(
+    dataset: NormalizedDataset, *, source: Mapping[str, Any], generated_at: datetime
+) -> dict[str, Any]:
+    """Figures calculated from the published data (see ``d365_pqu.insights``)."""
+    from d365_pqu.insights import build_insights
+
+    built = build_insights(
+        records=dataset.records,
+        stations=dataset.stations,
+        regions=dataset.regions,
+        service_updates=dataset.service_updates,
+        quality=dataset.quality,
+    )
+    return {
+        "dataset": DATASET_NAME,
+        "schema_version": SCHEMA_VERSION,
+        "generated_at": isoformat(generated_at),
+        "source": dict(source),
+        "categories": built["categories"],
+        "metrics": built["metrics"],
+        "highlights": built["highlights"],
+        "count": len(built["records"]),
+        "records": built["records"],
+    }
+
+
+def events_document(
+    dataset: NormalizedDataset, *, source: Mapping[str, Any], generated_at: datetime
+) -> dict[str, Any]:
+    """Key dates from the published data (see ``d365_pqu.events``)."""
+    from d365_pqu.events import build_events
+
+    events = build_events(
+        records=dataset.records,
+        stations=dataset.stations,
+        service_updates=dataset.service_updates,
+        articles=dataset.articles,
+        quality=dataset.quality,
+    )
+    return envelope(events, source=source, generated_at=generated_at)
 
 
 def quality_document(
@@ -199,11 +339,15 @@ def metadata_document(
         "record_count": len(dataset.records),
         "station_schedule_count": len(dataset.stations),
         "region_count": len(dataset.regions),
+        "service_update_count": len(dataset.service_updates),
+        "maintenance_window_count": len(dataset.maintenance_windows),
         "status_counts": statuses,
         "current_count": statuses.get("In-Progress", 0),
         "upcoming_count": statuses.get("Not Started", 0),
         "latest_pqu_id": latest_pqu_id(dataset),
+        "check_interval_minutes": CHECK_INTERVAL_MINUTES,
         "source": dataset.source,
+        "sources": {key: dict(entry) for key, entry in dataset.sources.items()},
         "links": {
             "repository": f"https://github.com/{DEFAULT_REPO_SLUG}",
             "pages": PAGES_BASE_URL + "/",
@@ -222,7 +366,9 @@ def health_document(
     previous_health: dict[str, Any] | None,
     checked_at: datetime,
     changed: bool,
+    source: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
+    provenance = source or dataset.source
     generated = isoformat(checked_at)
     last_source_change = (
         generated if changed else _previous_timestamp(previous_health, "last_source_change_at")
@@ -248,9 +394,50 @@ def health_document(
         "upcoming_records": sum(1 for r in dataset.records if r["status"] == "Not Started"),
         "warning_count": warning_count,
         "error_count": error_count,
-        "source_commit": dataset.source["commit"],
-        "source_sha256": dataset.source["sha256"],
+        "check_interval_minutes": CHECK_INTERVAL_MINUTES,
+        "source_commit": provenance["commit"],
+        "source_sha256": provenance["sha256"],
     }
+
+
+def run_health_document(
+    data_health: Mapping[str, Any],
+    *,
+    checked_at: datetime,
+    checked_commit: str | None,
+    run_status: str,
+    sources: Mapping[str, Mapping[str, Any]],
+    previous_run_health: Mapping[str, Any] | None = None,
+    failure: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Health of one check, layered over the committed health of the published dataset.
+
+    The committed ``data/health.json`` changes only with the data (or the monthly heartbeat);
+    this document records every check, including the upstream commit that was examined.
+    """
+    checked = isoformat(checked_at)
+    document = dict(data_health)
+    document.update(
+        {
+            "schema_version": SCHEMA_VERSION,
+            "checked_at": checked,
+            "last_successful_check_at": checked,
+            "check_interval_minutes": CHECK_INTERVAL_MINUTES,
+            "checked_commit": checked_commit,
+            "content_commit": data_health.get("source_commit"),
+            "run_status": run_status,
+            "sources": {key: dict(value) for key, value in sources.items()},
+            "error": None,
+        }
+    )
+    if failure is not None:
+        previous_success = (previous_run_health or {}).get("last_successful_check_at") or (
+            data_health.get("last_successful_check_at")
+        )
+        document.update(dict(failure))
+        document["status"] = "failed"
+        document["last_successful_check_at"] = previous_success
+    return document
 
 
 def _previous_timestamp(previous: dict[str, Any] | None, key: str) -> str | None:

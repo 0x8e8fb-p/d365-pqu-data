@@ -19,7 +19,11 @@
           "station": { "type": "integer", "minimum": 1, "maximum": 6 },
           "station_label": { "type": "string" },
           "region": { "type": "string", "minLength": 1 },
-          "is_region": { "type": "boolean" }
+          "is_region": { "type": "boolean" },
+          "maintenance_geo": {
+            "description": "Geography in Microsoft's planned maintenance window table matched from the region name (derived; Microsoft does not publish this link), or null.",
+            "type": ["string", "null"]
+          }
         },
         "additionalProperties": false
       }

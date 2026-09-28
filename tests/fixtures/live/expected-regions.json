@@ -1,0 +1,188 @@
+[
+  {
+    "station": 1,
+    "station_label": "Station 1",
+    "region": "Only for opted-in environments",
+    "is_region": false
+  },
+  {
+    "station": 2,
+    "station_label": "Station 2",
+    "region": "Canada Central",
+    "is_region": true
+  },
+  {
+    "station": 2,
+    "station_label": "Station 2",
+    "region": "Canada East",
+    "is_region": true
+  },
+  {
+    "station": 2,
+    "station_label": "Station 2",
+    "region": "France Central",
+    "is_region": true
+  },
+  {
+    "station": 2,
+    "station_label": "Station 2",
+    "region": "India Central",
+    "is_region": true
+  },
+  {
+    "station": 2,
+    "station_label": "Station 2",
+    "region": "Norway East",
+    "is_region": true
+  },
+  {
+    "station": 2,
+    "station_label": "Station 2",
+    "region": "Switzerland West",
+    "is_region": true
+  },
+  {
+    "station": 3,
+    "station_label": "Station 3",
+    "region": "Australia East",
+    "is_region": true
+  },
+  {
+    "station": 3,
+    "station_label": "Station 3",
+    "region": "Australia South East",
+    "is_region": true
+  },
+  {
+    "station": 3,
+    "station_label": "Station 3",
+    "region": "France South",
+    "is_region": true
+  },
+  {
+    "station": 3,
+    "station_label": "Station 3",
+    "region": "India South",
+    "is_region": true
+  },
+  {
+    "station": 3,
+    "station_label": "Station 3",
+    "region": "Japan East",
+    "is_region": true
+  },
+  {
+    "station": 3,
+    "station_label": "Station 3",
+    "region": "Norway West",
+    "is_region": true
+  },
+  {
+    "station": 3,
+    "station_label": "Station 3",
+    "region": "South Africa North",
+    "is_region": true
+  },
+  {
+    "station": 3,
+    "station_label": "Station 3",
+    "region": "South East Asia",
+    "is_region": true
+  },
+  {
+    "station": 3,
+    "station_label": "Station 3",
+    "region": "Switzerland North",
+    "is_region": true
+  },
+  {
+    "station": 3,
+    "station_label": "Station 3",
+    "region": "UAE North",
+    "is_region": true
+  },
+  {
+    "station": 3,
+    "station_label": "Station 3",
+    "region": "UK South",
+    "is_region": true
+  },
+  {
+    "station": 4,
+    "station_label": "Station 4",
+    "region": "Brazil South",
+    "is_region": true
+  },
+  {
+    "station": 4,
+    "station_label": "Station 4",
+    "region": "East Asia",
+    "is_region": true
+  },
+  {
+    "station": 4,
+    "station_label": "Station 4",
+    "region": "East US",
+    "is_region": true
+  },
+  {
+    "station": 4,
+    "station_label": "Station 4",
+    "region": "Japan West",
+    "is_region": true
+  },
+  {
+    "station": 4,
+    "station_label": "Station 4",
+    "region": "North Europe",
+    "is_region": true
+  },
+  {
+    "station": 4,
+    "station_label": "Station 4",
+    "region": "UAE Central",
+    "is_region": true
+  },
+  {
+    "station": 4,
+    "station_label": "Station 4",
+    "region": "UK West",
+    "is_region": true
+  },
+  {
+    "station": 5,
+    "station_label": "Station 5",
+    "region": "Central US",
+    "is_region": true
+  },
+  {
+    "station": 5,
+    "station_label": "Station 5",
+    "region": "West Europe",
+    "is_region": true
+  },
+  {
+    "station": 5,
+    "station_label": "Station 5",
+    "region": "West US",
+    "is_region": true
+  },
+  {
+    "station": 6,
+    "station_label": "Station 6",
+    "region": "China",
+    "is_region": true
+  },
+  {
+    "station": 6,
+    "station_label": "Station 6",
+    "region": "DoD",
+    "is_region": true
+  },
+  {
+    "station": 6,
+    "station_label": "Station 6",
+    "region": "Government Community Cloud",
+    "is_region": true
+  }
+]

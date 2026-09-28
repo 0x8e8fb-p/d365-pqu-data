@@ -52,11 +52,14 @@ Original = "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro
 where = ["src"]
 
 [tool.setuptools.package-data]
-d365_pqu = ["static/*"]
+d365_pqu = ["static/*", "static/js/*.js", "static/js/core/*.js", "static/js/ui/*.js", "static/js/ui/views/*.js"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra --strict-markers"
+markers = [
+    "e2e: browser tests that build a site from fixtures and drive it with Playwright Chromium",
+]
 filterwarnings = ["error::DeprecationWarning:d365_pqu.*"]
 
 [tool.ruff]

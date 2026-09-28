@@ -15,7 +15,6 @@ from d365_pqu.pipeline import (
     heartbeat_due,
     load_json,
     run_sync,
-    source_document_from_file,
     verify_artifacts,
 )
 
@@ -44,6 +43,7 @@ def _result_payload(result: Any) -> dict[str, Any]:
         "status": result.status,
         "source_hash": result.source_hash,
         "source_commit": result.source_commit,
+        "checked_commit": result.checked_commit,
         "record_count": result.record_count,
         "current_count": result.current_count,
         "upcoming_count": result.upcoming_count,
@@ -52,6 +52,7 @@ def _result_payload(result: Any) -> dict[str, Any]:
         "data_dir": result.data_dir,
         "workbook_path": result.workbook_path,
         "site_dir": result.site_dir,
+        "source_states": dict(result.source_states),
     }
 
 
@@ -66,7 +67,14 @@ def build_parser() -> argparse.ArgumentParser:
         "sync", help="Fetch Microsoft source and update all artifacts"
     )
     sync_parser.add_argument(
-        "--source-file", help="Read Markdown from a local file instead of the network"
+        "--source-file", help="Read the schedule Markdown from a local file instead of the network"
+    )
+    sync_parser.add_argument(
+        "--source-dir",
+        help=(
+            "Read source articles from local files named like the repository files "
+            "(the schedule is required; missing optional articles are skipped)"
+        ),
     )
     sync_parser.add_argument(
         "--source-commit", default="0" * 40, help="Commit value to record for local source files"
@@ -95,28 +103,38 @@ def build_parser() -> argparse.ArgumentParser:
     )
     heartbeat_parser.add_argument("--now", help="Override the current UTC timestamp")
     heartbeat_parser.add_argument("--github-output", help="Write step outputs to this file")
+
+    serve_parser = subparsers.add_parser(
+        "serve", help="Preview the built site on 127.0.0.1 (local development only)"
+    )
+    serve_parser.add_argument("--port", type=int, default=8000, help="Loopback port (default 8000)")
     return parser
 
 
 def command_sync(args: argparse.Namespace, paths: Paths) -> int:
+    from d365_pqu.source import bundle_from_directory, bundle_from_file
+
     now = _parse_now(args.now)
-    source = None
-    if args.source_file:
-        source = source_document_from_file(
-            Path(args.source_file),
-            commit=args.source_commit,
-            now=now,
-        )
+    if args.source_file and args.source_dir:
+        raise PquError("Use either --source-file or --source-dir, not both")
+    bundle = None
+    if args.source_dir:
+        bundle = bundle_from_directory(Path(args.source_dir), commit=args.source_commit, now=now)
+    elif args.source_file:
+        bundle = bundle_from_file(Path(args.source_file), commit=args.source_commit, now=now)
     result = run_sync(
         paths,
-        source=source,
+        bundle=bundle,
         now=now,
         write=not args.check,
     )
-    if args.build_site and not args.check:
-        build_site(paths)
     payload = _result_payload(result)
-    _write_github_output(args.github_output, payload)
+    if args.build_site and not args.check:
+        payload["site"] = build_site(paths)
+    _write_github_output(
+        args.github_output,
+        {key: value for key, value in payload.items() if key not in ("site", "source_states")},
+    )
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
 
@@ -131,9 +149,9 @@ def command_verify(args: argparse.Namespace, paths: Paths) -> int:
 
 
 def command_build_site(args: argparse.Namespace, paths: Paths) -> int:
-    build_site(paths)
-    _write_github_output(args.github_output, {"site_dir": str(paths.site_dir)})
-    print(json.dumps({"site_dir": str(paths.site_dir)}, indent=2, sort_keys=True))
+    payload = build_site(paths)
+    _write_github_output(args.github_output, payload)
+    print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
 
 
@@ -143,6 +161,24 @@ def command_heartbeat_due(args: argparse.Namespace, paths: Paths) -> int:
     due = heartbeat_due(health, now)
     _write_github_output(args.github_output, {"heartbeat_due": due})
     print(json.dumps({"heartbeat_due": due}, indent=2, sort_keys=True))
+    return 0
+
+
+def command_serve(args: argparse.Namespace, paths: Paths) -> int:
+    from d365_pqu.serve import LOOPBACK_HOST, create_server
+
+    server = create_server(paths.site_dir, args.port)
+    port = int(server.server_address[1])
+    print(
+        f"Serving {paths.site_dir} at http://{LOOPBACK_HOST}:{port}/ "
+        "(loopback only; Ctrl+C to stop)"
+    )
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
     return 0
 
 
@@ -156,6 +192,7 @@ def main(argv: list[str] | None = None) -> int:
         "verify": command_verify,
         "build-site": command_build_site,
         "heartbeat-due": command_heartbeat_due,
+        "serve": command_serve,
     }
     try:
         return handlers[args.command](args, paths)

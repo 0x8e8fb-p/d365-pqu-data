@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Sequence
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
@@ -19,6 +21,7 @@ COMPARED_FIELDS = (
     "platform_build",
     "uep_version",
     "station_schedule_available",
+    "status_note",
 )
 STATION_FIELDS = (
     "sandbox_start_date",
@@ -26,6 +29,7 @@ STATION_FIELDS = (
     "production_start_date",
     "production_end_date",
 )
+GUIDANCE_DATASET_ID = "dataset"
 
 
 def _jsonable(value: Any) -> Any:
@@ -117,6 +121,9 @@ def _pqu_changes(
         old_record = previous_by_id[pqu_id]
         new_record = current_by_id[pqu_id]
         for field in COMPARED_FIELDS:
+            if field not in old_record:
+                # Field introduced by a newer pipeline revision: a baseline, not a change.
+                continue
             old_value = old_record.get(field)
             new_value = new_record.get(field)
             if old_value != new_value:
@@ -161,7 +168,7 @@ def _station_changes(
                 pqu_id=key[0],
                 entity="station",
                 change_type="added",
-                field=None,
+                field=f"station.{key[1]}",
                 old_value=None,
                 new_value={field: row.get(field) for field in STATION_FIELDS},
                 source_commit=source_commit,
@@ -176,7 +183,7 @@ def _station_changes(
                 pqu_id=key[0],
                 entity="station",
                 change_type="removed",
-                field=None,
+                field=f"station.{key[1]}",
                 old_value={field: row.get(field) for field in STATION_FIELDS},
                 new_value=None,
                 source_commit=source_commit,
@@ -188,6 +195,8 @@ def _station_changes(
         old_row = previous_by_key[key]
         new_row = current_by_key[key]
         for field in STATION_FIELDS:
+            if field not in old_row:
+                continue
             if old_row.get(field) != new_row.get(field):
                 changes.append(
                     _entity_change(
@@ -254,7 +263,8 @@ def _region_changes(
     for key in sorted(previous_by_key.keys() & current_by_key.keys()):
         old_row = previous_by_key[key]
         new_row = current_by_key[key]
-        if old_row != new_row:
+        # Compare only the fields the previous snapshot published.
+        if any(old_row.get(field) != new_row.get(field) for field in old_row):
             changes.append(
                 _entity_change(
                     pqu_id="dataset",
@@ -271,6 +281,157 @@ def _region_changes(
     return changes
 
 
+def _guidance_sections(
+    articles: list[dict[str, Any]] | None,
+) -> dict[tuple[str, str], dict[str, Any]]:
+    sections: dict[tuple[str, str], dict[str, Any]] = {}
+    for article in articles or []:
+        if not isinstance(article, dict) or not isinstance(article.get("key"), str):
+            continue
+        for section in article.get("sections") or []:
+            if isinstance(section, dict) and isinstance(section.get("id"), str):
+                sections[(article["key"], section["id"])] = section
+    return sections
+
+
+def _guidance_summary(section: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "title": section.get("title"),
+        "url": section.get("url"),
+        "text_sha256": section.get("text_sha256"),
+    }
+
+
+def _guidance_changes(
+    previous_articles: list[dict[str, Any]],
+    current_articles: list[dict[str, Any]],
+    *,
+    source_commit: str,
+    changed_at: str,
+) -> list[ChangeRecord]:
+    """Section-level changes in Microsoft's guidance text, for articles in both snapshots."""
+    shared = {article.get("key") for article in previous_articles} & {
+        article.get("key") for article in current_articles
+    }
+    article_commits = {
+        article.get("key"): article.get("commit")
+        for article in current_articles
+        if isinstance(article.get("commit"), str)
+    }
+    previous = {
+        key: section
+        for key, section in _guidance_sections(previous_articles).items()
+        if key[0] in shared
+    }
+    current = {
+        key: section
+        for key, section in _guidance_sections(current_articles).items()
+        if key[0] in shared
+    }
+    changes: list[ChangeRecord] = []
+
+    def change(key: tuple[str, str], change_type: str, old: Any, new: Any) -> ChangeRecord:
+        article_commit = article_commits.get(key[0]) or source_commit
+        return _entity_change(
+            pqu_id=GUIDANCE_DATASET_ID,
+            entity="guidance",
+            change_type=change_type,
+            field=f"{key[0]}#{key[1]}",
+            old_value=old,
+            new_value=new,
+            source_commit=article_commit,
+            changed_at=changed_at,
+            identity=(key, "guidance", change_type, changed_at),
+        )
+
+    for key in sorted(current.keys() - previous.keys()):
+        changes.append(change(key, "added", None, _guidance_summary(current[key])))
+    for key in sorted(previous.keys() - current.keys()):
+        changes.append(change(key, "removed", _guidance_summary(previous[key]), None))
+    for key in sorted(previous.keys() & current.keys()):
+        if previous[key].get("text_sha256") != current[key].get("text_sha256"):
+            changes.append(
+                change(
+                    key,
+                    "modified",
+                    _guidance_summary(previous[key]),
+                    _guidance_summary(current[key]),
+                )
+            )
+    return changes
+
+
+SERVICE_UPDATE_FIELDS = (
+    "release_label",
+    "is_major",
+    "preview_date",
+    "preview_latest_update_date",
+    "general_availability_date",
+    "first_autoupdate_date",
+    "second_autoupdate_date",
+    "end_of_service_date",
+)
+MAINTENANCE_WINDOW_FIELDS = ("start_time_utc", "days", "duration_hours", "duration_text")
+
+
+@dataclass(frozen=True)
+class KeyedRecords:
+    """Records from one optional article, compared by a key field (version, geography, ...).
+
+    ``previous``/``current`` are ``None`` when that snapshot did not publish the article; no
+    changes are reported then, so a source becoming available is a baseline, not a change.
+    """
+
+    entity: str
+    key: str
+    fields: tuple[str, ...]
+    previous: list[dict[str, Any]] | None
+    current: list[dict[str, Any]] | None
+    source_commit: str | None = None
+
+
+def _keyed_changes(
+    records: KeyedRecords, *, source_commit: str, changed_at: str
+) -> list[ChangeRecord]:
+    if records.previous is None or records.current is None:
+        return []
+    key = records.key
+    old_by_key = {row[key]: row for row in records.previous if isinstance(row.get(key), str)}
+    new_by_key = {row[key]: row for row in records.current if isinstance(row.get(key), str)}
+    commit = records.source_commit or source_commit
+    changes: list[ChangeRecord] = []
+
+    def change(name: str, change_type: str, field: str | None, old: Any, new: Any) -> ChangeRecord:
+        return _entity_change(
+            pqu_id=GUIDANCE_DATASET_ID,
+            entity=records.entity,
+            change_type=change_type,
+            field=f"{name}#{field}" if field else name,
+            old_value=old,
+            new_value=new,
+            source_commit=commit,
+            changed_at=changed_at,
+            identity=(name, records.entity, field or change_type, changed_at),
+        )
+
+    def summary(row: dict[str, Any]) -> dict[str, Any]:
+        return {field: row.get(field) for field in records.fields}
+
+    for name in sorted(new_by_key.keys() - old_by_key.keys()):
+        changes.append(change(name, "added", None, None, summary(new_by_key[name])))
+    for name in sorted(old_by_key.keys() - new_by_key.keys()):
+        changes.append(change(name, "removed", None, summary(old_by_key[name]), None))
+    for name in sorted(old_by_key.keys() & new_by_key.keys()):
+        old_row = old_by_key[name]
+        new_row = new_by_key[name]
+        for field in records.fields:
+            if field in old_row and old_row.get(field) != new_row.get(field):
+                changes.append(
+                    change(name, "modified", field, old_row.get(field), new_row.get(field))
+                )
+    return changes
+
+
 def compute_changes(
     previous_records: list[dict[str, Any]] | None,
     current_records: list[dict[str, Any]],
@@ -281,6 +442,9 @@ def compute_changes(
     current_stations: list[dict[str, Any]] | None = None,
     previous_regions: list[dict[str, Any]] | None = None,
     current_regions: list[dict[str, Any]] | None = None,
+    previous_articles: list[dict[str, Any]] | None = None,
+    current_articles: list[dict[str, Any]] | None = None,
+    keyed: Sequence[KeyedRecords] = (),
 ) -> list[ChangeRecord]:
     if previous_records is None:
         return []
@@ -309,4 +473,15 @@ def compute_changes(
                 changed_at=timestamp,
             )
         )
+    if previous_articles is not None and current_articles is not None:
+        changes.extend(
+            _guidance_changes(
+                previous_articles,
+                current_articles,
+                source_commit=source_commit,
+                changed_at=timestamp,
+            )
+        )
+    for records in keyed:
+        changes.extend(_keyed_changes(records, source_commit=source_commit, changed_at=timestamp))
     return changes

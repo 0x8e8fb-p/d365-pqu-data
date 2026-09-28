@@ -38,7 +38,34 @@
     "upcoming_records": { "type": "integer", "minimum": 0 },
     "warning_count": { "type": "integer", "minimum": 0 },
     "error_count": { "type": "integer", "minimum": 0 },
+    "check_interval_minutes": { "type": "integer", "minimum": 1 },
     "source_commit": { "type": "string" },
-    "source_sha256": { "type": "string" }
+    "source_sha256": { "type": "string" },
+    "checked_commit": {
+      "description": "Upstream MicrosoftDocs commit examined by this check (run health only).",
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "content_commit": {
+      "description": "Commit of the published content; unchanged when a newer commit left the articles unchanged.",
+      "type": ["string", "null"]
+    },
+    "run_status": { "enum": ["updated", "unchanged", "heartbeat", "failed"] },
+    "error": { "type": ["string", "null"], "maxLength": 500 },
+    "sources": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["state"],
+        "properties": {
+          "state": { "enum": ["updated", "unchanged", "stale", "unavailable", "not_configured", "failed"] },
+          "commit": { "type": ["string", "null"] },
+          "sha256": { "type": ["string", "null"] },
+          "markdown_date": { "type": ["string", "null"], "format": "date" },
+          "message": { "type": ["string", "null"], "maxLength": 500 }
+        },
+        "additionalProperties": false
+      }
+    }
   }
 }

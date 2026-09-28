@@ -5,11 +5,13 @@ import re
 import subprocess
 import urllib.request
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any, Protocol
 from urllib.error import HTTPError, URLError
 
 from d365_pqu.config import (
     MAX_SOURCE_BYTES,
+    SCHEDULE_SPEC,
     SOURCE_ARTICLE_URL,
     SOURCE_BRANCH,
     SOURCE_BRANCH_URL,
@@ -17,9 +19,11 @@ from d365_pqu.config import (
     SOURCE_RAW_TEMPLATE,
     SOURCE_REPO,
     SOURCE_REPO_URL,
+    SOURCE_SPECS,
+    SourceSpec,
 )
 from d365_pqu.errors import SourceFetchError
-from d365_pqu.models import SourceDocument
+from d365_pqu.models import SourceBundle, SourceDocument
 
 _FRONT_MATTER_DATE = re.compile(r"^ms\.date:\s*(\d{2})/(\d{2})/(\d{4})\s*$", re.MULTILINE)
 
@@ -197,3 +201,116 @@ def source_links() -> dict[str, str]:
         "branch_url": SOURCE_BRANCH_URL,
         "file_path": SOURCE_FILE_PATH,
     }
+
+
+def _utc(moment: datetime | None) -> datetime:
+    value = moment or datetime.now(UTC)
+    return value if value.tzinfo is not None else value.replace(tzinfo=UTC)
+
+
+def document_for(
+    spec: SourceSpec,
+    markdown: str,
+    *,
+    commit: str,
+    raw_url: str,
+    retrieved_at: datetime,
+) -> SourceDocument:
+    """Build a source document with provenance for ``spec``."""
+    markdown_date = parse_markdown_date(markdown)
+    warnings: tuple[str, ...] = ()
+    if markdown_date is None:
+        warnings = (f"{spec.label}: source front matter did not contain a valid ms.date value.",)
+    return SourceDocument(
+        markdown=markdown,
+        source_commit=commit,
+        article_url=spec.article_url,
+        raw_url=raw_url,
+        markdown_date=markdown_date,
+        retrieved_at=_utc(retrieved_at),
+        sha256=hashlib.sha256(markdown.encode("utf-8")).hexdigest(),
+        warnings=warnings,
+        key=spec.key,
+        file_path=spec.file_path,
+    )
+
+
+def fetch_bundle(
+    *,
+    specs: tuple[SourceSpec, ...] = SOURCE_SPECS,
+    runner: CommandRunner = default_runner,
+    opener: UrlOpen = default_opener,
+    now: datetime | None = None,
+    repo: str = SOURCE_REPO,
+    branch: str = SOURCE_BRANCH,
+) -> SourceBundle:
+    """Resolve the branch once and download every source article at that exact commit.
+
+    A required article that cannot be downloaded fails the run; optional articles that cannot
+    be downloaded are reported in ``SourceBundle.errors`` so the last published data is kept.
+    """
+    retrieved_at = _utc(now)
+    commit = resolve_source_commit(repo=repo, branch=branch, runner=runner)
+    documents: dict[str, SourceDocument] = {}
+    errors: dict[str, str] = {}
+    for spec in specs:
+        try:
+            markdown, raw_url = fetch_markdown(
+                commit, opener=opener, repo=repo, file_path=spec.file_path
+            )
+        except SourceFetchError as exc:
+            if spec.required:
+                raise
+            errors[spec.key] = str(exc)
+            continue
+        documents[spec.key] = document_for(
+            spec, markdown, commit=commit, raw_url=raw_url, retrieved_at=retrieved_at
+        )
+    return SourceBundle(commit=commit, documents=documents, errors=errors)
+
+
+def bundle_from_directory(
+    directory: Path,
+    *,
+    commit: str,
+    now: datetime | None = None,
+    specs: tuple[SourceSpec, ...] = SOURCE_SPECS,
+) -> SourceBundle:
+    """Read source articles from local files named like the repository files (fixtures, demos).
+
+    Articles that are not present locally are treated as not requested.
+    """
+    retrieved_at = _utc(now)
+    documents: dict[str, SourceDocument] = {}
+    for spec in specs:
+        path = directory / spec.file_name
+        if not path.is_file():
+            if spec.required:
+                raise SourceFetchError(f"{path} is required but was not found")
+            continue
+        markdown = path.read_text(encoding="utf-8")
+        documents[spec.key] = document_for(
+            spec,
+            markdown,
+            commit=commit,
+            raw_url=raw_url_for_commit(commit, file_path=spec.file_path),
+            retrieved_at=retrieved_at,
+        )
+    return SourceBundle(commit=commit, documents=documents)
+
+
+def bundle_from_file(path: Path, *, commit: str, now: datetime | None = None) -> SourceBundle:
+    """A bundle holding only the schedule article, read from ``path``."""
+    markdown = path.read_text(encoding="utf-8")
+    document = document_for(
+        SCHEDULE_SPEC,
+        markdown,
+        commit=commit,
+        raw_url=raw_url_for_commit(commit, file_path=SCHEDULE_SPEC.file_path),
+        retrieved_at=_utc(now),
+    )
+    return SourceBundle(commit=commit, documents={SCHEDULE_SPEC.key: document})
+
+
+def bundle_from_document(document: SourceDocument) -> SourceBundle:
+    return SourceBundle(commit=document.source_commit, documents={document.key: document})

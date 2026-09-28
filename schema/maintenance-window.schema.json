@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://0x8e8fb-p.github.io/d365-pqu-data/schemas/maintenance-window.schema.json",
+  "title": "D365 Finance and Operations planned maintenance windows",
+  "description": "Maintenance window per geography (UTC) from Microsoft's Maintenance in self-service environments FAQ, with that article's provenance.",
+  "type": "object",
+  "required": ["dataset", "schema_version", "generated_at", "source_key", "state", "source", "count", "records"],
+  "properties": {
+    "dataset": { "const": "d365-finops-pqu" },
+    "schema_version": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "source_key": { "const": "maintenance" },
+    "state": {
+      "description": "current: from the latest article; stale: the latest article could not be read, so the last published copy is kept; unavailable: never published; not_configured: not requested by this run.",
+      "enum": ["current", "stale", "unavailable", "not_configured"]
+    },
+    "source": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/source" }] },
+    "count": { "type": "integer", "minimum": 0 },
+    "records": { "type": "array", "items": { "$ref": "#/$defs/record" } }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["publisher", "repository", "branch", "file_path", "commit", "article_url", "raw_url", "sha256", "retrieved_at"],
+      "properties": {
+        "publisher": { "type": "string" },
+        "repository": { "type": "string" },
+        "branch": { "type": "string" },
+        "file_path": { "type": "string" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "article_url": { "type": "string", "format": "uri" },
+        "raw_url": { "type": "string", "format": "uri" },
+        "markdown_date": { "type": ["string", "null"], "format": "date" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "retrieved_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "record": {
+      "type": "object",
+      "required": ["geo", "start_time_utc", "days", "duration_hours", "duration_text"],
+      "properties": {
+        "geo": { "type": "string", "minLength": 1 },
+        "start_time_utc": {
+          "description": "Start of the window on each listed day, in UTC (HH:MM).",
+          "type": "string",
+          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+        },
+        "days": {
+          "description": "UTC weekdays on which the window starts.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] }
+        },
+        "duration_hours": {
+          "description": "Window length in hours, or null when the source text could not be read.",
+          "type": ["number", "null"],
+          "exclusiveMinimum": 0,
+          "maximum": 24
+        },
+        "duration_text": { "description": "Window length as Microsoft wrote it.", "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

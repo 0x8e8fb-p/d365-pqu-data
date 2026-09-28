@@ -19,7 +19,7 @@
           "change_id": { "type": "string" },
           "changed_at": { "type": "string", "format": "date-time" },
           "pqu_id": { "type": "string" },
-          "entity": { "enum": ["pqu", "station", "region"] },
+          "entity": { "enum": ["pqu", "station", "region", "guidance", "service_update", "maintenance_window"] },
           "change_type": { "enum": ["added", "removed", "modified"] },
           "field": { "type": ["string", "null"] },
           "old_value": {},

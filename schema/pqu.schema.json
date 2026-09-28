@@ -81,6 +81,8 @@
         "platform_build": { "type": ["string", "null"] },
         "uep_version": { "type": ["string", "null"] },
         "station_schedule_available": { "type": "boolean" },
+        "station_schedule_new": { "type": "boolean" },
+        "status_note": { "type": ["string", "null"], "maxLength": 2000 },
         "first_seen_at": { "type": "string", "format": "date-time" },
         "last_changed_at": { "type": "string", "format": "date-time" },
         "source": { "$ref": "#/$defs/record_source" }

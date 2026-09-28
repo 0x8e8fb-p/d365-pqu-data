@@ -1,19 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src '__INLINE_SCRIPT_HASHES__'; style-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Page not found · D365 PQU Dataset</title>
+  <meta name="robots" content="noindex">
+  <title>Page not found · PQU Console</title>
+  <meta name="color-scheme" content="dark light">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafaf9">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b">
-  <link rel="icon" type="image/svg+xml" href="./assets/icon.svg">
-  <link rel="mask-icon" href="./assets/icon.svg" color="#0b5fa5">
-  <link rel="stylesheet" href="./assets/styles.css">
+  <link rel="icon" type="image/svg+xml" href="__SITE_ROOT__/assets/icon.svg">
+  <link rel="stylesheet" href="__SITE_ROOT__/assets/styles.css">
+  <script>
+    try {
+      var storedTheme = window.localStorage.getItem("d365-pqu-theme");
+      document.documentElement.setAttribute("data-theme", storedTheme === "light" ? "light" : "dark");
+    } catch (error) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  </script>
 </head>
 <body>
-  <main class="wrap standalone">
-    <h1>Page not found</h1>
-    <p>The requested page is not part of the D365 PQU dataset. Return to the <a href="./">dataset dashboard</a>.</p>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand brand-link" href="__SITE_ROOT__/">
+        <span class="brand-mark" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 64 64" fill="none" aria-hidden="true"><rect width="64" height="64" rx="14" class="brand-tile"/><g stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" class="brand-mark-lines"><path d="M25 48 V16 h11 a10.5 10.5 0 0 1 0 21 H25"/><path d="M36 40 L45 49"/></g></svg></span>
+        <span class="brand-text">
+          <span class="eyebrow">Dynamics 365 · Finance &amp; Operations</span>
+          <span class="brand-name">PQU Console</span>
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <main id="main" class="wrap standalone" tabindex="-1">
+    <section class="section not-found-page" aria-labelledby="not-found-heading">
+      <p class="kicker">Error 404</p>
+      <h1 id="not-found-heading">Page not found</h1>
+      <p class="section-lead">This address is not part of the PQU Console. Pages in the dashboard have a <span class="mono">#</span> in their address, for example <span class="mono">…/#/trains</span>.</p>
+      <ul class="not-found-links">
+        <li><a class="button primary" href="__SITE_ROOT__/">Open the dashboard</a></li>
+        <li><a class="button" href="__SITE_ROOT__/#/trains">PQU trains</a></li>
+        <li><a class="button" href="__SITE_ROOT__/#/data">Data &amp; API</a></li>
+      </ul>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p><a href="https://github.com/0x8e8fb-p/d365-pqu-data">Source repository</a></p>
+      <p class="footer-credit">0x8e8fb</p>
+    </div>
+  </footer>
 </body>
 </html>

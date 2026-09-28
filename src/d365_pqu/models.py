@@ -42,6 +42,8 @@ class PquRecord(TypedDict):
     first_seen_at: str
     last_changed_at: str
     source: RecordSource
+    station_schedule_new: bool
+    status_note: str | None
 
 
 class StationRecord(TypedDict):
@@ -63,6 +65,8 @@ class RegionRecord(TypedDict):
     station_label: str
     region: str
     is_region: bool
+    # Geography in Microsoft's maintenance window table matched from the region name, or None.
+    maintenance_geo: str | None
 
 
 class VersionRecord(TypedDict):
@@ -109,6 +113,25 @@ class SourceDocument:
     retrieved_at: datetime
     sha256: str
     warnings: tuple[str, ...] = ()
+    key: str = "schedule"
+    file_path: str = "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+
+
+@dataclass(frozen=True)
+class SourceBundle:
+    """Source articles read at one MicrosoftDocs commit.
+
+    ``documents`` holds the articles that were retrieved; ``errors`` holds optional articles that
+    could not be retrieved. Specs in neither were not requested (local fixture runs).
+    """
+
+    commit: str
+    documents: dict[str, SourceDocument]
+    errors: dict[str, str] = field(default_factory=dict)
+
+    @property
+    def schedule(self) -> SourceDocument:
+        return self.documents["schedule"]
 
 
 @dataclass(frozen=True)
@@ -136,6 +159,7 @@ class ParsedStationSchedule:
     platform_build: str
     uep_version: str | None
     rows: tuple[ParsedStationRow, ...]
+    is_new: bool = False
 
 
 @dataclass(frozen=True)
@@ -144,11 +168,21 @@ class ParsedRegionRow:
     regions: str
 
 
+@dataclass(frozen=True)
+class ParsedStatusNote:
+    """A footnote such as "Canceled* - PQU will occur only on Station-1." found in the article."""
+
+    label: str
+    marker: str
+    text: str
+
+
 @dataclass
 class ParsedSource:
     train_rows: list[ParsedTrainRow] = field(default_factory=list)
     region_rows: list[ParsedRegionRow] = field(default_factory=list)
     station_schedules: list[ParsedStationSchedule] = field(default_factory=list)
+    status_notes: list[ParsedStatusNote] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
 
 
@@ -164,6 +198,11 @@ class NormalizedDataset:
     observed_at: datetime
     generated_at: datetime
     previous_metadata: dict[str, Any] | None = None
+    articles: list[dict[str, Any]] = field(default_factory=list)
+    # Per-source publication state: key -> {label, required, article_url, file_path, state, source}.
+    sources: dict[str, dict[str, Any]] = field(default_factory=dict)
+    service_updates: list[dict[str, Any]] = field(default_factory=list)
+    maintenance_windows: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -180,3 +219,5 @@ class SyncResult:
     data_dir: str
     workbook_path: str
     site_dir: str
+    checked_commit: str = ""
+    source_states: dict[str, str] = field(default_factory=dict)

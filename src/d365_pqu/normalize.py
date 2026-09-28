@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from datetime import UTC, date, datetime
 from typing import Any
 
+from d365_pqu import mdtext
 from d365_pqu.config import ALLOWED_STATUSES
 from d365_pqu.errors import ParserError
+from d365_pqu.learn import SCHEDULE_RULES, extract_article
 from d365_pqu.models import (
     NormalizedDataset,
     ParsedSource,
@@ -18,7 +21,7 @@ from d365_pqu.models import (
     StationRecord,
     VersionRecord,
 )
-from d365_pqu.parser import plain_text
+from d365_pqu.sources import article_provenance, previous_article, provenance_for
 
 MONTHS = {
     "january": 1,
@@ -38,6 +41,8 @@ DATE_WITH_YEAR = re.compile(r"^(?P<month>[A-Za-z]+)\s+(?P<day>\d{1,2}),\s*(?P<ye
 DATE_NO_YEAR = re.compile(r"^(?P<month>[A-Za-z]+)\s+(?P<day>\d{1,2})$")
 RELEASE_TRAIN = re.compile(r"^(?P<app>\d+\.\d+\.\d+)\s+(?P<train>PQU-\d+)$", re.IGNORECASE)
 STATION_LABEL = re.compile(r"^Station\s+(\d+)$", re.IGNORECASE)
+STATUS_MARKER = re.compile(r"^(?P<status>.*?)\s*(?P<marker>\*+|†|‡)$")
+SCHEDULE_ARTICLE_KEY = "schedule"
 
 TRACKED_FIELDS = (
     "change_cutoff_date",
@@ -48,6 +53,7 @@ TRACKED_FIELDS = (
     "platform_build",
     "uep_version",
     "station_schedule_available",
+    "status_note",
 )
 
 
@@ -125,6 +131,22 @@ def canonical_status(value: str) -> str:
     return text
 
 
+def split_status_marker(value: str) -> tuple[str, str | None]:
+    """Split a footnote marker from a status cell: "Canceled*" -> ("Canceled", "*")."""
+    text = " ".join(value.split())
+    match = STATUS_MARKER.match(text)
+    if not match or not match.group("status"):
+        return text, None
+    return match.group("status"), match.group("marker")
+
+
+def status_notes(parsed: ParsedSource) -> dict[tuple[str, str], str]:
+    notes: dict[tuple[str, str], str] = {}
+    for note in parsed.status_notes:
+        notes.setdefault((canonical_status(note.label), note.marker), note.text)
+    return notes
+
+
 def _record_source(source: SourceDocument) -> RecordSource:
     return {
         "publisher": "Microsoft",
@@ -154,8 +176,8 @@ def _previous_records(previous: dict[str, Any] | None) -> dict[str, dict[str, An
     return result
 
 
-def _tracked(record: dict[str, Any]) -> dict[str, Any]:
-    return {field: record.get(field) for field in TRACKED_FIELDS}
+def _tracked(record: Mapping[str, Any], fields: tuple[str, ...]) -> dict[str, Any]:
+    return {field: record.get(field) for field in fields}
 
 
 def _first_seen(previous_record: dict[str, Any] | None, observed_at: datetime) -> str:
@@ -171,7 +193,10 @@ def _last_changed(
 ) -> str:
     if previous_record is None:
         return _iso(observed_at)
-    if _tracked(previous_record) != _tracked(current):
+    # Only fields that the previous snapshot published can have changed; a field added by a
+    # newer pipeline revision is not a change in Microsoft's data.
+    fields = tuple(field for field in TRACKED_FIELDS if field in previous_record)
+    if _tracked(previous_record, fields) != _tracked(current, fields):
         return _iso(observed_at)
     previous_value = previous_record.get("last_changed_at")
     return previous_value if isinstance(previous_value, str) else _iso(observed_at)
@@ -199,6 +224,7 @@ def normalize_source(
     *,
     previous: dict[str, Any] | None = None,
     observed_at: datetime | None = None,
+    previous_learn: Mapping[str, Any] | None = None,
 ) -> NormalizedDataset:
     moment = observed_at or datetime.now(UTC)
     if moment.tzinfo is None:
@@ -209,6 +235,7 @@ def normalize_source(
         _quality("source-warning", "warning", message) for message in source.warnings
     ]
     quality.extend(_quality("source-warning", "warning", message) for message in parsed.warnings)
+    notes = status_notes(parsed)
 
     records: list[PquRecord] = []
     seen_ids: set[str] = set()
@@ -237,7 +264,9 @@ def normalize_source(
             )
             continue
         seen_ids.add(pqu_id)
-        status = canonical_status(row.status)
+        status_text, marker = split_status_marker(row.status)
+        status = canonical_status(status_text)
+        status_note: str | None = None
         if status not in ALLOWED_STATUSES:
             quality.append(
                 _quality(
@@ -248,6 +277,21 @@ def normalize_source(
                     field="status",
                 )
             )
+        elif marker:
+            status_note = notes.get((status, marker))
+            if status_note is None:
+                quality.append(
+                    _quality(
+                        "status-footnote-undefined",
+                        "warning",
+                        (
+                            f"Status {row.status!r} carries footnote marker {marker!r}, "
+                            "but the article does not define it"
+                        ),
+                        pqu_id=pqu_id,
+                        field="status",
+                    )
+                )
         try:
             start_date, end_date = parse_date_range(row.train_duration)
         except ParserError as exc:
@@ -310,6 +354,8 @@ def normalize_source(
             first_seen_at="",
             last_changed_at="",
             source=record_source,
+            station_schedule_new=False,
+            status_note=status_note,
         )
         records.append(record)
 
@@ -368,6 +414,7 @@ def normalize_source(
         if master["uep_version"] is None and schedule.uep_version:
             master["uep_version"] = schedule.uep_version
         master["station_schedule_available"] = True
+        master["station_schedule_new"] = schedule.is_new
         for station_row in schedule.rows:
             label_match = STATION_LABEL.match(station_row.station)
             if not label_match:
@@ -425,7 +472,7 @@ def normalize_source(
 
     region_records: list[RegionRecord] = []
     for region_row in parsed.region_rows:
-        label_match = STATION_LABEL.match(plain_text(region_row.station))
+        label_match = STATION_LABEL.match(mdtext.collapse(region_row.station))
         if not label_match:
             quality.append(
                 _quality(
@@ -438,7 +485,7 @@ def normalize_source(
             continue
         station = int(label_match.group(1))
         regions = [
-            part.strip() for part in plain_text(region_row.regions).split(",") if part.strip()
+            part.strip() for part in mdtext.collapse(region_row.regions).split(",") if part.strip()
         ]
         if not regions:
             quality.append(
@@ -458,6 +505,7 @@ def normalize_source(
                     station_label=f"Station {station}",
                     region=region,
                     is_region=is_region,
+                    maintenance_geo=None,
                 )
             )
 
@@ -498,18 +546,10 @@ def normalize_source(
         for record in records
     ]
 
-    provenance = SourceProvenance(
-        publisher="Microsoft",
-        repository="MicrosoftDocs/dynamics-365-unified-operations-public",
-        branch="main",
-        file_path="articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
-        commit=source.source_commit,
-        article_url=source.article_url,
-        raw_url=source.raw_url,
-        markdown_date=source.markdown_date,
-        sha256=source.sha256,
-        retrieved_at=_iso(source.retrieved_at),
-    )
+    provenance = provenance_for(source)
+    articles = [
+        _schedule_article(source, provenance, quality=quality, previous_learn=previous_learn)
+    ]
 
     return NormalizedDataset(
         source=provenance,
@@ -522,4 +562,33 @@ def normalize_source(
         observed_at=moment,
         generated_at=moment,
         previous_metadata=previous.get("metadata") if previous else None,
+        articles=[article for article in articles if article is not None],
     )
+
+
+def _schedule_article(
+    source: SourceDocument,
+    provenance: SourceProvenance,
+    *,
+    quality: list[QualityItem],
+    previous_learn: Mapping[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Guidance text from the schedule article. Failure keeps the last published copy."""
+    try:
+        article = extract_article(
+            source.markdown,
+            key=SCHEDULE_ARTICLE_KEY,
+            file_path=source.file_path,
+            article_url=source.article_url,
+            rules=SCHEDULE_RULES,
+        )
+    except ParserError as exc:
+        quality.append(
+            _quality(
+                "guidance-parse-failed",
+                "warning",
+                f"Schedule article guidance could not be parsed; keeping the last copy: {exc}",
+            )
+        )
+        return previous_article(previous_learn, SCHEDULE_ARTICLE_KEY)
+    return {**article, **article_provenance(provenance)}

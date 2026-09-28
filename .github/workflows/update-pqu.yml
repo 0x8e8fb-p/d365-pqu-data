@@ -2,7 +2,9 @@ name: Update D365 PQU dataset
 
 on:
   schedule:
-    - cron: "17 */6 * * *"
+    # Hourly at minute 17. Must match UPDATE_CRON and CHECK_INTERVAL_MINUTES in
+    # src/d365_pqu/config.py (tests/test_workflows.py enforces this).
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -54,8 +56,10 @@ jobs:
 
       - name: Synchronize Microsoft source
         id: sync
+        # Writes data/ and excel/ only when the source content changes (or the monthly
+        # heartbeat is due), and always records this check in build/run-health.json.
         run: |
-          python -m d365_pqu sync --build-site --github-output "$GITHUB_OUTPUT"
+          python -m d365_pqu sync --github-output "$GITHUB_OUTPUT"
 
       - name: Verify generated artifacts before commit
         if: steps.sync.outputs.changed == 'true'
@@ -93,7 +97,9 @@ jobs:
       - name: Verify committed artifacts
         run: python -m d365_pqu verify
 
-      - name: Rebuild site from committed data
+      - name: Rebuild site from committed data and this run's health
+        # build/run-health.json from the sync step is published as api/health.json when it
+        # describes the committed dataset; otherwise data/health.json is used.
         run: python -m d365_pqu build-site
 
       - name: Configure GitHub Pages

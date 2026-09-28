@@ -36,6 +36,9 @@ jobs:
           python -m pip install -r requirements/dev.lock
           python -m pip install -e . --no-deps
 
+      - name: Install Playwright Chromium
+        run: python -m playwright install --with-deps chromium
+
       - name: Lint
         run: |
           ruff check .
@@ -44,7 +47,10 @@ jobs:
       - name: Type check
         run: mypy
 
-      - name: Unit tests
+      - name: Unit, JavaScript, and browser tests
+        env:
+          REQUIRE_NODE: "1"
+          REQUIRE_E2E: "1"
         run: pytest --cov=d365_pqu --cov-report=term-missing
 
       - name: Verify committed dataset artifacts

@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://0x8e8fb-p.github.io/d365-pqu-data/schemas/learn.schema.json",
+  "title": "D365 PQU Learn content",
+  "description": "Structured text from Microsoft Learn articles, split into sections with anchors and provenance.",
+  "type": "object",
+  "required": ["dataset", "schema_version", "generated_at", "source", "license", "count", "articles"],
+  "properties": {
+    "dataset": { "const": "d365-finops-pqu" },
+    "schema_version": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "source": { "type": "object" },
+    "license": {
+      "type": "object",
+      "required": ["name", "url", "attribution", "changes"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "$ref": "#/$defs/https" },
+        "attribution": { "type": "string", "minLength": 1 },
+        "changes": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "count": { "type": "integer", "minimum": 0 },
+    "articles": { "type": "array", "items": { "$ref": "#/$defs/article" } }
+  },
+  "$defs": {
+    "https": { "type": "string", "pattern": "^https://" },
+    "run": {
+      "type": "object",
+      "required": ["text"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1 },
+        "strong": { "const": true },
+        "em": { "const": true },
+        "code": { "const": true },
+        "href": { "$ref": "#/$defs/https" }
+      },
+      "additionalProperties": false
+    },
+    "runs": { "type": "array", "items": { "$ref": "#/$defs/run" } },
+    "blocks": { "type": "array", "items": { "$ref": "#/$defs/block" } },
+    "block": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["type", "runs"],
+          "properties": {
+            "type": { "const": "paragraph" },
+            "runs": { "allOf": [{ "$ref": "#/$defs/runs" }, { "minItems": 1 }] }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "ordered", "items"],
+          "properties": {
+            "type": { "const": "list" },
+            "ordered": { "type": "boolean" },
+            "start": { "type": "integer" },
+            "items": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/blocks" } }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "kind", "blocks"],
+          "properties": {
+            "type": { "const": "callout" },
+            "kind": { "enum": ["note", "important", "tip", "warning", "caution"] },
+            "blocks": { "$ref": "#/$defs/blocks" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "blocks"],
+          "properties": {
+            "type": { "const": "quote" },
+            "blocks": { "$ref": "#/$defs/blocks" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "header", "rows"],
+          "properties": {
+            "type": { "const": "table" },
+            "header": { "type": "array", "items": { "$ref": "#/$defs/runs" } },
+            "rows": {
+              "type": "array",
+              "items": { "type": "array", "items": { "$ref": "#/$defs/runs" } }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "name"],
+          "properties": {
+            "type": { "const": "dataset" },
+            "name": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "section": {
+      "type": "object",
+      "required": ["id", "anchor", "aliases", "title", "level", "url", "text_sha256", "blocks"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "anchor": { "type": ["string", "null"] },
+        "aliases": { "type": "array", "items": { "type": "string" } },
+        "title": { "type": "string" },
+        "level": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "url": { "$ref": "#/$defs/https" },
+        "text_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "blocks": { "$ref": "#/$defs/blocks" }
+      },
+      "additionalProperties": false
+    },
+    "article": {
+      "type": "object",
+      "required": ["key", "title", "url", "sections", "file_path", "commit", "sha256", "raw_url"],
+      "properties": {
+        "key": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+        "title": { "type": "string", "minLength": 1 },
+        "url": { "$ref": "#/$defs/https" },
+        "file_path": { "type": "string" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "markdown_date": { "type": ["string", "null"], "format": "date" },
+        "raw_url": { "$ref": "#/$defs/https" },
+        "sections": { "type": "array", "items": { "$ref": "#/$defs/section" } }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,104 @@
+---
+title: Maintenance in self-service environments FAQ
+description: Access answers to frequently asked questions about the Microsoft planned maintenance in self-service environments.
+author: matapg007
+ms.author: matgupta
+ms.topic: faq
+ms.date: 04/02/2026
+ms.custom: 
+  - bap-template
+ms.reviewer: johnmichalak
+audience: Developer, IT Pro
+ms.search.region: Global
+ms.search.validFrom: 2021-05-13
+---
+
+# Maintenance in self-service environments FAQ
+
+[!INCLUDE [banner](../../../includes/banner.md)]
+
+Because of the changing nature of technology, the continual appearance of new security threats, and compliance requirements, you must update environments with all critical security and quality updates. Microsoft built a framework for performing all maintenance activity during the dark hours of the geographic region where your environment is deployed. This maintenance activity includes operating system patching, deployment of security hotfixes, and deployment of quality updates. To minimize application downtime, upgrades occur in batches. Therefore, most capacity is always online, and only a subset is upgraded at a time. This approach enables servicing that involves a small window of service degradation instead of complete downtime.
+
+## Infrastructure maintenance in self-service environments
+
+Infrastructure maintenance is the process of updating the environments with the latest security updates and critical hotfixes. Microsoft must complete this process on your environments to ensure security, availability, and reliability. This article provides answers to frequently asked questions about Microsoft planned maintenance in self-service environments.
+
+## What types of planned maintenance activities does Microsoft perform on an environment?
+
+Some common planned maintenance activities that Microsoft performs include:
+
+- Operating system (OS) security updates
+- Security hotfixes
+- Microsoft quality updates
+
+## <a name="windows"></a>What are the planned maintenance windows?
+
+A planned maintenance window typically occurs during the dark hours of the geographic region where your environment is deployed. The following table lists the maintenance windows for each geography in Coordinated Universal Time (UTC).
+
+| Geo | Start time | Days | Maintenance window |
+|-----|------------|------|--------------------|
+| Australia | 13:00 UTC | Friday, Saturday | Six hours |
+| Asia | 16:00 UTC | Friday, Saturday | Six hours |
+| Brazil | 04:00 UTC | Saturday, Sunday | Six hours |
+| Canada | 04:00 UTC | Saturday, Sunday | Six hours |
+| China | 16:00 UTC | Friday, Saturday | Six hours |
+| Europe | 22:00 UTC | Friday, Saturday | Six hours |
+| France | 22:00 UTC | Friday, Saturday | Six hours |
+| India | 18:30 UTC | Friday, Saturday | Six hours |
+| Japan | 16:00 UTC | Friday, Saturday | Six hours |
+| Norway | 22:00 UTC | Friday, Saturday | Six hours |
+| South Africa | 22:00 UTC | Friday, Saturday | Six hours |
+| Switzerland | 22:00 UTC | Friday, Saturday | Six hours |
+| United Arab Emirates | 18:00 UTC | Friday, Saturday | Six hours |
+| United Kingdom | 22:00 UTC | Friday, Saturday | Six hours |
+| United States | 04:00 UTC | Saturday, Sunday | Six hours |
+
+## What is the schedule for proactive quality updates?
+
+For information on the upcoming proactive quality update schedule, see the [Release schedule for proactive quality updates](../../fin-ops/get-started/quality-updates-schedule.md).
+
+> [!NOTE] 
+> From August 2022 through October 2022, Microsoft rolls out updates to the production environment during any weekend, and outside of normal business hours, to help minimize any potential impact on your environments. All sandbox environments are updated during any night, outside of business hours.
+> 
+> All the maintenance activity (system updates, security hotfixes, and quality updates) is performed during the dark-hour window to provide a near-zero-downtime experience.
+
+## What does near-zero-downtime maintenance mean?
+
+You can continue to operate the system during the maintenance activity. You might experience brief interruptions or disconnects during this window, but you don't need full downtime.
+
+## What is the experience during the near-zero-downtime maintenance window?
+
+Upgrades occur in batches. Therefore, most capacity is always online, and only a subset is upgraded at a time to help eliminate complete downtime. Adopt [priority-based scheduling](../sysadmin/priority-based-batch-scheduling.md) of batch jobs. Priority-based scheduling eliminates the stickiness of batch jobs that are associated with a batch server and enables near-zero-downtime servicing for security patching and quality updates. By design, all Tier 2 and Tier 3 environments might experience approximately 30 minutes of downtime during the servicing or maintenance operations.
+
+### Interactive usage
+
+Users who are connected to the environment might experience a brief disconnection of less than 60 seconds a few times during the servicing window. After recovery, users might experience one of the following outcomes:
+
+- The session recovers gracefully, and the user either goes to the page that they were working on, or redirects to the root/workspace/home page and receives the following message: "Something went wrong. But we were able to recover your session."
+- Session recovery fails, and the user who is working on a details page is redirected to the root/workspace/home page and receives the following message: "Something went wrong, and we were unable to recover your session. You've been redirected."
+
+For example, the user might be working on a sales order creating lines or posting. After the interruption, the user might return to the Sales workspace, but the new order and lines should still be available. Users should go back to the main form and check their work. 
+
+### Batch service
+
+Individual batch servers aren't available for up to 30 minutes. The following activities occur: 
+
+- The service terminates any running batch jobs.
+- The service automatically restarts jobs that it terminated. Set the maximum number of retries to **0** (zero) for any jobs that shouldn't be restarted automatically.
+
+    - Check printing 
+    - Statement posting
+
+For more information about batch retry, see [Retry for any error or batch server restart](../sysadmin/retryable-batch.md#retry-for-any-error-or-batch-server-restart).
+
+### Priority-based scheduling
+
+- If you enable priority-based scheduling, users experience reduced Application Object Server (AOS) capacity during the maintenance window. The available AOS instances serve batch jobs. Therefore, there's never complete downtime during the servicing window.
+- If you don't enable priority-based scheduling, any batch groups that you configure with AOS instances experience downtime until the associated AOS instances are updated and back in rotation.
+
+> [!NOTE] 
+> Microsoft is working to reduce the downtime for batch service to a few minutes. Achievement of this goal requires that customers adopt priority-based scheduling of batch jobs.
+
+## Is it possible to reschedule near-zero-downtime operating system maintenance?
+
+No. To meet regulatory and security compliance standards, Microsoft performs the planned maintenance during the dark hours of the geographic region where your environment is deployed. The main objective of planned maintenance is to regularly patch environments to remediate security vulnerabilities and apply critical quality updates. If you delay updates, you put data security, availability, and reliability at risk.

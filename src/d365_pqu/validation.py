@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable, Mapping
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -17,6 +18,75 @@ PLATFORM_BUILD = re.compile(r"^\d+\.\d+\.\d+\.\d+$")
 UEP_VERSION = re.compile(r"^\d+\.\d+\.\d+\.\d+$")
 APPLICATION_VERSION = re.compile(r"^\d+\.\d+\.\d+$")
 PQU_TRAIN = re.compile(r"^PQU-\d+$")
+SERVICE_UPDATE_DATES = (
+    "preview_date",
+    "preview_latest_update_date",
+    "general_availability_date",
+    "first_autoupdate_date",
+    "second_autoupdate_date",
+    "end_of_service_date",
+)
+
+
+def validate_service_updates(records: Iterable[Mapping[str, Any]]) -> None:
+    seen: set[str] = set()
+    for record in records:
+        version = record.get("version")
+        if not isinstance(version, str) or not APPLICATION_VERSION.match(version):
+            raise ValidationError(f"Invalid service update version {version!r}")
+        if version in seen:
+            raise ValidationError(f"Duplicate service update version {version}")
+        seen.add(version)
+        for field in SERVICE_UPDATE_DATES:
+            value = record.get(field)
+            if value is None:
+                continue
+            try:
+                date.fromisoformat(str(value))
+            except ValueError as exc:
+                raise ValidationError(f"Invalid {field} for service update {version}") from exc
+
+
+START_TIME = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
+WEEKDAY_NAMES = frozenset(
+    ("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+)
+
+
+def validate_maintenance_windows(records: Iterable[Mapping[str, Any]]) -> None:
+    seen: set[str] = set()
+    for record in records:
+        geo = record.get("geo")
+        if not isinstance(geo, str) or not geo.strip():
+            raise ValidationError(f"Invalid maintenance window geography {geo!r}")
+        if geo.casefold() in seen:
+            raise ValidationError(f"Duplicate maintenance window geography {geo}")
+        seen.add(geo.casefold())
+        if not START_TIME.match(str(record.get("start_time_utc") or "")):
+            raise ValidationError(f"Invalid maintenance window start time for {geo}")
+        days = record.get("days")
+        if (
+            not isinstance(days, list)
+            or not days
+            or len(set(days)) != len(days)
+            or not set(days) <= WEEKDAY_NAMES
+        ):
+            raise ValidationError(f"Invalid maintenance window days for {geo}")
+        duration = record.get("duration_hours")
+        if duration is not None and not (isinstance(duration, int | float) and 0 < duration <= 24):
+            raise ValidationError(f"Invalid maintenance window duration for {geo}")
+
+
+def validate_region_geos(
+    regions: Iterable[Mapping[str, Any]], windows: Iterable[Mapping[str, Any]]
+) -> None:
+    geos = {str(window.get("geo")) for window in windows}
+    for region in regions:
+        geo = region.get("maintenance_geo")
+        if geo is not None and geo not in geos:
+            raise ValidationError(
+                f"Region {region.get('region')} refers to unknown maintenance geography {geo!r}"
+            )
 
 
 def _fatal(items: list[QualityItem]) -> list[QualityItem]:

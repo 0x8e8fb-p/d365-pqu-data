@@ -2,16 +2,15 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Any
 
-from markdown_it import MarkdownIt
-
+from d365_pqu import mdtext
 from d365_pqu.errors import ParserError
 from d365_pqu.models import (
     ParsedRegionRow,
     ParsedSource,
     ParsedStationRow,
     ParsedStationSchedule,
+    ParsedStatusNote,
     ParsedTrainRow,
 )
 
@@ -29,14 +28,18 @@ STATION_HEADING = re.compile(
     r"Proactive quality update upcoming\s+(?P<app>\d+\.\d+\.\d+)\s+Release-(?P<release>\d+)\s+train schedule",
     re.IGNORECASE,
 )
+NEW_MARKER = re.compile(r"^\s*\[NEW\]", re.IGNORECASE)
 APP_VERSION = re.compile(r"App version:\s*([0-9][0-9.]*)", re.IGNORECASE)
 PLATFORM_VERSION = re.compile(r"Platform version:\s*([0-9][0-9.]*)", re.IGNORECASE)
 UEP_VERSION = re.compile(
     r"Unified Environment Provisioning Application Version:\s*([0-9][0-9.]*|\S+)",
     re.IGNORECASE,
 )
-_MARKDOWN_MARKS = re.compile(r"[*_`]+")
-_HTML_TAGS = re.compile(r"<[^>]+>")
+# "Canceled* - PQU will occur only on Station-1. ..." (a footnote for a marked status value).
+# The separator may be a hyphen, an en dash, an em dash, or a colon.
+STATUS_NOTE = re.compile(
+    r"^(?P<label>[A-Za-z][A-Za-z -]{0,40}?)(?P<marker>\*+|†|‡)\s*[-\u2013\u2014:]\s*(?P<text>\S.*)$"
+)
 
 
 @dataclass(frozen=True)
@@ -44,6 +47,7 @@ class _Event:
     kind: str
     level: int = 0
     text: str = ""
+    lines: tuple[str, ...] = ()
     rows: tuple[tuple[str, ...], ...] = ()
 
 
@@ -52,72 +56,37 @@ class _ScheduleBuilder:
     release_train: str
     application_version: str
     rows: list[ParsedStationRow]
+    is_new: bool = False
     application_build: str = ""
     platform_build: str = ""
     uep_version: str | None = None
 
 
-def plain_text(text: str) -> str:
-    return " ".join(_HTML_TAGS.sub(" ", _MARKDOWN_MARKS.sub("", text)).split())
-
-
 def _events(markdown: str) -> list[_Event]:
-    parser = MarkdownIt("default")
-    tokens = parser.parse(markdown)
+    tokens = mdtext.parse_tokens(markdown)
     events: list[_Event] = []
     index = 0
     while index < len(tokens):
         token = tokens[index]
-        if token.type == "heading_open":
+        if token.type in ("heading_open", "paragraph_open"):
             inline = tokens[index + 1] if index + 1 < len(tokens) else None
-            events.append(
-                _Event(
-                    kind="heading",
-                    level=int(token.tag[1:]),
-                    text=plain_text(inline.content if inline is not None else ""),
+            if token.type == "heading_open":
+                events.append(
+                    _Event(
+                        kind="heading", level=int(token.tag[1:]), text=mdtext.inline_text(inline)
+                    )
                 )
-            )
-            index += 3
-            continue
-        if token.type == "paragraph_open":
-            inline = tokens[index + 1] if index + 1 < len(tokens) else None
-            events.append(
-                _Event(
-                    kind="paragraph",
-                    text=plain_text(inline.content if inline is not None else ""),
-                )
-            )
+            else:
+                lines = tuple(mdtext.inline_lines(inline))
+                events.append(_Event(kind="paragraph", text=" ".join(lines), lines=lines))
             index += 3
             continue
         if token.type == "table_open":
-            rows, index = _read_table(tokens, index)
+            rows, index = mdtext.table_text_rows(tokens, index)
             events.append(_Event(kind="table", rows=rows))
             continue
         index += 1
     return events
-
-
-def _read_table(tokens: list[Any], start: int) -> tuple[tuple[tuple[str, ...], ...], int]:
-    rows: list[tuple[str, ...]] = []
-    current: list[str] = []
-    in_cell = False
-    index = start + 1
-    while index < len(tokens):
-        token = tokens[index]
-        if token.type == "table_close":
-            return tuple(rows), index + 1
-        if token.type == "tr_open":
-            current = []
-        elif token.type in {"th_open", "td_open"}:
-            in_cell = True
-        elif token.type == "inline" and in_cell:
-            current.append(plain_text(token.content))
-        elif token.type in {"th_close", "td_close"}:
-            in_cell = False
-        elif token.type == "tr_close":
-            rows.append(tuple(current))
-        index += 1
-    raise ParserError("Markdown table was not closed")
 
 
 def _require_headers(
@@ -214,6 +183,17 @@ def parse_source(markdown: str) -> ParsedSource:
     seen_region_table = False
 
     for event in _events(markdown):
+        if event.kind == "paragraph":
+            for line in event.lines:
+                note = STATUS_NOTE.match(line)
+                if note:
+                    parsed.status_notes.append(
+                        ParsedStatusNote(
+                            label=note.group("label").strip(),
+                            marker=note.group("marker"),
+                            text=note.group("text").strip(),
+                        )
+                    )
         if event.kind == "heading":
             if event.level == 2:
                 lowered = event.text.lower()
@@ -233,6 +213,7 @@ def parse_source(markdown: str) -> ParsedSource:
                     release_train=f"{match.group('app')} PQU-{int(match.group('release'))}",
                     application_version=match.group("app"),
                     rows=[],
+                    is_new=bool(NEW_MARKER.match(event.text)),
                 )
         elif event.kind == "paragraph" and builder is not None:
             app_match = APP_VERSION.search(event.text)
@@ -273,6 +254,7 @@ def parse_source(markdown: str) -> ParsedSource:
                         platform_build=builder.platform_build,
                         uep_version=builder.uep_version,
                         rows=tuple(builder.rows),
+                        is_new=builder.is_new,
                     )
                 )
                 builder = None

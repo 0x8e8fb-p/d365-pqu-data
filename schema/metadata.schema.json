@@ -33,7 +33,27 @@
     "current_count": { "type": "integer", "minimum": 0 },
     "upcoming_count": { "type": "integer", "minimum": 0 },
     "latest_pqu_id": { "type": ["string", "null"] },
+    "check_interval_minutes": { "type": "integer", "minimum": 1 },
+    "service_update_count": { "type": "integer", "minimum": 0 },
+    "maintenance_window_count": { "type": "integer", "minimum": 0 },
     "source": { "type": "object" },
+    "sources": {
+      "description": "Every Microsoft article the dataset is built from, with its publication state and provenance.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["label", "required", "article_url", "file_path", "state", "source"],
+        "properties": {
+          "label": { "type": "string" },
+          "required": { "type": "boolean" },
+          "article_url": { "type": "string", "format": "uri" },
+          "file_path": { "type": "string" },
+          "state": { "enum": ["current", "stale", "unavailable", "not_configured"] },
+          "source": { "type": ["object", "null"] }
+        },
+        "additionalProperties": false
+      }
+    },
     "links": { "type": "object", "additionalProperties": { "type": "string" } }
   }
 }

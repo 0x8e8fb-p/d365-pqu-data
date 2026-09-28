@@ -1,0 +1,9 @@
+[
+  {
+    "code": "cutoff-start-year-mismatch",
+    "severity": "warning",
+    "message": "Change cutoff 2026-02-04 and train start 2025-02-09 are in different years",
+    "pqu_id": "10.0.46-PQU-1",
+    "field": "change_cutoff_date"
+  }
+]
