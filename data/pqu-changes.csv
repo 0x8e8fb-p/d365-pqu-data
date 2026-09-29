@@ -1,1 +1,13 @@
 change_id,changed_at,pqu_id,entity,change_type,field,old_value,new_value,source_commit
+7f6ef8e13f4b3ae236ca,2026-09-29T13:39:53.051448Z,10.0.48-PQU-5,pqu,modified,status,In-Progress,Completed,f5356378cee582265b31fa0900bf6fbebaaba88f
+34e5903cd792fb7ec94e,2026-09-29T13:39:53.051448Z,10.0.48-PQU-7,pqu,modified,status,Not Started,In-Progress,f5356378cee582265b31fa0900bf6fbebaaba88f
+04f69c27f9a807380d06,2026-09-29T13:39:53.051448Z,10.0.48-PQU-7,pqu,modified,application_build,,10.0.2645.147,f5356378cee582265b31fa0900bf6fbebaaba88f
+b9e58c9c97ef54ef392d,2026-09-29T13:39:53.051448Z,10.0.48-PQU-7,pqu,modified,platform_build,,7.0.7996.122,f5356378cee582265b31fa0900bf6fbebaaba88f
+feedd0841df82dd683bb,2026-09-29T13:39:53.051448Z,10.0.48-PQU-7,pqu,modified,uep_version,,10.0.48.8,f5356378cee582265b31fa0900bf6fbebaaba88f
+3bf303cfd068dcb69086,2026-09-29T13:39:53.051448Z,10.0.48-PQU-7,pqu,modified,station_schedule_available,false,true,f5356378cee582265b31fa0900bf6fbebaaba88f
+e21a1f59ceac020ae327,2026-09-29T13:39:53.051448Z,10.0.48-PQU-7,station,added,station.1,,"{""production_end_date"":null,""production_start_date"":null,""sandbox_end_date"":""2026-10-03"",""sandbox_start_date"":""2026-09-30""}",f5356378cee582265b31fa0900bf6fbebaaba88f
+e1064d507d317681bb46,2026-09-29T13:39:53.051448Z,10.0.48-PQU-7,station,added,station.2,,"{""production_end_date"":""2026-10-11"",""production_start_date"":""2026-10-10"",""sandbox_end_date"":""2026-10-08"",""sandbox_start_date"":""2026-10-05""}",f5356378cee582265b31fa0900bf6fbebaaba88f
+648a0cf6ecfddf01ee59,2026-09-29T13:39:53.051448Z,10.0.48-PQU-7,station,added,station.3,,"{""production_end_date"":""2026-10-11"",""production_start_date"":""2026-10-10"",""sandbox_end_date"":""2026-10-08"",""sandbox_start_date"":""2026-10-05""}",f5356378cee582265b31fa0900bf6fbebaaba88f
+e0cd9317cf7d5dd3977b,2026-09-29T13:39:53.051448Z,10.0.48-PQU-7,station,added,station.4,,"{""production_end_date"":""2026-10-18"",""production_start_date"":""2026-10-17"",""sandbox_end_date"":""2026-10-15"",""sandbox_start_date"":""2026-10-12""}",f5356378cee582265b31fa0900bf6fbebaaba88f
+d6633da91be1ef1a9d33,2026-09-29T13:39:53.051448Z,10.0.48-PQU-7,station,added,station.5,,"{""production_end_date"":""2026-10-25"",""production_start_date"":""2026-10-24"",""sandbox_end_date"":""2026-10-22"",""sandbox_start_date"":""2026-10-19""}",f5356378cee582265b31fa0900bf6fbebaaba88f
+be95a7611f947415bf21,2026-09-29T13:39:53.051448Z,10.0.48-PQU-7,station,added,station.6,,"{""production_end_date"":""2026-10-25"",""production_start_date"":""2026-10-24"",""sandbox_end_date"":""2026-10-22"",""sandbox_start_date"":""2026-10-19""}",f5356378cee582265b31fa0900bf6fbebaaba88f

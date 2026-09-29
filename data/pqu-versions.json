@@ -1,18 +1,18 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-09-28T04:01:44.646801Z",
+  "generated_at": "2026-09-29T13:39:53.051448Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
     "branch": "main",
     "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
-    "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+    "commit": "f5356378cee582265b31fa0900bf6fbebaaba88f",
     "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/f5356378cee582265b31fa0900bf6fbebaaba88f/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
     "markdown_date": "2026-09-21",
-    "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
-    "retrieved_at": "2026-09-25T21:34:10.649390Z"
+    "sha256": "a9c212d228626304dfb6bb83a647fddd68307f0ea32693ab9e67b7b02126e589",
+    "retrieved_at": "2026-09-29T13:39:53.051448Z"
   },
   "count": 59,
   "records": [
@@ -398,7 +398,7 @@
       "application_version": "10.0.48",
       "pqu_train": "PQU-5",
       "release_number": 5,
-      "status": "In-Progress",
+      "status": "Completed",
       "application_build": "10.0.2645.124",
       "platform_build": "7.0.7996.111",
       "uep_version": "10.0.48.6",
@@ -424,10 +424,10 @@
       "application_version": "10.0.48",
       "pqu_train": "PQU-7",
       "release_number": 7,
-      "status": "Not Started",
-      "application_build": null,
-      "platform_build": null,
-      "uep_version": null,
+      "status": "In-Progress",
+      "application_build": "10.0.2645.147",
+      "platform_build": "7.0.7996.122",
+      "uep_version": "10.0.48.8",
       "change_cutoff_date": "2026-09-30",
       "train_start_date": "2026-09-30",
       "train_end_date": "2026-10-24"

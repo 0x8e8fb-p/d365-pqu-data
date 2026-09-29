@@ -1,19 +1,182 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-09-28T04:01:44.646801Z",
+  "generated_at": "2026-09-29T13:39:53.051448Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
     "branch": "main",
     "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
-    "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+    "commit": "f5356378cee582265b31fa0900bf6fbebaaba88f",
     "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/f5356378cee582265b31fa0900bf6fbebaaba88f/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
     "markdown_date": "2026-09-21",
-    "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
-    "retrieved_at": "2026-09-25T21:34:10.649390Z"
+    "sha256": "a9c212d228626304dfb6bb83a647fddd68307f0ea32693ab9e67b7b02126e589",
+    "retrieved_at": "2026-09-29T13:39:53.051448Z"
   },
-  "count": 0,
-  "records": []
+  "count": 12,
+  "records": [
+    {
+      "change_id": "7f6ef8e13f4b3ae236ca",
+      "changed_at": "2026-09-29T13:39:53.051448Z",
+      "pqu_id": "10.0.48-PQU-5",
+      "entity": "pqu",
+      "change_type": "modified",
+      "field": "status",
+      "old_value": "In-Progress",
+      "new_value": "Completed",
+      "source_commit": "f5356378cee582265b31fa0900bf6fbebaaba88f"
+    },
+    {
+      "change_id": "34e5903cd792fb7ec94e",
+      "changed_at": "2026-09-29T13:39:53.051448Z",
+      "pqu_id": "10.0.48-PQU-7",
+      "entity": "pqu",
+      "change_type": "modified",
+      "field": "status",
+      "old_value": "Not Started",
+      "new_value": "In-Progress",
+      "source_commit": "f5356378cee582265b31fa0900bf6fbebaaba88f"
+    },
+    {
+      "change_id": "04f69c27f9a807380d06",
+      "changed_at": "2026-09-29T13:39:53.051448Z",
+      "pqu_id": "10.0.48-PQU-7",
+      "entity": "pqu",
+      "change_type": "modified",
+      "field": "application_build",
+      "old_value": null,
+      "new_value": "10.0.2645.147",
+      "source_commit": "f5356378cee582265b31fa0900bf6fbebaaba88f"
+    },
+    {
+      "change_id": "b9e58c9c97ef54ef392d",
+      "changed_at": "2026-09-29T13:39:53.051448Z",
+      "pqu_id": "10.0.48-PQU-7",
+      "entity": "pqu",
+      "change_type": "modified",
+      "field": "platform_build",
+      "old_value": null,
+      "new_value": "7.0.7996.122",
+      "source_commit": "f5356378cee582265b31fa0900bf6fbebaaba88f"
+    },
+    {
+      "change_id": "feedd0841df82dd683bb",
+      "changed_at": "2026-09-29T13:39:53.051448Z",
+      "pqu_id": "10.0.48-PQU-7",
+      "entity": "pqu",
+      "change_type": "modified",
+      "field": "uep_version",
+      "old_value": null,
+      "new_value": "10.0.48.8",
+      "source_commit": "f5356378cee582265b31fa0900bf6fbebaaba88f"
+    },
+    {
+      "change_id": "3bf303cfd068dcb69086",
+      "changed_at": "2026-09-29T13:39:53.051448Z",
+      "pqu_id": "10.0.48-PQU-7",
+      "entity": "pqu",
+      "change_type": "modified",
+      "field": "station_schedule_available",
+      "old_value": false,
+      "new_value": true,
+      "source_commit": "f5356378cee582265b31fa0900bf6fbebaaba88f"
+    },
+    {
+      "change_id": "e21a1f59ceac020ae327",
+      "changed_at": "2026-09-29T13:39:53.051448Z",
+      "pqu_id": "10.0.48-PQU-7",
+      "entity": "station",
+      "change_type": "added",
+      "field": "station.1",
+      "old_value": null,
+      "new_value": {
+        "sandbox_start_date": "2026-09-30",
+        "sandbox_end_date": "2026-10-03",
+        "production_start_date": null,
+        "production_end_date": null
+      },
+      "source_commit": "f5356378cee582265b31fa0900bf6fbebaaba88f"
+    },
+    {
+      "change_id": "e1064d507d317681bb46",
+      "changed_at": "2026-09-29T13:39:53.051448Z",
+      "pqu_id": "10.0.48-PQU-7",
+      "entity": "station",
+      "change_type": "added",
+      "field": "station.2",
+      "old_value": null,
+      "new_value": {
+        "sandbox_start_date": "2026-10-05",
+        "sandbox_end_date": "2026-10-08",
+        "production_start_date": "2026-10-10",
+        "production_end_date": "2026-10-11"
+      },
+      "source_commit": "f5356378cee582265b31fa0900bf6fbebaaba88f"
+    },
+    {
+      "change_id": "648a0cf6ecfddf01ee59",
+      "changed_at": "2026-09-29T13:39:53.051448Z",
+      "pqu_id": "10.0.48-PQU-7",
+      "entity": "station",
+      "change_type": "added",
+      "field": "station.3",
+      "old_value": null,
+      "new_value": {
+        "sandbox_start_date": "2026-10-05",
+        "sandbox_end_date": "2026-10-08",
+        "production_start_date": "2026-10-10",
+        "production_end_date": "2026-10-11"
+      },
+      "source_commit": "f5356378cee582265b31fa0900bf6fbebaaba88f"
+    },
+    {
+      "change_id": "e0cd9317cf7d5dd3977b",
+      "changed_at": "2026-09-29T13:39:53.051448Z",
+      "pqu_id": "10.0.48-PQU-7",
+      "entity": "station",
+      "change_type": "added",
+      "field": "station.4",
+      "old_value": null,
+      "new_value": {
+        "sandbox_start_date": "2026-10-12",
+        "sandbox_end_date": "2026-10-15",
+        "production_start_date": "2026-10-17",
+        "production_end_date": "2026-10-18"
+      },
+      "source_commit": "f5356378cee582265b31fa0900bf6fbebaaba88f"
+    },
+    {
+      "change_id": "d6633da91be1ef1a9d33",
+      "changed_at": "2026-09-29T13:39:53.051448Z",
+      "pqu_id": "10.0.48-PQU-7",
+      "entity": "station",
+      "change_type": "added",
+      "field": "station.5",
+      "old_value": null,
+      "new_value": {
+        "sandbox_start_date": "2026-10-19",
+        "sandbox_end_date": "2026-10-22",
+        "production_start_date": "2026-10-24",
+        "production_end_date": "2026-10-25"
+      },
+      "source_commit": "f5356378cee582265b31fa0900bf6fbebaaba88f"
+    },
+    {
+      "change_id": "be95a7611f947415bf21",
+      "changed_at": "2026-09-29T13:39:53.051448Z",
+      "pqu_id": "10.0.48-PQU-7",
+      "entity": "station",
+      "change_type": "added",
+      "field": "station.6",
+      "old_value": null,
+      "new_value": {
+        "sandbox_start_date": "2026-10-19",
+        "sandbox_end_date": "2026-10-22",
+        "production_start_date": "2026-10-24",
+        "production_end_date": "2026-10-25"
+      },
+      "source_commit": "f5356378cee582265b31fa0900bf6fbebaaba88f"
+    }
+  ]
 }

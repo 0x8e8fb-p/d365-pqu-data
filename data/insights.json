@@ -1,18 +1,18 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-09-28T04:01:44.646801Z",
+  "generated_at": "2026-09-29T13:39:53.051448Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
     "branch": "main",
     "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
-    "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+    "commit": "f5356378cee582265b31fa0900bf6fbebaaba88f",
     "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/f5356378cee582265b31fa0900bf6fbebaaba88f/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
     "markdown_date": "2026-09-21",
-    "sha256": "eff5917fbe1f79e7ad47e73e0e4b450a1fa4b39a6d8a69bfdf8cb32036f9ef0d",
-    "retrieved_at": "2026-09-25T21:34:10.649390Z"
+    "sha256": "a9c212d228626304dfb6bb83a647fddd68307f0ea32693ab9e67b7b02126e589",
+    "retrieved_at": "2026-09-29T13:39:53.051448Z"
   },
   "categories": [
     {
@@ -447,11 +447,11 @@
       "max": null,
       "breakdown": {
         "In-Progress": 2,
-        "Not Started": 11,
-        "Completed": 4
+        "Not Started": 10,
+        "Completed": 5
       },
       "excluded": [],
-      "summary": "10.0.48: 17 trains: 2 In-Progress, 11 Not Started, 4 Completed."
+      "summary": "10.0.48: 17 trains: 2 In-Progress, 10 Not Started, 5 Completed."
     },
     {
       "id": "trains-by-status:10.0.49",
@@ -478,12 +478,12 @@
       "value": 5,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 5,
+      "sample_size": 6,
       "min": 5,
       "max": 7,
       "breakdown": null,
       "excluded": [],
-      "summary": "Station 2: sandbox updates start 5 days after Station 1 (median of 5 trains; range 5–7 days)."
+      "summary": "Station 2: sandbox updates start 5 days after Station 1 (median of 6 trains; range 5–7 days)."
     },
     {
       "id": "station-offset:station-3",
@@ -493,12 +493,12 @@
       "value": 5,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 5,
+      "sample_size": 6,
       "min": 5,
       "max": 8,
       "breakdown": null,
       "excluded": [],
-      "summary": "Station 3: sandbox updates start 5 days after Station 1 (median of 5 trains; range 5–8 days)."
+      "summary": "Station 3: sandbox updates start 5 days after Station 1 (median of 6 trains; range 5–8 days)."
     },
     {
       "id": "station-offset:station-4",
@@ -508,12 +508,12 @@
       "value": 12,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 5,
+      "sample_size": 6,
       "min": 12,
       "max": 14,
       "breakdown": null,
       "excluded": [],
-      "summary": "Station 4: sandbox updates start 12 days after Station 1 (median of 5 trains; range 12–14 days)."
+      "summary": "Station 4: sandbox updates start 12 days after Station 1 (median of 6 trains; range 12–14 days)."
     },
     {
       "id": "station-offset:station-5",
@@ -523,12 +523,12 @@
       "value": 19,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 5,
+      "sample_size": 6,
       "min": 19,
       "max": 21,
       "breakdown": null,
       "excluded": [],
-      "summary": "Station 5: sandbox updates start 19 days after Station 1 (median of 5 trains; range 19–21 days)."
+      "summary": "Station 5: sandbox updates start 19 days after Station 1 (median of 6 trains; range 19–21 days)."
     },
     {
       "id": "station-offset:station-6",
@@ -538,12 +538,12 @@
       "value": 19,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 5,
+      "sample_size": 6,
       "min": 19,
       "max": 22,
       "breakdown": null,
       "excluded": [],
-      "summary": "Station 6: sandbox updates start 19 days after Station 1 (median of 5 trains; range 19–22 days)."
+      "summary": "Station 6: sandbox updates start 19 days after Station 1 (median of 6 trains; range 19–22 days)."
     },
     {
       "id": "sandbox-to-production:station-2",
@@ -553,12 +553,12 @@
       "value": 5,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 5,
+      "sample_size": 6,
       "min": 5,
       "max": 12,
       "breakdown": null,
       "excluded": [],
-      "summary": "Station 2: production updates start 5 days after sandbox updates (median of 5 trains; range 5–12 days)."
+      "summary": "Station 2: production updates start 5 days after sandbox updates (median of 6 trains; range 5–12 days)."
     },
     {
       "id": "sandbox-to-production:station-3",
@@ -568,12 +568,12 @@
       "value": 5,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 5,
+      "sample_size": 6,
       "min": 5,
       "max": 11,
       "breakdown": null,
       "excluded": [],
-      "summary": "Station 3: production updates start 5 days after sandbox updates (median of 5 trains; range 5–11 days)."
+      "summary": "Station 3: production updates start 5 days after sandbox updates (median of 6 trains; range 5–11 days)."
     },
     {
       "id": "sandbox-to-production:station-4",
@@ -583,12 +583,12 @@
       "value": 5,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 5,
+      "sample_size": 6,
       "min": 5,
       "max": 12,
       "breakdown": null,
       "excluded": [],
-      "summary": "Station 4: production updates start 5 days after sandbox updates (median of 5 trains; range 5–12 days)."
+      "summary": "Station 4: production updates start 5 days after sandbox updates (median of 6 trains; range 5–12 days)."
     },
     {
       "id": "sandbox-to-production:station-5",
@@ -598,12 +598,12 @@
       "value": 5,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 5,
+      "sample_size": 6,
       "min": 5,
       "max": 12,
       "breakdown": null,
       "excluded": [],
-      "summary": "Station 5: production updates start 5 days after sandbox updates (median of 5 trains; range 5–12 days)."
+      "summary": "Station 5: production updates start 5 days after sandbox updates (median of 6 trains; range 5–12 days)."
     },
     {
       "id": "sandbox-to-production:station-6",
@@ -613,12 +613,12 @@
       "value": 5,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 5,
+      "sample_size": 6,
       "min": 5,
       "max": 11,
       "breakdown": null,
       "excluded": [],
-      "summary": "Station 6: production updates start 5 days after sandbox updates (median of 5 trains; range 5–11 days)."
+      "summary": "Station 6: production updates start 5 days after sandbox updates (median of 6 trains; range 5–11 days)."
     },
     {
       "id": "sandbox-to-production:all",
@@ -628,12 +628,12 @@
       "value": 5,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 25,
+      "sample_size": 30,
       "min": 5,
       "max": 12,
       "breakdown": null,
       "excluded": [],
-      "summary": "Production updates start a median of 5 days after sandbox updates (25 station windows; range 5–12 days)."
+      "summary": "Production updates start a median of 5 days after sandbox updates (30 station windows; range 5–12 days)."
     },
     {
       "id": "regions-per-station:station-2",
