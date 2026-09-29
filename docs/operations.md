@@ -2,7 +2,24 @@
 
 ## Normal schedule
 
-The `Update D365 PQU dataset` workflow runs at minute 17 of every hour and can be started manually with **Run workflow**. The minute is intentionally off the top of the hour to reduce scheduler contention. The schedule lives in `.github/workflows/update-pqu.yml` and must match `UPDATE_CRON` and `CHECK_INTERVAL_MINUTES` in `src/d365_pqu/config.py`; `tests/test_workflows.py` fails if they drift apart.
+The `Update D365 PQU dataset` workflow runs about once an hour and can be started manually with **Run workflow**.
+
+GitHub's cron scheduler cannot be relied on for this: in this repository it has created the hourly scheduled runs hours late and skipped most of them (about four runs a day), which left the dashboard showing **Stale**. The hour is therefore kept by the `Hourly update timer` workflow (`.github/workflows/update-timer.yml`):
+
+1. A timer run waits in the `pqu-timer` environment, whose wait timer is 58 minutes. While it waits, the job has no runner and uses no Actions minutes.
+2. It then starts the next timer run and the update. The next timer starts first, so a failing update does not end the loop.
+3. Timer runs share one concurrency group, so there is never more than one loop. A timer run that starts without having waited at least 45 minutes (the environment lost its wait timer) fails and starts nothing, instead of starting runs back to back.
+4. Every update run ends with an `ensure-timer` job that starts a timer run when none is waiting, so the loop restarts after a failure, a cancelled run, or a GitHub incident.
+
+The cron schedule at minute 17 stays as a backup and also restarts the loop. It lives in `.github/workflows/update-pqu.yml` and must match `UPDATE_CRON` and `CHECK_INTERVAL_MINUTES` in `src/d365_pqu/config.py`; `tests/test_workflows.py` fails if they drift apart.
+
+The `pqu-timer` environment is a repository setting, not a file. To recreate it, add an environment named `pqu-timer` with a 58-minute wait timer under **Settings → Environments**, or run:
+
+```bash
+gh api -X PUT repos/0x8e8fb-p/d365-pqu-data/environments/pqu-timer -F wait_timer=58
+```
+
+Wait timers in the GitHub Free plan need a public repository. To stop the hourly loop, disable `Hourly update timer` in the **Actions** tab; to restart it, enable it and use **Run workflow** on it (or on the update workflow).
 
 Every run:
 
@@ -52,8 +69,10 @@ Do not manually edit generated files to repair a parser failure. Update the pars
 3. Read the first failing step and the issue body.
 4. If the source structure changed, update parser tests and code.
 5. Run the local quality suite.
-6. Use **Run workflow** on `main`.
+6. Use **Run workflow** on `main`. The run also restarts the hourly timer if it had stopped.
 7. Confirm the new commit, Pages deployment, and endpoint responses.
+
+If the dashboard shows **Stale** although runs succeed, check that a `Hourly update timer` run is waiting in the **Actions** tab and that the `pqu-timer` environment still has its 58-minute wait timer.
 
 If scheduled workflows are disabled after a long period of inactivity, re-enable them in **Actions** and run the workflow manually. The monthly health heartbeat normally prevents this GitHub inactivity condition.
 
@@ -85,7 +104,7 @@ To rebuild the dataset from local copies of the articles (for example to test a 
 
 ## Operational limits
 
-- GitHub Actions schedules are best-effort and can be delayed during GitHub incidents.
-- The workflow checks every hour; it is not a real-time SLA.
+- GitHub Actions schedules are best-effort; the hourly timer does not depend on them, but GitHub incidents can still delay runs.
+- The workflow checks about once an hour; it is not a real-time SLA.
 - Microsoft can change or temporarily restructure its documentation. Fatal structural changes require a reviewed parser update.
 - Environment-specific rollout timing still comes from Microsoft Lifecycle Services notifications.

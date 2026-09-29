@@ -91,7 +91,7 @@ The workbook has filters, frozen headers, real Excel date values, hyperlinks, st
 
 ## Automation
 
-`update-pqu.yml` runs every hour at minute 17 and can also be started manually from the GitHub Actions tab. The workflow:
+`update-pqu.yml` runs about once an hour and can also be started manually from the GitHub Actions tab. GitHub's cron scheduler skips most hourly runs in this repository, so the hour is kept by `update-timer.yml`: each timer run waits 58 minutes in the `pqu-timer` environment (a wait timer, which uses no runner), then starts the update and the next timer. The cron at minute 17 remains as a backup. See [Operations and recovery](docs/operations.md). The workflow:
 
 1. Resolves the current Microsoft source commit once with `git ls-remote`.
 2. Downloads the five articles at that exact commit. The release schedule is required; if another article cannot be read, the last published copy is kept and marked stale, and a source warning says so.

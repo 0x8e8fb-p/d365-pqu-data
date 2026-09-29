@@ -214,3 +214,37 @@ jobs:
               });
               core.notice(`Created sync issue #${created.data.number}`);
             }
+
+  # Keeps the hourly loop in update-timer.yml going: when no timer run is queued, waiting or
+  # running (after a failure, a cancelled run or a GitHub incident), start one. Any update run,
+  # scheduled or manual, restarts the loop this way; the timer's own concurrency group keeps
+  # a second loop from starting.
+  ensure-timer:
+    needs: update
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Start the hourly timer if none is waiting
+        run: |
+          set -euo pipefail
+          if ! state="$(gh api "repos/$GH_REPO/actions/workflows/update-timer.yml" --jq .state 2>/dev/null)"; then
+            state="missing"
+          fi
+          if [ "$state" != "active" ]; then
+            echo "The hourly timer workflow is $state; leaving it off."
+            exit 0
+          fi
+          pending="$(gh api "repos/$GH_REPO/actions/workflows/update-timer.yml/runs?per_page=20" \
+            --jq '[.workflow_runs[] | select(.status != "completed")] | length')"
+          if [ "$pending" -gt 0 ]; then
+            echo "A timer run is already waiting."
+            exit 0
+          fi
+          gh api --method POST "repos/$GH_REPO/actions/workflows/update-timer.yml/dispatches" -f ref=main >/dev/null
+          echo "Started the hourly timer."

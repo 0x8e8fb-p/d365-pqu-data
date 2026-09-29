@@ -81,7 +81,8 @@ SOURCE_SPECS = (
 SOURCE_SPECS_BY_KEY = {spec.key: spec for spec in SOURCE_SPECS}
 
 # Hourly at minute 17 (off the top of the hour to reduce scheduler contention). The interval must
-# match the cron schedule in .github/workflows/update-pqu.yml; a test enforces both.
+# match the cron schedule in .github/workflows/update-pqu.yml; a test enforces both. GitHub skips
+# most of these scheduled runs, so update-timer.yml keeps the hour (see docs/operations.md).
 UPDATE_CRON = "17 * * * *"
 CHECK_INTERVAL_MINUTES = 60
 HEARTBEAT_DAYS = 30

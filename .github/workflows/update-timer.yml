@@ -1,0 +1,74 @@
+name: Hourly update timer
+
+# Starts "Update D365 PQU dataset" about once an hour without depending on GitHub's cron
+# scheduler, which creates this repository's scheduled runs hours late and skips most of them.
+# Each run first waits in the pqu-timer environment: its 58-minute wait timer holds the job
+# without a runner and is not billed. The run then starts the next timer run and the update.
+# Every update run restarts this loop if no timer run is waiting; disabling this workflow in the
+# Actions tab stops it. See docs/operations.md.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+# One timer at a time: a newer run replaces a pending one, so the loop never doubles.
+concurrency:
+  group: pqu-update-timer
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment:
+      name: pqu-timer
+      deployment: false
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      # A run that starts sooner than this after it was created did not wait, which means the
+      # environment has lost its wait timer. Stop instead of starting runs back to back.
+      MIN_WAIT_SECONDS: "2700"
+    steps:
+      - name: Check that this run waited
+        run: |
+          set -euo pipefail
+          created=""
+          for attempt in 1 2 3 4 5; do
+            if created="$(gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID" --jq .created_at)"; then
+              break
+            fi
+            created=""
+            sleep $((attempt * 10))
+          done
+          if [ -z "$created" ]; then
+            echo "::error::Could not read this run's creation time."
+            exit 1
+          fi
+          waited=$(( $(date -u +%s) - $(date -u -d "$created" +%s) ))
+          echo "Started ${waited}s after this run was created."
+          if [ "$waited" -lt "$MIN_WAIT_SECONDS" ]; then
+            echo "::error::The pqu-timer environment did not hold this run (${waited}s). Set its wait timer to 58 minutes as described in docs/operations.md, then run this workflow again."
+            exit 1
+          fi
+
+      - name: Start the next timer run, then the update
+        run: |
+          set -euo pipefail
+          dispatch() {
+            for attempt in 1 2 3 4 5; do
+              if gh api --method POST "repos/$GH_REPO/actions/workflows/$1/dispatches" -f ref=main >/dev/null; then
+                echo "Started $1."
+                return 0
+              fi
+              sleep $((attempt * 15))
+            done
+            echo "::error::Could not start $1."
+            return 1
+          }
+          status=0
+          dispatch update-timer.yml || status=1
+          dispatch update-pqu.yml || status=1
+          exit "$status"
