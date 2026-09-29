@@ -8,7 +8,7 @@
   const router = PQU.router;
 
   const ASSET_VERSION = "__ASSET_VERSION__";
-  const APP_TITLE = "PQU Console";
+  const APP_TITLE = "D365 PQU Tracker";
   const DOCUMENTS = {
     metadata: "./api/metadata.json",
     pqu: "./api/pqu.json",
@@ -201,6 +201,7 @@
       now: Date.now(),
       todayIso,
       todayLabel: dates.formatDate(todayIso, { weekday: true }),
+      todayLong: dates.formatDate(todayIso, { weekday: true, long: true }),
       lastHash: { ...state.lastHash },
       caption:
         "Proactive quality update trains. Dates are Microsoft's published calendar dates; " +
@@ -252,7 +253,6 @@
   function focusView(container, navigating) {
     const target = container.querySelector("[data-focus-target]");
     if (target) {
-      PQU.ui.layout.update();
       target.focus({ preventScroll: true });
       target.scrollIntoView({ block: "start", behavior: "instant" });
       return;
@@ -331,12 +331,9 @@
     container.setAttribute("aria-busy", "true");
     container.replaceChildren(
       el("div", { class: "skeleton", "aria-hidden": "true" }, [
-        el("span", { class: "skeleton-line skeleton-kicker" }),
         el("span", { class: "skeleton-line skeleton-title" }),
-        el("span", { class: "skeleton-block" }),
         el("span", { class: "skeleton-line" }),
-        el("span", { class: "skeleton-line skeleton-short" }),
-        el("span", { class: "skeleton-block skeleton-tall" })
+        el("span", { class: "skeleton-line skeleton-short" })
       ]),
       el("p", { class: "visually-hidden", text: "Loading the dataset…" })
     );
@@ -540,9 +537,23 @@
     }, MINUTE_MS - (now % MINUTE_MS) + 20);
   }
 
+  /* The skip link's "#main" would be read as a route; move focus without changing the address. */
+  function wireSkipLink() {
+    const link = document.querySelector(".skip-link");
+    const main = document.getElementById("main");
+    if (!link || !main) {
+      return;
+    }
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      main.focus({ preventScroll: true });
+      main.scrollIntoView({ block: "start", behavior: "instant" });
+    });
+  }
+
   async function start() {
     PQU.ui.theme.wireTheme();
-    PQU.ui.layout.wire();
+    wireSkipLink();
     PQU.ui.zone.renderPicker(() => {
       renderRoute().catch(showLoadError);
     });

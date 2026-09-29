@@ -1,5 +1,6 @@
-/* Versions view: each service update's lifecycle phase today, from Microsoft's published dates,
- * alongside the PQU trains published for that version. */
+/* Versions view: every service update on one lifecycle chart, Microsoft's milestone dates in a
+ * table, the PQU trains published for each version, and Find my build. Dates, statuses and
+ * builds are Microsoft's; phases, countdowns and build positions are calculated. */
 (function (root) {
   "use strict";
 
@@ -10,8 +11,16 @@
   const lifecycle = PQU.lifecycle;
   const records = PQU.records;
   const text = PQU.text;
+  const common = PQU.ui.common;
 
-  const LEGEND = ["preview", "available", "autoupdate", "supported"];
+  const MILESTONE_COLUMNS = [
+    { field: "preview_date", label: "Preview" },
+    { field: "preview_latest_update_date", label: "Latest preview update" },
+    { field: "general_availability_date", label: "General availability" },
+    { field: "first_autoupdate_date", label: "First autoupdate" },
+    { field: "second_autoupdate_date", label: "Second autoupdate" },
+    { field: "end_of_service_date", label: "End of service" }
+  ];
 
   function slug(version) {
     return `version-${String(version).replace(/[^0-9a-z]+/gi, "-")}`;
@@ -46,143 +55,9 @@
     return null;
   }
 
-  function lifecycleBar(entry, assessment, todayIso) {
-    const geometry = lifecycle.bar(entry.lifecycle, todayIso);
-    if (!geometry) {
-      return null;
-    }
-    const label =
-      `Lifecycle from ${dates.formatDate(geometry.start)} to ${dates.formatDate(geometry.end)}. ` +
-      (geometry.today === null
-        ? "Today is outside this range."
-        : `Today falls in the ${assessment.label} phase.`);
-    return el("div", { class: "lifecycle-bar", role: "img", "aria-label": label }, [
-      el(
-        "div",
-        { class: "lifecycle-track" },
-        geometry.segments.map((segment) =>
-          el("span", {
-            class: `lifecycle-seg seg-${segment.state}`,
-            title: `${segment.label}: ${dates.formatDateRange(segment.startDate, segment.endDate)}`,
-            vars: { "--left": `${segment.left}%`, "--width": `${segment.width}%` }
-          })
-        )
-      ),
-      geometry.today === null
-        ? null
-        : el("span", { class: "lifecycle-today", vars: { "--at": `${geometry.today}%` } })
-    ]);
-  }
+  /* ---- Facts ---- */
 
-  function milestoneList(assessment, todayIso) {
-    if (!assessment.milestones.length) {
-      return null;
-    }
-    return el(
-      "dl",
-      { class: "milestones" },
-      assessment.milestones.map((milestone) =>
-        el(
-          "div",
-          {
-            class: [
-              "milestone",
-              assessment.next && assessment.next.field === milestone.field ? "is-next" : null,
-              milestone.date <= todayIso ? "is-reached" : null
-            ]
-          },
-          [el("dt", { text: milestone.label }), el("dd", { text: dates.formatDate(milestone.date) })]
-        )
-      )
-    );
-  }
-
-  function trainLine(entry) {
-    const summary = lifecycle.trainSummary(entry.trains);
-    if (!summary.total) {
-      return el("p", { class: "version-trains muted", text: "No PQU trains in the current schedule." });
-    }
-    const counts = records.STATUS_ORDER.filter((status) => summary.counts[status]).map(
-      (status) => `${summary.counts[status]} ${status}`
-    );
-    const parts = [`${text.plural(summary.total, "PQU train")}: ${counts.join(" · ")}.`];
-    if (summary.latest) {
-      parts.push(
-        ` Latest published build ${summary.latest.application_build} ` +
-          `(platform ${summary.latest.platform_build || "—"}, ${text.trainLabel(summary.latest.pqu_id)}).`
-      );
-    } else {
-      parts.push(" No build published yet.");
-    }
-    return el("p", { class: "version-trains" }, [
-      ...parts,
-      " ",
-      el("a", {
-        href: PQU.router.href("trains", {}, { version: entry.version }),
-        text: `Show ${entry.version} trains`
-      })
-    ]);
-  }
-
-  function versionCard(entry, todayIso, focusVersion) {
-    const id = slug(entry.version);
-    const record = entry.lifecycle;
-    const assessment = record ? lifecycle.assess(record, todayIso) : null;
-    const targeted = focusVersion === entry.version;
-    const meta = [];
-    if (record && record.release_label) {
-      meta.push(el("span", { class: "mono", text: record.release_label }));
-    }
-    if (record && record.is_major) {
-      meta.push(el("span", { class: "chip chip-major", text: "Major release" }));
-    }
-    return el(
-      "article",
-      {
-        class: ["version-card", assessment ? `phase-${assessment.state}` : "phase-unknown", targeted ? "is-target" : null],
-        id,
-        "aria-labelledby": `${id}-title`
-      },
-      [
-        el("div", { class: "version-head" }, [
-          el("div", {}, [
-            el("h3", {
-              id: `${id}-title`,
-              class: "mono",
-              tabindex: targeted ? "-1" : null,
-              dataset: targeted ? { focusTarget: "" } : {},
-              text: entry.version
-            }),
-            meta.length ? el("p", { class: "version-meta" }, meta) : null
-          ]),
-          el(
-            "div",
-            { class: "version-state" },
-            assessment
-              ? [
-                  el("span", { class: `phase-badge phase-badge-${assessment.state}`, text: assessment.label }),
-                  el("p", { class: "version-next" }, [
-                    PQU.ui.dom.visuallyHidden("Calculated from published dates: "),
-                    assessment.summary
-                  ])
-                ]
-              : [el("span", { class: "phase-badge phase-badge-unknown", text: "No lifecycle dates" })]
-          )
-        ]),
-        assessment ? lifecycleBar(entry, assessment, todayIso) : null,
-        assessment ? milestoneList(assessment, todayIso) : null,
-        record
-          ? null
-          : el("p", {
-              class: "muted version-missing",
-              text: "This version is not in Microsoft's current service update schedule."
-            }),
-        trainLine(entry)
-      ]
-    );
-  }
-
-  function statStrip(entries, todayIso) {
+  function statFacts(entries, todayIso) {
     const assessed = entries
       .filter((entry) => entry.lifecycle)
       .map((entry) => ({ entry, assessment: lifecycle.assess(entry.lifecycle, todayIso) }));
@@ -236,9 +111,225 @@
     }
     return el(
       "dl",
-      { class: "stat-strip", id: "version-stats" },
-      stats.map((stat) => el("div", {}, [el("dt", { text: stat.label }), el("dd", { text: stat.value })]))
+      { class: "facts", id: "version-stats" },
+      stats.map((stat) => el("div", {}, [el("dt", { text: stat.label }), el("dd", { class: "calc", text: stat.value })]))
     );
+  }
+
+  /* ---- Lifecycle chart ---- */
+
+  function legend() {
+    return el("ul", { class: "legend", "aria-label": "Chart key" }, [
+      el("li", {}, [el("span", { class: "legend-swatch swatch-hollow", "aria-hidden": "true" }), "Preview"]),
+      el("li", {}, [
+        el("span", { class: "legend-swatch swatch-solid", "aria-hidden": "true" }),
+        "General availability to end of service"
+      ]),
+      el("li", {}, [el("span", { class: "legend-notch", "aria-hidden": "true" }), "Autoupdates"]),
+      el("li", {}, [el("span", { class: "legend-swatch swatch-past", "aria-hidden": "true" }), "Ended"]),
+      el("li", {}, [el("span", { class: "legend-today", "aria-hidden": "true" }), "Today"])
+    ]);
+  }
+
+  function lifecycleChart(ctx, entries) {
+    const geometry = lifecycle.chart(
+      entries.filter((entry) => entry.lifecycle).map((entry) => entry.lifecycle),
+      ctx.todayIso
+    );
+    if (!geometry) {
+      return null;
+    }
+    const label =
+      `Lifecycle of ${text.plural(geometry.rows.length, "service update")} from ${dates.formatDate(geometry.start)} ` +
+      `to ${dates.formatDate(geometry.end)}. ` +
+      (geometry.today === null ? "Today is outside this range. " : `Today is ${dates.formatDate(ctx.todayIso)}. `) +
+      "The table below lists every date.";
+    const rows = geometry.rows.map((row) =>
+      el("div", { class: ["lc-row", row.state === "end-of-service" ? "is-past" : null], dataset: { version: row.version } }, [
+        el("span", { class: "lc-label", text: row.version }),
+        el("div", { class: "lc-lane" }, [
+          ...row.segments.map((segment) =>
+            el("span", {
+              class: ["lc-seg", `seg-${segment.kind}`],
+              title: `${row.version} ${segment.kind === "preview" ? "preview" : "in service"}: ${dates.formatDateRange(
+                segment.start,
+                segment.end
+              )}`,
+              vars: { "--left": `${segment.left}%`, "--width": `${segment.width}%` }
+            })
+          ),
+          ...row.marks.map((mark) => el("span", { class: "lc-mark", vars: { "--left": `${mark.left}%` } }))
+        ])
+      ])
+    );
+    return el("figure", { class: "lc-chart", id: "lifecycle-chart" }, [
+      el("div", { class: "lc-scroll" }, [
+        el("div", { class: "lc-plot", role: "img", "aria-label": label }, [
+          ...geometry.ticks.map((tick) => el("span", { class: "lc-grid", vars: { "--f": String(tick.left / 100) } })),
+          ...rows,
+          el("div", { class: "lc-row lc-axis" }, [
+            el("span", { class: "lc-label" }),
+            el(
+              "div",
+              { class: "lc-lane" },
+              geometry.ticks.map((tick) => el("span", { class: "lc-tick", vars: { "--left": `${tick.left}%` }, text: tick.label }))
+            )
+          ]),
+          geometry.today === null
+            ? null
+            : el("span", { class: "lc-today", vars: { "--f": String(geometry.today / 100) } })
+        ])
+      ]),
+      el("figcaption", {}, [legend()])
+    ]);
+  }
+
+  /* ---- Dates table ---- */
+
+  function milestoneCell(record, column, assessment, todayIso) {
+    const value = record[column.field];
+    if (!dates.isIsoDate(value)) {
+      return el("td", { class: "muted", text: "—" });
+    }
+    const isNext = assessment.next && assessment.next.field === column.field;
+    return el("td", {
+      class: [isNext ? "is-next" : null, value <= todayIso ? "is-reached" : null],
+      text: dates.formatDate(value)
+    });
+  }
+
+  function versionRow(ctx, entry, focusVersion) {
+    const id = slug(entry.version);
+    const record = entry.lifecycle;
+    const targeted = focusVersion === entry.version;
+    const heading = el(
+      "th",
+      {
+        scope: "row",
+        id: `${id}-title`,
+        tabindex: targeted ? "-1" : null,
+        dataset: targeted ? { focusTarget: "" } : {}
+      },
+      [
+        entry.version,
+        record && (record.release_label || record.is_major)
+          ? el("span", { class: "cell-note" }, [
+              record.release_label || "",
+              record.release_label && record.is_major ? " · " : "",
+              record.is_major ? el("span", { class: "tag tag-major", text: "Major release" }) : null
+            ])
+          : null
+      ]
+    );
+    if (!record) {
+      return el("tr", { id, class: [targeted ? "is-target" : null], dataset: { version: entry.version } }, [
+        heading,
+        el("td", {}, [el("span", { class: "phase-name muted", text: "No lifecycle dates" })]),
+        el("td", {
+          class: "muted version-missing",
+          colspan: String(MILESTONE_COLUMNS.length),
+          text: "This version is not in Microsoft's current service update schedule."
+        })
+      ]);
+    }
+    const assessment = lifecycle.assess(record, ctx.todayIso);
+    return el(
+      "tr",
+      { id, class: [targeted ? "is-target" : null, `phase-${assessment.state}`], dataset: { version: entry.version } },
+      [
+        heading,
+        el("td", { class: "phase-cell" }, [
+          common.calc(assessment.label, { class: "phase-name", announce: true }),
+          el("span", { class: "cell-note calc version-next", text: assessment.summary })
+        ]),
+        ...MILESTONE_COLUMNS.map((column) => milestoneCell(record, column, assessment, ctx.todayIso))
+      ]
+    );
+  }
+
+  function datesTable(ctx, entries, focusVersion) {
+    return el("div", { class: "table-scroll" }, [
+      el("table", { class: "version-table", id: "version-table" }, [
+        el("caption", {
+          class: "visually-hidden",
+          text: "Microsoft's milestone dates for each service update, with its phase today"
+        }),
+        el("thead", {}, [
+          el("tr", {}, [
+            el("th", { scope: "col", text: "Version" }),
+            el("th", { scope: "col", text: "Today" }),
+            ...MILESTONE_COLUMNS.map((column) => el("th", { scope: "col", text: column.label }))
+          ])
+        ]),
+        el(
+          "tbody",
+          {},
+          entries.map((entry) => versionRow(ctx, entry, focusVersion))
+        )
+      ])
+    ]);
+  }
+
+  /* ---- Trains by version ---- */
+
+  function trainsTable(entries) {
+    const withTrains = entries.filter((entry) => entry.trains.length);
+    if (!withTrains.length) {
+      return el("p", { class: "muted", text: "No PQU trains in the current schedule." });
+    }
+    const summaries = withTrains.map((entry) => ({ entry, summary: lifecycle.trainSummary(entry.trains) }));
+    const present = new Set(summaries.flatMap((item) => Object.keys(item.summary.counts)));
+    const statuses = [
+      ...records.STATUS_ORDER.filter((status) => present.has(status)),
+      ...[...present].filter((status) => !records.STATUS_ORDER.includes(status)).sort()
+    ];
+    return el("div", { class: "table-scroll" }, [
+      el("table", { class: "trains-by-version", id: "version-trains" }, [
+        el("caption", {
+          class: "visually-hidden",
+          text: "PQU trains in Microsoft's schedule for each version, by status, with the newest published build"
+        }),
+        el("thead", {}, [
+          el("tr", {}, [
+            el("th", { scope: "col", text: "Version" }),
+            el("th", { scope: "col", class: "num", text: "Trains" }),
+            ...statuses.map((status) => el("th", { scope: "col", text: status })),
+            el("th", { scope: "col", text: "Newest published build" })
+          ])
+        ]),
+        el(
+          "tbody",
+          {},
+          summaries.map(({ entry, summary }) =>
+            el("tr", { class: "version-trains", dataset: { version: entry.version } }, [
+              el("th", { scope: "row" }, [
+                el("a", {
+                  href: PQU.router.href("trains", {}, { version: entry.version }),
+                  "aria-label": `Show ${entry.version} trains`,
+                  text: entry.version
+                })
+              ]),
+              el("td", { text: String(summary.total) }),
+              ...statuses.map((status) => el("td", { text: String(summary.counts[status] || 0) })),
+              el(
+                "td",
+                {},
+                summary.latest
+                  ? [
+                      summary.latest.application_build,
+                      " ",
+                      el("span", { class: "cell-note" }, [
+                        `Platform ${summary.latest.platform_build || "—"} · `,
+                        common.trainLink(summary.latest.pqu_id)
+                      ])
+                    ]
+                  : [el("span", { class: "muted", text: "No build published yet" })]
+              )
+            ])
+          )
+        )
+      ])
+    ]);
   }
 
   function scheduleNotes(ctx) {
@@ -255,19 +346,6 @@
       blocks: [...intro, ...before, ...after],
       summaryNote: "Microsoft Learn"
     });
-  }
-
-  function legend() {
-    return el(
-      "ul",
-      { class: "legend", "aria-label": "Lifecycle phases" },
-      LEGEND.map((state) =>
-        el("li", {}, [
-          el("span", { class: `legend-swatch seg-${state}`, "aria-hidden": "true" }),
-          lifecycle.STATE_LABELS[state]
-        ])
-      )
-    );
   }
 
   /* ---- Find my build ---- */
@@ -295,12 +373,7 @@
   }
 
   function trainRef(record, field) {
-    return [
-      el("span", { class: "mono", text: record[field] }),
-      " (",
-      PQU.ui.common.trainLink(record.pqu_id),
-      ")"
-    ];
+    return [record[field], " (", common.trainLink(record.pqu_id), ")"];
   }
 
   function newerText(count) {
@@ -334,10 +407,11 @@
         .sort((a, b) => PQU.versions.compareVersions(a[0], b[0]))
         .map(([version, line]) => `${version} (${line})`);
       return [
-        el("p", { class: "build-headline", text: `No train in Microsoft's schedule uses build line ${PQU.builds.lineOf(result.input)}` }),
-        known.length
-          ? detail([`The schedule lists application builds for ${text.joinList(known)}.`])
-          : null
+        el("p", {
+          class: "build-headline",
+          text: `No train in Microsoft's schedule uses build line ${PQU.builds.lineOf(result.input)}`
+        }),
+        known.length ? detail([`The schedule lists application builds for ${text.joinList(known)}.`]) : null
       ];
     }
     const other = result.field === "application_build" ? "platform_build" : "application_build";
@@ -346,7 +420,7 @@
     let lines;
     switch (result.kind) {
       case "exact":
-        headline = [PQU.ui.common.trainLink(result.match.pqu_id), ` · ${newerText(result.newerCount)}`];
+        headline = [common.trainLink(result.match.pqu_id), " · ", el("span", { class: "calc", text: newerText(result.newerCount) })];
         lines = [
           detail([
             `${result.input} is the ${result.label} of ${text.trainLabel(result.match.pqu_id)} ` +
@@ -361,7 +435,7 @@
       case "between":
         headline = [
           `Between ${text.trainLabel(result.older.pqu_id)} and ${text.trainLabel(result.newer.pqu_id)} · `,
-          newerText(result.newerCount)
+          el("span", { class: "calc", text: newerText(result.newerCount) })
         ];
         lines = [
           detail([
@@ -374,12 +448,19 @@
         ];
         break;
       case "before":
-        headline = [`Older than every ${result.version} build listed · ${newerText(result.newerCount)}`];
-        lines = [detail([`The earliest ${result.version} build in Microsoft's schedule is `, ...trainRef(result.newer, result.field), "."])];
+        headline = [
+          `Older than every ${result.version} build listed · `,
+          el("span", { class: "calc", text: newerText(result.newerCount) })
+        ];
+        lines = [
+          detail([`The earliest ${result.version} build in Microsoft's schedule is `, ...trainRef(result.newer, result.field), "."])
+        ];
         break;
       default:
         headline = [`Newer than every ${result.version} build listed`];
-        lines = [detail([`The newest ${result.version} build in Microsoft's schedule is `, ...trainRef(result.older, result.field), "."])];
+        lines = [
+          detail([`The newest ${result.version} build in Microsoft's schedule is `, ...trainRef(result.older, result.field), "."])
+        ];
     }
     const state = versionState(ctx, result.version);
     return [
@@ -387,7 +468,7 @@
       ...lines,
       state
         ? detail([
-            state,
+            el("span", { class: "calc", text: state }),
             " ",
             el("a", {
               href: PQU.router.href("versions", {}, { build: result.input, version: result.version }),
@@ -434,20 +515,23 @@
       },
       [
         el("label", { class: "field" }, [el("span", { text: "Application or platform build" }), input]),
-        el("button", { class: "button primary small", type: "submit", text: "Find" })
+        el("button", { class: "button primary", type: "submit", text: "Find" })
       ]
     );
     show(route.query.build);
-    return el("section", { class: "build-finder", id: "build-finder", "aria-labelledby": "build-finder-heading" }, [
-      el("h3", { id: "build-finder-heading", text: "Find my build" }),
-      el("p", {
-        class: "section-lead",
-        text: "See which PQU train published a build and how many newer builds Microsoft lists for its version."
-      }),
-      form,
-      result,
-      PQU.ui.common.calcNote("Calculated by comparing the number with the PQU builds in Microsoft's schedule.")
-    ]);
+    return common.block(
+      "build-finder",
+      "Find my build",
+      [
+        el("p", {
+          text: "Enter the build your environment runs to see which PQU train published it and how many newer builds Microsoft lists for its version."
+        }),
+        form,
+        result,
+        common.calcNote("Build positions are calculated by comparing the number with the PQU builds in Microsoft's schedule.")
+      ],
+      { headingId: "build-finder-heading" }
+    );
   }
 
   function render(container, ctx, route) {
@@ -456,40 +540,31 @@
     const entries = lifecycle.mergeVersions(serviceRecords, ctx.records);
     const source = document && document.source ? document.source : null;
     const focusVersion = (route && route.query.version) || null;
+    const hasDates = entries.some((entry) => entry.lifecycle);
     container.replaceChildren(
-      el("section", { class: "section", "aria-labelledby": "versions-heading" }, [
-        el("div", { class: "section-head" }, [
-          el("div", {}, [
-            el("p", { class: "kicker", text: "Lifecycle" }),
-            el("h2", {
-              id: "versions-heading",
-              tabindex: "-1",
-              dataset: { viewHeading: "" },
-              text: "Service update versions"
-            })
-          ]),
-          source
-            ? el("p", { class: "section-note" }, [
+      el("div", { class: "page versions" }, [
+        common.pageHead({
+          id: "versions-heading",
+          title: "Service updates",
+          sub: "Each service update (version) moves from preview to general availability, two autoupdates and end of service. PQU trains deliver fixes to the versions in service.",
+          aside: source
+            ? [
                 "Dates from ",
                 extLink(source.article_url, "Service update availability"),
                 source.markdown_date ? ` · updated ${dates.formatDate(source.markdown_date)}` : ""
-              ])
+              ]
             : null
-        ]),
+        }),
         sourceNotice(ctx),
-        statStrip(entries, ctx.todayIso),
+        statFacts(entries, ctx.todayIso),
+        hasDates ? common.italicNote(ctx) : null,
         buildFinder(ctx, route || { query: {} }),
-        scheduleNotes(ctx),
-        el("p", { class: "calc-note" }, [
-          el("span", { class: "calc-mark", "aria-hidden": "true", text: "↳" }),
-          ` Phases and countdowns are calculated from Microsoft's published dates for ${ctx.todayLabel} (${ctx.zoneName}).`
+        common.block("version-lifecycle", "Lifecycle", [
+          hasDates ? lifecycleChart(ctx, entries) : null,
+          datesTable(ctx, entries, focusVersion),
+          scheduleNotes(ctx)
         ]),
-        entries.some((entry) => entry.lifecycle) ? legend() : null,
-        el(
-          "div",
-          { class: "version-list" },
-          entries.map((entry) => versionCard(entry, ctx.todayIso, focusVersion))
-        )
+        common.block("version-train-counts", "PQU trains by version", [trainsTable(entries)])
       ])
     );
   }
@@ -498,7 +573,7 @@
     name: "versions",
     label: "Versions",
     documents: ["service_updates", "learn"],
-    title: () => "Service update versions",
+    title: () => "Service updates",
     render
   };
 })(typeof globalThis !== "undefined" ? globalThis : this);

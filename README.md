@@ -41,13 +41,13 @@ Raw GitHub URLs are also available for integrations that prefer the committed co
 - **Changes**: every change detected in Microsoft's articles, grouped by day, with an Atom feed.
 - **Data & API** (footer): every published file with its schema and the Microsoft commit each article was read at.
 
-Every page has a shareable address, works in dark and light themes, and is built from the same published files, with no third-party scripts or services.
+Every page has a shareable address, follows the system's light or dark theme (or the one chosen in the footer), and is built from the same published files, with no third-party scripts or services.
 
 ## Published values and calculated values
 
 Dates, statuses, builds, schedules, maintenance windows, and guidance text are Microsoft's, shown as published. When Microsoft's article contradicts itself, the value is still shown as published, with a source warning.
 
-Some values are calculated from Microsoft's data, and the dashboard labels them as calculated: phases and countdowns, day counts, build positions, the geography each Azure region's maintenance window is matched to, the dark hours paired with a production weekend, and the figures in `insights.json`. Calculations about "today" use the viewer's date and time zone, which can be changed in the header. Calendar dates are never shifted between time zones; times such as checks and maintenance windows are shown in the chosen zone.
+Some values are calculated from Microsoft's data, and the dashboard sets them in italics and says so: phases and countdowns, day counts, build positions, the geography each Azure region's maintenance window is matched to, the dark hours paired with a production weekend, and the figures in `insights.json`. Calculations about "today" use the viewer's date and time zone, which can be changed in the header. Calendar dates are never shifted between time zones; times such as checks and maintenance windows are shown in the chosen zone.
 
 An open dashboard checks for newly published data at the check interval, recalculates at midnight and when a maintenance window starts or ends, and keeps the reader's place when it redraws.
 

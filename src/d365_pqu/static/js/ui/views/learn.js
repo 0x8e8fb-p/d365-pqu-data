@@ -1,6 +1,6 @@
-/* Learn: Microsoft's own explanation of PQUs, rollouts, and maintenance, shown next to the
- * published data it describes. Every text block is Microsoft Learn content with attribution;
- * schedules and windows come from the published datasets; states are calculated for today. */
+/* Learn: Microsoft's own explanation of PQUs, rollouts and maintenance, next to the published
+ * data it describes. Every text block is Microsoft Learn content with attribution; schedules and
+ * windows come from the published datasets; states and figures are calculated (in italics). */
 (function (root) {
   "use strict";
 
@@ -74,7 +74,7 @@
 
   function section(id, title, children) {
     return el("section", { class: "learn-section", id, "aria-labelledby": `${id}-heading` }, [
-      el("h3", { id: `${id}-heading`, tabindex: "-1", text: title }),
+      el("div", { class: "block-head" }, [el("h2", { id: `${id}-heading`, tabindex: "-1", text: title })]),
       ...children
     ]);
   }
@@ -96,14 +96,18 @@
 
   function searchText(group) {
     return text.normalizeSearch(
-      [group.title, rich.plainText(group.blocks), ...group.children.map((child) => `${child.title} ${rich.plainText(child.blocks)}`)].join(" ")
+      [
+        group.title,
+        rich.plainText(group.blocks),
+        ...group.children.map((child) => `${child.title} ${rich.plainText(child.blocks)}`)
+      ].join(" ")
     );
   }
 
   function qaItem(group, options = {}) {
-    const summary = el("summary", {
-      dataset: options.focus ? { focusTarget: "" } : null
-    }, [el("span", { class: "qa-question", text: group.title })]);
+    const summary = el("summary", { dataset: options.focus ? { focusTarget: "" } : null }, [
+      el("span", { class: "qa-question", text: group.title })
+    ]);
     const links = [];
     if (options.faq) {
       links.push(el("a", { href: PQU.router.href("learn", { faq: group.id }), text: "Link to this answer" }));
@@ -124,7 +128,7 @@
           ...rich.blocks(group.blocks),
           ...group.children.map((child) =>
             el("section", { class: "qa-sub", "aria-label": child.title }, [
-              el("h4", { text: child.title }),
+              el(options.subHeading || "h4", { text: child.title }),
               ...rich.blocks(child.blocks)
             ])
           ),
@@ -165,23 +169,16 @@
     if (!article) {
       children.push(missingArticle(ctx, "pqu_overview"));
     } else {
-      const cards = article.sections
+      const items = article.sections
         .filter((item) => item.id !== "intro" && item.blocks.length)
         .map((item) =>
-          el(
-            "article",
-            {
-              class: ["brief-card", item.blocks.some((block) => block.type === "list") ? "is-wide" : null],
-              "aria-labelledby": `brief-${item.id}`
-            },
-            [
-              el("h4", { id: `brief-${item.id}`, text: item.title }),
-              el("div", { class: "prose" }, rich.blocks(item.blocks)),
-              el("p", { class: "card-link" }, [extLink(item.url, "Read on Microsoft Learn")])
-            ]
-          )
+          el("article", { class: "brief-item", "aria-labelledby": `brief-${item.id}` }, [
+            el("h3", { id: `brief-${item.id}`, text: item.title }),
+            el("div", { class: "prose" }, rich.blocks(item.blocks)),
+            el("p", { class: "card-link" }, [extLink(item.url, "Read on Microsoft Learn")])
+          ])
         );
-      children.push(el("div", { class: "brief-grid", id: "brief-cards" }, cards));
+      children.push(el("div", { class: "brief", id: "brief-cards" }, items));
       children.push(guidance.sourceLine(article, { class: "source-line" }));
     }
     return section("learn-brief", "PQUs in brief", children);
@@ -197,19 +194,29 @@
     const state = windows.rangeState(startIso, endIso, ctx.todayIso);
     return el("p", { class: "step-window" }, [
       el("span", { class: "window-kind", text: label }),
+      " ",
       el("span", {
         class: "window-dates",
-        text: startIso
-          ? dates.formatDateRange(startIso, endIso, {
-              weekday: true,
-              year: yearNeeded(startIso, ctx.todayIso)
-            })
-          : "N/A"
+        text: startIso ? dates.formatDateRange(startIso, endIso, { year: yearNeeded(startIso, ctx.todayIso) }) : "N/A"
       }),
       state
-        ? el("span", { class: `window-state state-${state.state}` }, [visuallyHidden("Calculated: "), state.text])
+        ? [" ", el("span", { class: ["window-state", `state-${state.state}`] }, [visuallyHidden("Calculated: "), state.text])]
         : null
     ]);
+  }
+
+  /* Whether the selected train has reached, is at, or has passed a station today. */
+  function stopState(ctx, row) {
+    if (!row) {
+      return null;
+    }
+    const states = ["sandbox", "production"]
+      .map((kind) => windows.rangeState(row[`${kind}_start_date`], row[`${kind}_end_date`], ctx.todayIso))
+      .filter(Boolean);
+    if (states.some((state) => state.state === "current")) {
+      return "is-current";
+    }
+    return states.length && states.every((state) => state.state === "done") ? "is-done" : null;
   }
 
   function rolloutStep(ctx, station, pquId, savedRegion) {
@@ -218,32 +225,35 @@
     const notes = rows.filter((row) => !row.is_region).map((row) => row.region);
     const yours = Boolean(savedRegion && savedRegion.station === station);
     const windowRow = (ctx.stationsByTrain[pquId] || []).find((row) => row.station === station);
-    return el("li", { class: ["step", yours ? "is-yours" : null], dataset: { station: String(station) } }, [
-      el("div", { class: "step-head" }, [
-        el("span", { class: "step-number", "aria-hidden": "true", text: String(station) }),
-        el("h4", { text: `Station ${station}` }),
-        yours ? el("span", { class: "chip chip-yours", text: "Your station" }) : null
-      ]),
-      notes.map((note) => el("p", { class: "step-note", text: note })),
-      regions.length
-        ? el("details", { class: "step-regions" }, [
-            el("summary", { text: text.plural(regions.length, "region") }),
-            el(
-              "ul",
-              {},
-              regions.map((row) =>
-                el("li", {}, [el("a", { href: PQU.router.href("region", { region: row.region }), text: row.region })])
+    return el(
+      "li",
+      { class: ["step", yours ? "is-yours" : null, stopState(ctx, windowRow)], dataset: { station: String(station) } },
+      [
+        el("div", { class: "step-head" }, [
+          el("h3", { text: `Station ${station}` }),
+          yours ? common.tag("Your station", "yours") : null
+        ]),
+        notes.map((note) => el("p", { class: "step-note", text: note })),
+        regions.length
+          ? el("details", { class: "step-regions" }, [
+              el("summary", { text: text.plural(regions.length, "region") }),
+              el(
+                "ul",
+                {},
+                regions.map((row) =>
+                  el("li", {}, [el("a", { href: PQU.router.href("region", { region: row.region }), text: row.region })])
+                )
               )
-            )
-          ])
-        : null,
-      windowRow
-        ? el("div", { class: "step-windows" }, [
-            windowLine(ctx, "Sandbox", windowRow.sandbox_start_date, windowRow.sandbox_end_date),
-            windowLine(ctx, "Production", windowRow.production_start_date, windowRow.production_end_date)
-          ])
-        : el("p", { class: "muted step-window", text: "Not in this train's schedule." })
-    ]);
+            ])
+          : null,
+        windowRow
+          ? el("div", { class: "step-windows" }, [
+              windowLine(ctx, "Sandbox", windowRow.sandbox_start_date, windowRow.sandbox_end_date),
+              windowLine(ctx, "Production", windowRow.production_start_date, windowRow.production_end_date)
+            ])
+          : el("p", { class: "muted step-window", text: "Not in this train's schedule." })
+      ]
+    );
   }
 
   function rolloutSection(ctx) {
@@ -268,7 +278,11 @@
     }
     const saved = prefs.read("region");
     const savedRegion = ctx.regions.find((row) => row.is_region && row.region === saved) || null;
-    const steps = el("ol", { class: "rollout-steps", id: "rollout-steps", "aria-label": "Stations in rollout order" });
+    const steps = el("ol", {
+      class: "station-line",
+      id: "rollout-steps",
+      "aria-label": "Stations in rollout order"
+    });
     const draw = () =>
       steps.replaceChildren(...stationNumbers.map((station) => rolloutStep(ctx, station, rolloutTrain, savedRegion)));
     draw();
@@ -301,24 +315,27 @@
       );
       children.push(
         el("div", { class: "rollout-controls" }, [
-          el("label", { class: "field" }, [el("span", { text: "Station windows for" }), select]),
+          el("label", { class: "field" }, [el("span", { text: "Follow a train through the stations" }), select]),
           savedRegion
             ? el("p", { class: "muted", text: `Your region: ${savedRegion.region} (Station ${savedRegion.station}).` })
             : el("p", { class: "muted" }, [
                 el("a", { href: PQU.router.href("region"), text: "Pick your region" }),
-                " to highlight your station."
+                " to mark your station."
               ])
         ])
       );
     }
     children.push(steps);
     children.push(
-      common.calcNote(`States are calculated from Microsoft's published dates for ${ctx.todayLabel} (${ctx.zoneName}).`)
+      common.calcNote([
+        el("i", { text: "Italic" }),
+        ` states are calculated from Microsoft's published dates for ${ctx.todayLabel} (${ctx.zoneName}). Filled stops have finished; the highlighted stop is in progress today.`
+      ])
     );
     if (schedule) {
       const callouts = rich.callouts(schedule).map(({ block }) => block);
       if (callouts.length) {
-        children.push(el("h4", { class: "subhead", text: "Microsoft's rollout rules" }));
+        children.push(el("h3", { class: "subhead", text: "Microsoft's rollout rules" }));
         children.push(
           el("div", { class: "rollout-rules prose", id: "rollout-rules" }, [
             ...rich.blocks(callouts),
@@ -351,13 +368,13 @@
       const yours = Boolean(savedRegion && savedRegion.maintenance_geo === window.geo);
       const matched = (regionsByGeo[window.geo] || []).slice().sort((a, b) => a.localeCompare(b));
       return el("tr", { class: yours ? "is-yours" : null, dataset: { geo: window.geo } }, [
-        el("th", { scope: "row" }, [window.geo, yours ? el("span", { class: "chip chip-yours", text: "Your region" }) : null]),
+        el("th", { scope: "row" }, [window.geo, yours ? common.tag("Your region", "yours") : null]),
         el("td", { text: text.joinList(window.days || []) }),
-        el("td", { class: "mono", text: window.start_time_utc }),
-        el("td", { text: window.duration_text || "—" }),
+        el("td", { class: "nowrap", text: window.start_time_utc }),
+        el("td", { class: "nowrap", text: window.duration_text || "—" }),
         el(
           "td",
-          { class: "next-windows" },
+          { class: "next-windows calc" },
           next.length
             ? el(
                 "ul",
@@ -382,16 +399,14 @@
       `Next windows (${ctx.zoneName})`,
       "Azure regions (matched by name)"
     ];
-    return el("div", { class: "table-panel" }, [
-      el("div", { class: "table-scroll" }, [
-        el("table", { id: "maintenance-table", class: "maint-table" }, [
-          el("caption", {
-            class: "visually-hidden",
-            text: `Microsoft's planned maintenance windows by geography in UTC, with the next two windows in ${ctx.zoneName}.`
-          }),
-          el("thead", {}, [el("tr", {}, headers.map((label) => el("th", { scope: "col", text: label })))]),
-          el("tbody", {}, rows)
-        ])
+    return el("div", { class: "table-scroll" }, [
+      el("table", { id: "maintenance-table", class: "maint-table" }, [
+        el("caption", {
+          class: "visually-hidden",
+          text: `Microsoft's planned maintenance windows by geography in UTC, with the next two windows in ${ctx.zoneName}.`
+        }),
+        el("thead", {}, [el("tr", {}, headers.map((label) => el("th", { scope: "col", text: label })))]),
+        el("tbody", {}, rows)
       ])
     ]);
   }
@@ -426,12 +441,12 @@
       const rest = article.sections.filter((item) => item.id !== "intro" && item !== context.section);
       const groups = groupSections(rest);
       if (groups.length) {
-        children.push(el("h4", { class: "subhead", text: "Questions about maintenance" }));
+        children.push(el("h3", { class: "subhead", text: "Questions about maintenance" }));
         children.push(
           el(
             "div",
             { class: "qa-list", id: "maintenance-qa" },
-            groups.map((group) => qaItem(group, { prefix: "maintenance" }))
+            groups.map((group) => qaItem(group, { prefix: "maintenance", subHeading: "h4" }))
           )
         );
       }
@@ -534,7 +549,7 @@
         return el("td", { class: "muted", text: "—" });
       }
       const basis = basisText(record, metric);
-      return el("td", { title: record.summary }, [
+      return el("td", { class: "calc", title: record.summary }, [
         el("span", { class: "cell-value", text: valueText(record) }),
         basis ? el("span", { class: "cell-note", text: basis }) : null
       ]);
@@ -562,7 +577,7 @@
     ]);
   }
 
-  function insightCard(ctx, doc, category) {
+  function insightBlock(ctx, doc, category) {
     const metrics = doc.metrics.filter((metric) => metric.category === category.id);
     const recordsByMetric = {};
     for (const metric of metrics) {
@@ -574,9 +589,9 @@
     }
     const overall = shown.flatMap((metric) => recordsByMetric[metric.id].filter((record) => record.group === "all"));
     const grouped = shown.filter((metric) => recordsByMetric[metric.id].some((record) => record.group !== "all"));
-    const children = [el("h4", { id: `insights-${category.id}-title`, text: category.title })];
+    const children = [el("h3", { id: `insights-${category.id}-title`, text: category.title })];
     if (grouped.length) {
-      children.push(...overall.map((record) => el("p", { class: "insight-lead", text: record.summary })));
+      children.push(...overall.map((record) => el("p", { class: "insight-lead calc", text: record.summary })));
       children.push(insightTable(category, grouped, recordsByMetric));
     } else {
       const metricsById = Object.fromEntries(shown.map((metric) => [metric.id, metric]));
@@ -587,7 +602,7 @@
           overall.map((record) =>
             el("div", { dataset: { insight: record.id } }, [
               el("dt", { text: metricsById[record.metric].title }),
-              el("dd", {}, [
+              el("dd", { class: "calc" }, [
                 el("span", { class: "cell-value", text: valueText(record) }),
                 el("span", { class: "cell-note", text: basisText(record, metricsById[record.metric]) })
               ])
@@ -599,8 +614,8 @@
     children.push(methodDetails(shown, recordsByMetric));
     children.push(sourcesLine(ctx, [...new Set(shown.flatMap((metric) => metric.sources || []))]));
     return el(
-      "article",
-      { class: "insight-card", id: `insights-${category.id}`, "aria-labelledby": `insights-${category.id}-title` },
+      "section",
+      { class: "insight", id: `insights-${category.id}`, "aria-labelledby": `insights-${category.id}-title` },
       children
     );
   }
@@ -622,30 +637,26 @@
     }
     const metricsById = Object.fromEntries(doc.metrics.map((metric) => [metric.id, metric]));
     const recordsById = Object.fromEntries(doc.records.map((record) => [record.id, record]));
-    const tiles = (doc.highlights || [])
+    const figures = (doc.highlights || [])
       .map((id) => recordsById[id])
       .filter(Boolean)
       .map((record) => {
         const metric = metricsById[record.metric] || { title: record.metric };
-        return el("article", { class: "insight-tile", dataset: { insight: record.id } }, [
-          el("p", { class: "tile-value", text: valueText(record) }),
+        return el("li", { class: "figure-item", dataset: { insight: record.id } }, [
+          el("p", { class: "figure-value calc", text: valueText(record) }),
           el("p", {
-            class: "tile-title",
+            class: "figure-title",
             text: record.group === "all" ? metric.title : `${metric.title} · ${record.label}`
           }),
-          el("p", { class: "tile-summary", text: record.summary })
+          el("p", { class: "figure-summary", text: record.summary })
         ]);
       });
     return section("learn-insights", "What the data says", [
       common.calcNote(
-        "These figures are calculated from Microsoft's published dates. Microsoft doesn't publish them; each card shows how it is calculated and what was left out."
+        "These figures are calculated from Microsoft's published dates. Microsoft doesn't publish them; each part says how it is calculated and what was left out."
       ),
-      tiles.length ? el("div", { class: "insight-tiles", id: "insight-highlights" }, tiles) : null,
-      el(
-        "div",
-        { class: "insight-cards" },
-        (doc.categories || []).map((category) => insightCard(ctx, doc, category)).filter(Boolean)
-      )
+      figures.length ? el("ul", { class: "figures", id: "insight-highlights" }, figures) : null,
+      ...(doc.categories || []).map((category) => insightBlock(ctx, doc, category)).filter(Boolean)
     ]);
   }
 
@@ -673,7 +684,7 @@
       "div",
       { class: "qa-list", id: "faq-list" },
       questions.map((group) =>
-        qaItem(group, { prefix: "faq", faq: true, open: group === found, focus: group === found })
+        qaItem(group, { prefix: "faq", faq: true, open: group === found, focus: group === found, subHeading: "h3" })
       )
     );
     const filter = () => {
@@ -712,14 +723,14 @@
     filter();
     children.push(
       el("div", { class: "faq-tools" }, [
-        el("label", { class: "field" }, [el("span", { text: "Search the FAQ" }), search]),
+        el("label", { class: "field" }, [el("span", { text: "Search the questions" }), search]),
         status
       ])
     );
     children.push(list);
     for (const group of others) {
       children.push(
-        el("div", { class: "faq-extra prose" }, [el("h4", { text: group.title }), ...rich.blocks(group.blocks)])
+        el("div", { class: "faq-extra prose" }, [el("h3", { text: group.title }), ...rich.blocks(group.blocks)])
       );
     }
     children.push(guidance.sourceLine(article, { class: "source-line" }));
@@ -730,6 +741,7 @@
 
   function jumpNav(parts) {
     return el("nav", { class: "jump-nav", "aria-label": "On this page" }, [
+      el("p", { class: "jump-title", text: "On this page" }),
       el(
         "ul",
         {},
@@ -737,15 +749,14 @@
           el("li", {}, [
             el("button", {
               type: "button",
-              class: "chip-button",
+              class: "link-button",
               text: part.label,
               on: {
                 click: () => {
                   const target = document.getElementById(part.id);
                   if (target) {
-                    PQU.ui.layout.update();
                     target.scrollIntoView({ block: "start", behavior: "instant" });
-                    const heading = target.querySelector("h3");
+                    const heading = target.querySelector("h2");
                     if (heading) {
                       heading.focus({ preventScroll: true });
                     }
@@ -782,27 +793,23 @@
     ];
     currentTitle = faq.found ? `${faq.found.title} · Learn` : "Learn";
     container.replaceChildren(
-      el("div", { class: "learn" }, [
-        el("div", { class: "section-head" }, [
-          el("div", {}, [
-            el("p", { class: "kicker", text: "Learn" }),
-            el("h2", {
-              id: "learn-heading",
-              tabindex: "-1",
-              dataset: { viewHeading: "" },
-              text: "Proactive quality updates, explained"
-            })
-          ])
-        ]),
+      el("div", { class: "page learn" }, [
+        common.pageHead({
+          id: "learn-heading",
+          title: "How proactive quality updates work",
+          sub: "Microsoft's own explanations, next to the live schedule they describe. Text from Microsoft Learn is quoted with its source."
+        }),
         ctx.errors.learn
           ? el("p", {
               class: "inline-alert",
+              id: "learn-error",
               text: "Microsoft's Learn content could not be loaded. Schedules and windows from the dataset are still shown."
             })
           : null,
-        jumpNav(parts),
-        ...parts.map((part) => part.node),
-        licenseNote(ctx)
+        el("div", { class: "learn-layout" }, [
+          jumpNav(parts),
+          el("div", { class: "learn-body" }, [...parts.map((part) => part.node), licenseNote(ctx)])
+        ])
       ])
     );
   }

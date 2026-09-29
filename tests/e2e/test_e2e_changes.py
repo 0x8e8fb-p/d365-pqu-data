@@ -42,7 +42,7 @@ def _lines(page, subject: str) -> list[str]:
 def test_changes_are_grouped_by_day_check_and_subject(fixture_site, open_page) -> None:
     opened = open_page(_updated(fixture_site), "#/changes")
     page = opened.page
-    assert page.title() == "Changes · PQU Console"
+    assert page.title() == "Changes · D365 PQU Tracker"
     assert page.locator("#tabs a[aria-current='page']").text_content() == "Changes"
     assert _text(page.locator("#changes-summary")) == (
         "10 changes found in 1 check since tracking began on 28 Sep 2026 · 08:30 IST."

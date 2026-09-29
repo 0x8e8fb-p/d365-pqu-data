@@ -6,7 +6,7 @@
 
   const PQU = (root.PQU = root.PQU || {});
   PQU.views = PQU.views || {};
-  const { el, extLink, visuallyHidden } = PQU.ui.dom;
+  const { el, extLink } = PQU.ui.dom;
   const dates = PQU.dates;
   const text = PQU.text;
 
@@ -62,7 +62,7 @@
   function facts(ctx) {
     const metadata = ctx.metadata || {};
     const interval = PQU.health.formatInterval(metadata.check_interval_minutes);
-    return el("dl", { class: "stat-strip data-facts", id: "data-facts" }, [
+    return el("dl", { class: "facts data-facts", id: "data-facts" }, [
       fact(
         "Generated",
         dates.formatDateTime(metadata.generated_at, ctx.zone, { locale: ctx.locale }),
@@ -95,7 +95,7 @@
       return el("tr", { dataset: { source: key } }, [
         el("th", { scope: "row" }, [
           extLink(entry.article_url, entry.label || key),
-          entry.required ? el("span", { class: "fact-note", text: " · required" }) : null
+          entry.required ? el("span", { class: "muted", text: " · required" }) : null
         ]),
         el("td", {}, [
           el("span", { class: `source-state state-${entry.state}`, text: STATE_LABELS[entry.state] || entry.state }),
@@ -116,28 +116,24 @@
         })
       ]);
     });
-    return el("section", { class: "data-section", "aria-labelledby": "data-sources-heading" }, [
-      el("h3", { id: "data-sources-heading", text: "Microsoft sources" }),
+    return PQU.ui.common.block("data-sources-block", "Microsoft sources", [
       el("p", {
-        class: "section-lead",
         text:
           "Each article is read at one commit of Microsoft's documentation repository. Every file below records the " +
           "commit and checksum it came from."
       }),
-      el("div", { class: "table-panel" }, [
-        el("div", { class: "table-scroll" }, [
-          el("table", { id: "data-sources" }, [
-            el("caption", { class: "visually-hidden", text: "Microsoft Learn articles used by this dataset" }),
-            el("thead", {}, [
-              el("tr", {}, [
-                ...["Article", "State", "Microsoft commit", "Article date"].map((label) =>
-                  el("th", { scope: "col", text: label })
-                ),
-                el("th", { scope: "col", class: "col-optional", text: "Retrieved" })
-              ])
-            ]),
-            el("tbody", {}, rows)
-          ])
+      el("div", { class: "table-scroll" }, [
+        el("table", { id: "data-sources" }, [
+          el("caption", { class: "visually-hidden", text: "Microsoft Learn articles used by this dataset" }),
+          el("thead", {}, [
+            el("tr", {}, [
+              ...["Article", "State", "Microsoft commit", "Article date"].map((label) =>
+                el("th", { scope: "col", text: label })
+              ),
+              el("th", { scope: "col", class: "col-optional", text: "Retrieved" })
+            ])
+          ]),
+          el("tbody", {}, rows)
         ])
       ])
     ]);
@@ -147,7 +143,7 @@
     return el("a", { href: pagePath(path), "aria-label": `${name} (${label})`, text: label });
   }
 
-  function fileItem(endpoint) {
+  function fileRow(endpoint) {
     const links = [fileLink(endpoint.path, formatLabel(endpoint.path), endpoint.name)];
     if (endpoint.csv) {
       links.push(fileLink(endpoint.csv, "CSV", endpoint.name));
@@ -155,22 +151,33 @@
     if (endpoint.schema) {
       links.push(fileLink(endpoint.schema, "Schema", endpoint.name));
     }
-    return el("li", { class: "data-file", dataset: { path: endpoint.path } }, [
-      el("h4", { text: endpoint.name }),
-      el("p", { class: "data-desc", text: endpoint.description }),
-      el("p", { class: "data-links" }, links.flatMap((link, index) => (index ? [" · ", link] : [link]))),
-      el("p", { class: "data-address" }, [visuallyHidden("Address: "), el("code", { text: absolute(endpoint.path) })])
+    return el("tr", { class: "data-file", dataset: { path: endpoint.path } }, [
+      el("th", { scope: "row" }, [
+        el("span", { class: "data-name", text: endpoint.name }),
+        el("span", { class: "data-desc cell-note", text: endpoint.description }),
+        el("span", { class: "data-address cell-note" }, [el("code", { text: absolute(endpoint.path) })])
+      ]),
+      el("td", { class: "data-links" }, links.flatMap((link, index) => (index ? [" · ", link] : [link])))
     ]);
   }
 
   function filesSection(index) {
-    return el("section", { class: "data-section", "aria-labelledby": "data-files-heading" }, [
-      el("h3", { id: "data-files-heading", text: "Files" }),
+    return PQU.ui.common.block("data-files-block", "Files", [
       el("p", {
-        class: "section-lead",
-        text: "Static files: no key or sign-in. JSON and CSV hold the same records; each JSON file has a JSON Schema."
+        text: "Static files: no key or sign-in. JSON and CSV hold the same records, and each JSON file has a JSON Schema."
       }),
-      el("ul", { class: "data-files", id: "data-files" }, index.endpoints.map(fileItem))
+      el("div", { class: "table-scroll" }, [
+        el("table", { class: "data-files-table", id: "data-files" }, [
+          el("caption", { class: "visually-hidden", text: "Published data files with their addresses and formats" }),
+          el("thead", {}, [
+            el("tr", {}, [
+              el("th", { scope: "col", text: "File and address" }),
+              el("th", { scope: "col", text: "Formats" })
+            ])
+          ]),
+          el("tbody", {}, index.endpoints.map(fileRow))
+        ])
+      ])
     ]);
   }
 
@@ -179,11 +186,10 @@
     if (!calendars.length) {
       return null;
     }
-    return el("section", { class: "data-section", "aria-labelledby": "data-calendars-heading" }, [
-      el("h3", { id: "data-calendars-heading", text: "Calendars" }),
+    return PQU.ui.common.block("data-calendars-block", "Calendars", [
       el(
         "ul",
-        { class: "data-calendars", id: "data-calendars" },
+        { class: "ruled-list", id: "data-calendars" },
         calendars.map((calendar) => {
           const address = absolute(calendar.path);
           return el("li", { dataset: { path: calendar.path } }, [
@@ -212,34 +218,26 @@
     const items = [
       el("li", {}, [el("a", { href: pagePath(index.workbook), download: true, text: "Excel workbook" })]),
       el("li", {}, [el("a", { href: "./api/index.json", text: "API index (JSON)" })]),
-      index.llms ? el("li", {}, [el("a", { href: pagePath(index.llms), text: "llms.txt" }), " · a summary of these files for AI tools"]) : null,
+      index.llms
+        ? el("li", {}, [el("a", { href: pagePath(index.llms), text: "llms.txt" }), ", a summary of these files for AI tools"])
+        : null,
       index.schema_source ? el("li", {}, [extLink(index.schema_source, "JSON Schemas on GitHub")]) : null,
-      links.raw_pqu ? el("li", {}, [extLink(links.raw_pqu, "pqu.json on raw GitHub"), " · the committed copy"]) : null,
+      links.raw_pqu ? el("li", {}, [extLink(links.raw_pqu, "pqu.json on raw GitHub"), ", the committed copy"]) : null,
       index.repository ? el("li", {}, [extLink(index.repository, "Source repository")]) : null,
       index.notice ? el("li", {}, [extLink(index.notice, "License and attribution (NOTICE.md)")]) : null
     ];
-    return el("section", { class: "data-section", "aria-labelledby": "data-more-heading" }, [
-      el("h3", { id: "data-more-heading", text: "More" }),
-      el("ul", { class: "data-more", id: "data-more" }, items)
-    ]);
+    return PQU.ui.common.block("data-more-block", "More", [el("ul", { class: "data-more", id: "data-more" }, items)]);
   }
 
   function render(container, ctx) {
     const index = ctx.index;
     const indexUsable = index && Array.isArray(index.endpoints);
     container.replaceChildren(
-      el("section", { class: "section data-view", "aria-labelledby": "data-heading" }, [
-        el("div", { class: "section-head" }, [
-          el("div", {}, [
-            el("p", { class: "kicker", text: "Open data" }),
-            el("h2", { id: "data-heading", tabindex: "-1", dataset: { viewHeading: "" }, text: "Data & API" })
-          ])
-        ]),
-        el("p", {
-          class: "section-lead",
-          text:
-            "Everything on this dashboard comes from these files. Values are Microsoft's; calculated figures say so " +
-            "in their descriptions."
+      el("div", { class: "page data-view" }, [
+        PQU.ui.common.pageHead({
+          id: "data-heading",
+          title: "Data & API",
+          sub: "Everything on this site is built from these files. Values are Microsoft's; calculated figures say so in their descriptions."
         }),
         facts(ctx),
         sourcesTable(ctx),

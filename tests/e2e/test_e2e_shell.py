@@ -25,7 +25,7 @@ def test_tabs_follow_the_route_and_move_focus_to_the_view(fixture_site, open_pag
     assert {"Trains", "Versions"} <= set(labels)
     assert labels == [label for label in TAB_ORDER if label in labels]
     assert page.locator("#tabs a[aria-current='page']").inner_text() == "Trains"
-    assert page.title() == "PQU trains · PQU Console"
+    assert page.title() == "PQU trains · D365 PQU Tracker"
 
     page.locator("#tabs a", has_text="Versions").focus()
     page.keyboard.press("Enter")
@@ -33,7 +33,7 @@ def test_tabs_follow_the_route_and_move_focus_to_the_view(fixture_site, open_pag
     assert page.evaluate("location.hash") == "#/versions"
     assert page.locator("#tabs a[aria-current='page']").inner_text() == "Versions"
     assert page.evaluate("document.activeElement.id") == "versions-heading"
-    assert page.title() == "Service update versions · PQU Console"
+    assert page.title() == "Service updates · D365 PQU Tracker"
     opened.assert_clean()
 
 
@@ -114,7 +114,7 @@ def test_unknown_route_shows_not_found(fixture_site, open_page) -> None:
     assert page.locator("#not-found-heading").inner_text() == "Page not found"
     assert "#/nowhere/at-all" in page.locator("#view").inner_text()
     assert page.locator("#tabs a[aria-current]").count() == 0
-    assert page.title() == "Page not found · PQU Console"
+    assert page.title() == "Page not found · D365 PQU Tracker"
     opened.assert_clean()
 
 
@@ -122,32 +122,58 @@ def test_versions_show_todays_lifecycle_phase(fixture_site, open_page) -> None:
     opened = open_page(_live(fixture_site), "#/versions")
     page = opened.page
 
-    def card(version: str):
-        return page.locator(f"article.version-card#version-{version.replace('.', '-')}")
+    def row(version: str):
+        return page.locator(f"#version-table tr#version-{version.replace('.', '-')}")
 
-    assert card("10.0.46").locator(".phase-badge").inner_text() == "End of service"
-    assert "End of service · 38 days ago" in card("10.0.46").inner_text()
-    assert card("10.0.49").locator(".phase-badge").inner_text() == "Generally available"
-    assert "First autoupdate in 4 days · Fri 2 Oct" in card("10.0.49").inner_text()
-    assert card("10.0.50").locator(".phase-badge").inner_text() == "Upcoming"
-    assert "Preview in 25 days · Fri 23 Oct" in card("10.0.50").inner_text()
-    assert card("10.0.47").locator(".phase-badge").inner_text() == "Supported"
+    def phase(version: str) -> str:
+        return " ".join((row(version).locator(".phase-name").text_content() or "").split())
+
+    assert phase("10.0.46") == "Calculated: End of service"
+    assert "End of service · 38 days ago" in (row("10.0.46").text_content() or "")
+    assert phase("10.0.49") == "Calculated: Generally available"
+    assert "First autoupdate in 4 days · Fri 2 Oct" in (row("10.0.49").text_content() or "")
+    # The next milestone is marked in the dates.
+    assert row("10.0.49").locator("td.is-next").text_content() == "2 Oct 2026"
+    assert phase("10.0.50") == "Calculated: Upcoming"
+    assert "Preview in 25 days · Fri 23 Oct" in (row("10.0.50").text_content() or "")
+    assert phase("10.0.47") == "Calculated: Supported"
     majors = [
         version
         for version in ("10.0.45", "10.0.46", "10.0.47", "10.0.48", "10.0.49", "10.0.50", "10.0.51")
-        if card(version).locator(".chip-major").count()
+        if row(version).locator(".tag-major").count()
     ]
     assert majors == ["10.0.45", "10.0.47", "10.0.49", "10.0.51"]
-    trains = card("10.0.47").locator(".version-trains").inner_text()
-    assert trains.startswith(
-        "17 PQU trains: 2 In-Progress · 4 Not Started · 10 Completed · 1 Canceled. "
-        "Latest published build 10.0.2527.215 (platform 7.0.7858.174, 10.0.47 PQU-13)."
+    headers = page.locator("#version-table thead th").all_text_contents()
+    assert headers == [
+        "Version",
+        "Today",
+        "Preview",
+        "Latest preview update",
+        "General availability",
+        "First autoupdate",
+        "Second autoupdate",
+        "End of service",
+    ]
+
+    trains = page.locator("#version-trains tr.version-trains[data-version='10.0.47'] td")
+    assert trains.all_text_contents()[:5] == ["17", "2", "4", "10", "1"]
+    assert " ".join((trains.nth(5).text_content() or "").split()) == (
+        "10.0.2527.215 Platform 7.0.7858.174 · 10.0.47 PQU-13"
     )
-    bar = card("10.0.49").locator(".lifecycle-bar")
-    assert bar.get_attribute("role") == "img"
-    assert bar.get_attribute("aria-label") == (
-        "Lifecycle from 27 Jul 2026 to 21 May 2027. Today falls in the Generally available phase."
+
+    plot = page.locator("#lifecycle-chart .lc-plot")
+    assert plot.get_attribute("role") == "img"
+    assert plot.get_attribute("aria-label") == (
+        "Lifecycle of 7 service updates from 28 Jul 2025 to 19 Nov 2027. Today is 28 Sep 2026. "
+        "The table below lists every date."
     )
+    lanes = page.locator("#lifecycle-chart .lc-row[data-version]")
+    assert lanes.count() == 7
+    assert [
+        lane.get_attribute("data-version")
+        for lane in page.locator("#lifecycle-chart .lc-row.is-past").all()
+    ] == ["10.0.46", "10.0.45"]
+    assert page.locator("#lifecycle-chart .lc-today").count() == 1
     stats = dict(
         zip(
             page.locator("#version-stats dt").all_text_contents(),
@@ -165,7 +191,7 @@ def test_versions_show_todays_lifecycle_phase(fixture_site, open_page) -> None:
     assert "A sandbox autoupdate occurs seven days before the production update." in (
         rules.inner_text()
     )
-    card("10.0.47").get_by_role("link", name="Show 10.0.47 trains").click()
+    page.locator("#version-trains").get_by_role("link", name="Show 10.0.47 trains").click()
     wait_for_render(page)
     assert page.locator("#version-filter").input_value() == "10.0.47"
     opened.assert_clean()
@@ -177,8 +203,11 @@ def test_versions_without_the_lifecycle_article_still_list_train_versions(
     opened = open_page(fixture_site((MINIMAL, E2E_SYNC_AT)), "#/versions")
     page = opened.page
     assert "not part of this dataset" in page.locator(".inline-alert").inner_text()
-    cards = page.locator("article.version-card")
-    assert cards.locator("h3").all_inner_texts() == ["10.0.48", "10.0.47"]
-    assert cards.first.locator(".phase-badge").inner_text() == "No lifecycle dates"
+    rows = page.locator("#version-table tbody tr")
+    assert [
+        " ".join((header.text_content() or "").split()) for header in rows.locator("th").all()
+    ] == ["10.0.48", "10.0.47"]
+    assert rows.first.locator(".phase-name").text_content() == "No lifecycle dates"
     assert page.locator("#version-stats").count() == 0
+    assert page.locator("#lifecycle-chart").count() == 0
     opened.assert_clean()

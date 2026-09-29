@@ -37,12 +37,6 @@
   };
   /* Phases in which the version is generally available and still serviced. */
   const SERVICED_STATES = ["available", "autoupdate", "supported"];
-  const BAR_SEGMENTS = [
-    { state: "preview", from: "preview_date", to: "general_availability_date" },
-    { state: "available", from: "general_availability_date", to: "first_autoupdate_date" },
-    { state: "autoupdate", from: "first_autoupdate_date", to: "second_autoupdate_date" },
-    { state: "supported", from: "second_autoupdate_date", to: "end_of_service_date" }
-  ];
 
   function milestones(record) {
     return MILESTONES.filter((item) => record && dates.isIsoDate(record[item.field])).map((item) => ({
@@ -93,38 +87,71 @@
     return result;
   }
 
-  /* Proportional segments between milestones, plus today's position (percent of the range). */
-  function bar(record, todayIso) {
-    const list = milestones(record);
-    if (list.length < 2) {
-      return null;
+  /* Quarter starts (1 Jan, 1 Apr, 1 Jul, 1 Oct) within [start, end]; January and the first tick
+   * carry the year. */
+  function quarterTicks(start, end, position) {
+    const first = dates.parseIsoDate(start);
+    let year = first.year;
+    let month = Math.floor((first.month - 1) / 3) * 3 + 1;
+    if (first.day !== 1 || month !== first.month) {
+      month += 3;
     }
-    const sorted = list.map((item) => item.date).sort();
-    const start = sorted[0];
-    const end = sorted[sorted.length - 1];
-    const span = dates.diffDays(start, end);
-    if (!span || span <= 0) {
-      return null;
-    }
-    const position = (iso) => Math.min(100, Math.max(0, (dates.diffDays(start, iso) / span) * 100));
-    const segments = [];
-    for (const segment of BAR_SEGMENTS) {
-      const from = record[segment.from];
-      const to = record[segment.to];
-      if (dates.isIsoDate(from) && dates.isIsoDate(to) && to > from) {
-        const left = position(from);
-        segments.push({
-          state: segment.state,
-          label: STATE_LABELS[segment.state],
-          startDate: from,
-          endDate: to,
-          left,
-          width: Math.max(0, position(to) - left)
-        });
+    const ticks = [];
+    for (;;) {
+      if (month > 12) {
+        month -= 12;
+        year += 1;
       }
+      const iso = `${year}-${dates.pad2(month)}-01`;
+      if (iso > end) {
+        break;
+      }
+      ticks.push({
+        iso,
+        left: position(iso),
+        label: month === 1 || ticks.length === 0 ? `${dates.monthName(month)} ${year}` : dates.monthName(month)
+      });
+      month += 3;
     }
+    return ticks;
+  }
+
+  /*
+   * Every service update on one shared calendar axis, from the earliest published milestone to
+   * the latest. Each row has a preview segment (preview to general availability), a service
+   * segment (general availability to end of service), marks at the autoupdate dates, and its
+   * lifecycle state today. Positions are percentages of the axis; null when there is no axis.
+   */
+  function chart(records, todayIso) {
+    const listed = (records || []).filter((record) => milestones(record).length);
+    const all = listed.flatMap((record) => milestones(record).map((item) => item.date)).sort();
+    if (!all.length || all[0] === all[all.length - 1]) {
+      return null;
+    }
+    const start = all[0];
+    const end = all[all.length - 1];
+    const span = dates.diffDays(start, end);
+    const position = (iso) => (dates.diffDays(start, iso) / span) * 100;
+    const segment = (kind, from, to) => {
+      if (!dates.isIsoDate(from) || !dates.isIsoDate(to) || to <= from) {
+        return null;
+      }
+      const left = position(from);
+      return { kind, start: from, end: to, left, width: position(to) - left };
+    };
+    const rows = listed.map((record) => ({
+      version: record.version,
+      state: assess(record, todayIso).state,
+      segments: [
+        segment("preview", record.preview_date, record.general_availability_date),
+        segment("service", record.general_availability_date, record.end_of_service_date)
+      ].filter(Boolean),
+      marks: ["first_autoupdate_date", "second_autoupdate_date"]
+        .filter((field) => dates.isIsoDate(record[field]))
+        .map((field) => ({ field, date: record[field], left: position(record[field]) }))
+    }));
     const today = dates.isIsoDate(todayIso) && todayIso >= start && todayIso <= end ? position(todayIso) : null;
-    return { start, end, segments, today };
+    return { start, end, today, ticks: quarterTicks(start, end, position), rows };
   }
 
   /* One entry per application version from the lifecycle table and/or the train schedule. */
@@ -164,7 +191,7 @@
     SERVICED_STATES,
     STATE_LABELS,
     assess,
-    bar,
+    chart,
     mergeVersions,
     milestones,
     trainSummary

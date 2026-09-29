@@ -35,17 +35,16 @@ def _next_windows(page, geo: str) -> list[str]:
 def test_brief_cards_quote_the_overview_with_links_and_attribution(fixture_site, open_page) -> None:
     opened = open_page(_live(fixture_site), "#/learn")
     page = opened.page
-    assert page.locator("#learn-heading").inner_text() == "Proactive quality updates, explained"
+    assert page.locator("#learn-heading").inner_text() == "How proactive quality updates work"
     assert page.locator("#tabs a[aria-current='page']").inner_text() == "Learn"
     cards = page.locator("#brief-cards article")
-    assert cards.locator("h4").all_inner_texts() == [
+    assert cards.locator("h3").all_inner_texts() == [
         "What are PQUs?",
         "Why is Microsoft introducing PQUs?",
         "What investments is Microsoft making to enable safe deployments of PQUs?",
     ]
     assert "cumulative builds of hotfixes" in cards.first.inner_text()
     wide = cards.nth(2)
-    assert "is-wide" in (wide.get_attribute("class") or "")
     assert wide.locator("li strong").all_inner_texts() == [
         "Higher-quality concise payloads",
         "Safe deployment rollout process",
@@ -83,22 +82,29 @@ def test_rollout_steps_follow_the_selected_train(fixture_site, open_page) -> Non
     station_1 = _step(page, 1)
     assert station_1.locator(".step-note").inner_text() == "Only for opted-in environments"
     assert _window(station_1, "Production") == ("N/A", "")
+    # 10.0.48 PQU-6 has finished Stations 1 to 3 and is at Station 4 today.
+    assert "is-done" in (station_1.get_attribute("class") or "")
+    assert "is-done" in (_step(page, 3).get_attribute("class") or "")
     station_4 = _step(page, 4)
     assert "is-yours" in (station_4.get_attribute("class") or "")
-    assert station_4.locator(".chip-yours").inner_text() == "Your station"
+    assert "is-current" in (station_4.get_attribute("class") or "")
+    assert station_4.locator(".tag-yours").inner_text() == "Your station"
     assert _window(station_4, "Sandbox") == (
-        "Mon 28 Sep \u2013 Thu 1 Oct",
+        "28 Sep \u2013 1 Oct",
         "Calculated: In progress · day 1 of 4",
     )
     assert _window(station_4, "Production") == (
-        "Sat 3 Oct \u2013 Sun 4 Oct",
+        "3\u20134 Oct",
         "Calculated: Starts in 5 days",
     )
+    station_5 = _step(page, 5)
+    assert "is-done" not in (station_5.get_attribute("class") or "")
+    assert "is-current" not in (station_5.get_attribute("class") or "")
     station_3 = _step(page, 3)
     assert station_3.locator(".step-regions summary").inner_text() == "11 regions"
     page.locator("#rollout-train").select_option("10.0.47-PQU-13")
     assert _window(_step(page, 4), "Sandbox") == (
-        "Mon 5 Oct \u2013 Thu 8 Oct",
+        "5\u20138 Oct",
         "Calculated: Starts in 7 days",
     )
     assert page.locator("#rollout-rules .callout").count() == 3
@@ -111,7 +117,7 @@ def test_maintenance_table_converts_windows_to_the_viewer_zone(fixture_site, ope
     rows = page.locator("#maintenance-table tbody tr")
     assert rows.count() == 15
     headers = page.locator("#maintenance-table thead th").all_inner_texts()
-    assert headers[4] == "NEXT WINDOWS (ASIA/KOLKATA)"
+    assert headers[4] == "Next windows (Asia/Kolkata)"
     assert _next_windows(page, "Europe") == [
         "Sat 3 Oct 03:30 \u2013 09:30 IST",
         "Sun 4 Oct 03:30 \u2013 09:30 IST",
@@ -187,11 +193,11 @@ def test_faq_deep_link_opens_and_focuses_the_answer(fixture_site, open_page) -> 
         "What is the biweekly cadence for PQU?"
     )
     assert "two\u2011week cadence" in item.inner_text()
-    assert page.title() == "What is the biweekly cadence for PQU? · Learn · PQU Console"
+    assert page.title() == "What is the biweekly cadence for PQU? · Learn · D365 PQU Tracker"
     box = item.locator("summary").bounding_box()
-    header = page.locator("header.topbar").bounding_box()
+    header = page.locator("header.site-header").bounding_box()
     assert box is not None and header is not None
-    # Scrolled to the answer and not hidden under the sticky header.
+    # Scrolled to the answer and not hidden under the header.
     assert header["y"] + header["height"] <= box["y"] < 400
     link = item.get_by_role("link", name="Open on Microsoft Learn")
     assert link.get_attribute("href") == (
@@ -208,10 +214,13 @@ def test_opening_and_closing_an_answer_updates_the_address(fixture_site, open_pa
     summary = page.locator(f"#faq-{slug} summary")
     summary.click()
     page.wait_for_function(f"() => location.hash === '#/learn/faq/{slug}'")
-    assert page.title() == "Can customers delay, reschedule, or pause a PQU? · Learn · PQU Console"
+    assert (
+        page.title()
+        == "Can customers delay, reschedule, or pause a PQU? · Learn · D365 PQU Tracker"
+    )
     summary.click()
     page.wait_for_function("() => location.hash === '#/learn'")
-    assert page.title() == "Learn · PQU Console"
+    assert page.title() == "Learn · D365 PQU Tracker"
     page.evaluate(f"location.hash = '#/learn/faq/{FAQ_BIWEEKLY}'")
     wait_for_render(page)
     assert page.locator(f"#faq-{FAQ_BIWEEKLY}").get_attribute("open") is not None
@@ -223,7 +232,7 @@ def test_opening_and_closing_an_answer_updates_the_address(fixture_site, open_pa
     opened.assert_clean()
 
 
-def test_jump_nav_lands_each_section_below_the_header(fixture_site, open_page) -> None:
+def test_jump_nav_lands_each_section_at_the_top(fixture_site, open_page) -> None:
     opened = open_page(_live(fixture_site), "#/learn")
     page = opened.page
     for label, section in (("FAQ", "learn-faq"), ("Maintenance windows", "learn-maintenance")):
@@ -231,9 +240,8 @@ def test_jump_nav_lands_each_section_below_the_header(fixture_site, open_page) -
         heading = page.locator(f"#{section}-heading")
         assert page.evaluate("document.activeElement.id") == f"{section}-heading"
         box = heading.bounding_box()
-        header = page.locator("header.topbar").bounding_box()
-        assert box is not None and header is not None
-        assert header["y"] + header["height"] <= box["y"] < 300
+        assert box is not None
+        assert 0 <= box["y"] < 300
     opened.assert_clean()
 
 
@@ -325,7 +333,9 @@ def test_what_the_data_says_shows_calculated_figures_next_to_the_faq(
 ) -> None:
     opened = open_page(_live(fixture_site), "#/learn")
     page = opened.page
-    order = page.locator(".learn > .learn-section").evaluate_all("nodes => nodes.map(n => n.id)")
+    order = page.locator(".learn-body > .learn-section").evaluate_all(
+        "nodes => nodes.map(n => n.id)"
+    )
     assert order == [
         "learn-brief",
         "learn-rollout",
@@ -340,12 +350,13 @@ def test_what_the_data_says_shows_calculated_figures_next_to_the_faq(
         "What the data says",
         "FAQ",
     ]
-    tiles = page.locator("#insight-highlights .insight-tile")
-    assert tiles.locator(".tile-value").all_inner_texts() == ["14 days", "5 days", "91 days"]
+    figures = page.locator("#insight-highlights .figure-item")
+    assert figures.locator(".figure-value").all_inner_texts() == ["14 days", "5 days", "91 days"]
     assert (
-        tiles.first.locator(".tile-title").text_content() == "Days between train starts · 10.0.49"
+        figures.first.locator(".figure-title").text_content()
+        == "Days between train starts · 10.0.49"
     )
-    assert tiles.first.locator(".tile-summary").inner_text() == (
+    assert figures.first.locator(".figure-summary").inner_text() == (
         "10.0.49: a new train starts every 14 days, or 2 weeks "
         "(median of 16 intervals; range 14\u201321 days)."
     )
@@ -391,9 +402,9 @@ def test_what_the_data_says_shows_calculated_figures_next_to_the_faq(
 def test_figures_from_a_schedule_only_dataset(fixture_site, open_page) -> None:
     opened = open_page(fixture_site((FIXTURES / "source-minimal.md", E2E_SYNC_AT)), "#/learn")
     page = opened.page
-    tiles = page.locator("#insight-highlights .insight-tile")
-    assert tiles.locator(".tile-value").all_inner_texts() == ["14 days", "5 days"]
-    assert tiles.nth(1).locator(".tile-summary").inner_text() == (
+    figures = page.locator("#insight-highlights .figure-item")
+    assert figures.locator(".figure-value").all_inner_texts() == ["14 days", "5 days"]
+    assert figures.nth(1).locator(".figure-summary").inner_text() == (
         "Production updates start a median of 5 days after sandbox updates (10 station windows)."
     )
     assert page.locator("#insights-service-updates").count() == 0

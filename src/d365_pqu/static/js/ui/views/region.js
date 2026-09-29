@@ -1,11 +1,12 @@
-/* My region: the station for an Azure region, its published sandbox and production windows,
- * and the dark-hours maintenance windows around each production weekend. */
+/* My region: the station for an Azure region, its published sandbox and production windows, and
+ * the dark-hours maintenance windows around each production weekend. Pairing a production
+ * weekend with dark hours is a calculation; Microsoft publishes the two separately. */
 (function (root) {
   "use strict";
 
   const PQU = (root.PQU = root.PQU || {});
   PQU.views = PQU.views || {};
-  const { el } = PQU.ui.dom;
+  const { el, visuallyHidden } = PQU.ui.dom;
   const dates = PQU.dates;
   const text = PQU.text;
   const windows = PQU.windows;
@@ -68,6 +69,14 @@
 
   function rangeText(startIso, endIso, todayIso) {
     return dates.formatDateRange(startIso, endIso, { weekday: true, year: yearFor(startIso, todayIso) });
+  }
+
+  /* "Sat 3 Oct 03:30 – 09:30 IST (Fri 2 Oct 22:00 UTC)": the viewer's time first, Microsoft's UTC
+   * time after it. */
+  function occurrenceText(ctx, occurrence) {
+    const local = windows.rangeText(occurrence, ctx.zone, ctx.locale);
+    const described = windows.describe(occurrence, ctx.zone, ctx.locale);
+    return described.local ? `${local} (${described.utc})` : local;
   }
 
   /* ---- Picker ---- */
@@ -159,7 +168,7 @@
         el("div", { class: "rules-body" }, body)
       ]);
     }
-    return el("div", { class: "region-picker", id: "region-picker" }, body);
+    return common.block("region-picker", "Regions by station", body);
   }
 
   /* ---- Selected region ---- */
@@ -169,10 +178,10 @@
     const draw = () => {
       if (prefs.read("region") === region.region) {
         line.replaceChildren(
-          el("span", { class: "muted", text: "Saved as your region. " }),
+          "Saved as your region. ",
           el("button", {
             type: "button",
-            class: "button small ghost",
+            class: "button small",
             text: "Forget",
             on: {
               click: () => {
@@ -218,96 +227,102 @@
       maintenance = [
         el("span", { text: `${window.geo} · ${windows.ruleText(window)}` }),
         el("span", { class: "fact-note", text: "Geography matched from the region name." }),
-        next
-          ? el("span", {
-              class: "fact-note",
-              text: `Next: ${windows.describe(next, ctx.zone, ctx.locale).text}`
-            })
-          : null
+        next ? common.calc(`Next: ${occurrenceText(ctx, next)}`, { class: "fact-note" }) : null
       ];
     } else {
       maintenance = [el("span", { class: "muted", text: missingWindowMessage(ctx, region) })];
     }
-    return el("dl", { class: "stat-strip region-facts", id: "region-facts" }, [
+    return el("dl", { class: "facts region-facts", id: "region-facts" }, [
       fact("Station", `Station ${region.station}`),
       fact(`Also on Station ${region.station}`, peers.length ? text.joinList(peers) : "No other regions"),
       fact("Maintenance window (dark hours)", maintenance)
     ]);
   }
 
-  function windowLine(kind, startIso, endIso, state, todayIso) {
-    return el("div", { class: "window-line" }, [
-      el("span", { class: "window-kind", text: kind }),
+  function windowCell(label, startIso, endIso, state, todayIso) {
+    return el("td", { dataset: { kind: label.toLowerCase() }, "data-label": label }, [
       el("span", {
         class: "window-dates",
         text: startIso ? rangeText(startIso, endIso, todayIso) : "N/A in Microsoft's schedule"
       }),
       state
-        ? el("span", { class: `window-state state-${state.state}` }, [
-            PQU.ui.dom.visuallyHidden("Calculated: "),
-            state.text
-          ])
+        ? el("span", { class: ["window-state", `state-${state.state}`] }, [visuallyHidden("Calculated: "), state.text])
         : null
     ]);
   }
 
-  function darkHours(ctx, region, row) {
-    const window = geoWindow(ctx, region);
-    if (!window || !row.production_start_date) {
-      return null;
+  function darkHoursCell(ctx, window, row) {
+    const label = `${window.geo} dark hours`;
+    if (!row.production_start_date) {
+      return el("td", { class: "muted", "data-label": label, text: "No production window" });
     }
     const pair = windows.forRange(window, row.production_start_date, row.production_end_date);
     if (!pair.paired) {
-      return el("p", {
-        class: "dark-hours-rule",
-        text: `${window.geo} maintenance window: ${windows.ruleText(window)}`
-      });
+      return el("td", { "data-label": label }, [
+        el("p", { class: "dark-hours-rule", text: `${window.geo} maintenance window: ${windows.ruleText(window)}` })
+      ]);
     }
-    return el("div", { class: "dark-hours" }, [
-      el("p", { class: "dark-hours-label", text: `${window.geo} dark hours on this weekend` }),
+    return el("td", { "data-label": label }, [
       el(
         "ul",
-        {},
+        { class: "dark-hours calc" },
         pair.windows.map((occurrence) => {
           const state = windows.occurrenceState(occurrence, ctx.now);
-          return el("li", { class: `occ occ-${state}` }, [
-            windows.describe(occurrence, ctx.zone, ctx.locale).text,
-            state === "now" ? [" ", el("span", { class: "chip chip-now", text: "Now" })] : null,
-            state === "done" ? el("span", { class: "visually-hidden", text: " (passed)" }) : null
+          return el("li", { class: ["occ", `occ-${state}`] }, [
+            occurrenceText(ctx, occurrence),
+            state === "now" ? [" ", common.tag("Now", "now")] : null,
+            state === "done" ? visuallyHidden(" (passed)") : null
           ]);
         })
       )
     ]);
   }
 
-  function trainCard(ctx, region, item) {
+  function windowRow(ctx, region, item) {
     const record = ctx.recordsById[item.row.pqu_id] || { pqu_id: item.row.pqu_id };
     const current =
       (item.sandbox && item.sandbox.state === "current") ||
       (item.production && item.production.state === "current");
-    return el(
-      "article",
-      { class: ["window-card", current ? "is-current" : null], dataset: { pqu: record.pqu_id } },
-      [
-        el("header", { class: "window-card-head" }, [
-          el("h4", {}, [common.trainLink(record.pqu_id)]),
-          record.status ? common.statusBadge(record.status) : null,
-          common.newChip(record),
-          record.application_build
-            ? el("span", { class: "mono muted build", text: record.application_build })
-            : null
+    const window = geoWindow(ctx, region);
+    return el("tr", { class: ["window-row", current ? "is-current" : null], dataset: { pqu: record.pqu_id } }, [
+      el("th", { scope: "row", class: "window-train" }, [
+        common.trainLink(record.pqu_id),
+        record.status ? [" ", common.statusText(record.status)] : null,
+        common.newTag(record),
+        record.application_build ? el("span", { class: "build", text: `Build ${record.application_build}` }) : null
+      ]),
+      windowCell("Sandbox", item.row.sandbox_start_date, item.row.sandbox_end_date, item.sandbox, ctx.todayIso),
+      windowCell(
+        "Production",
+        item.row.production_start_date,
+        item.row.production_end_date,
+        item.production,
+        ctx.todayIso
+      ),
+      window ? darkHoursCell(ctx, window, item.row) : null
+    ]);
+  }
+
+  function windowTable(ctx, region, items, id, caption) {
+    const window = geoWindow(ctx, region);
+    return el("div", { class: "table-scroll" }, [
+      el("table", { class: "window-table stack-table", id }, [
+        el("caption", { class: "visually-hidden", text: caption }),
+        el("thead", {}, [
+          el("tr", {}, [
+            el("th", { scope: "col", text: "Train" }),
+            el("th", { scope: "col", text: "Sandbox" }),
+            el("th", { scope: "col", text: "Production" }),
+            window ? el("th", { scope: "col", text: `${window.geo} dark hours that weekend` }) : null
+          ])
         ]),
-        windowLine("Sandbox", item.row.sandbox_start_date, item.row.sandbox_end_date, item.sandbox, ctx.todayIso),
-        windowLine(
-          "Production",
-          item.row.production_start_date,
-          item.row.production_end_date,
-          item.production,
-          ctx.todayIso
-        ),
-        darkHours(ctx, region, item.row)
-      ]
-    );
+        el(
+          "tbody",
+          {},
+          items.map((item) => windowRow(ctx, region, item))
+        )
+      ])
+    ]);
   }
 
   function unscheduled(ctx) {
@@ -327,23 +342,24 @@
       return null;
     }
     const notStarted = ctx.records.filter((record) => record.status === "Not Started").length;
-    return el("section", { class: "region-block", "aria-labelledby": "unscheduled-heading" }, [
-      el("h3", { id: "unscheduled-heading", text: "Detailed schedule not published yet" }),
+    return common.block("region-unscheduled", "Detailed schedule not published yet", [
+      el("p", {
+        class: "note",
+        text: "Microsoft publishes station windows shortly before a train starts. These trains come next."
+      }),
       el(
         "ul",
-        { class: "unscheduled", id: "unscheduled" },
+        { class: "ruled-list", id: "unscheduled" },
         list.slice(0, UNSCHEDULED_LIMIT).map((record) =>
           el("li", {}, [
             common.trainLink(record.pqu_id),
             " ",
-            common.statusBadge(record.status),
-            el("span", {
-              class: "muted",
-              text: ` · train starts ${dates.formatDate(record.train_start_date, {
-                weekday: true,
-                year: yearFor(record.train_start_date, ctx.todayIso)
-              })} (${dates.daysPhrase(dates.diffDays(ctx.todayIso, record.train_start_date))})`
-            })
+            common.statusText(record.status),
+            ` · train starts ${dates.formatDate(record.train_start_date, {
+              weekday: true,
+              year: yearFor(record.train_start_date, ctx.todayIso)
+            })}, `,
+            common.calc(dates.daysPhrase(dates.diffDays(ctx.todayIso, record.train_start_date)))
           ])
         )
       ),
@@ -370,9 +386,9 @@
     if (!article || !blocks.length) {
       return null;
     }
-    return el("div", { class: "source-note prose", id: "region-intro" }, [
-      ...PQU.ui.rich.blocks(blocks),
-      PQU.ui.guidance.sourceLine(article, { class: "source-line" })
+    return el("figure", { class: "excerpt", id: "region-intro" }, [
+      el("blockquote", { class: "prose", cite: article.url }, PQU.ui.rich.blocks(blocks)),
+      el("figcaption", {}, [PQU.ui.guidance.sourceLine(article, { class: "source-line" })])
     ]);
   }
 
@@ -396,9 +412,7 @@
     const rows = ctx.stations.filter((row) => row.station === region.station);
     const plan = windows.stationSchedule(rows, ctx.todayIso);
     const window = geoWindow(ctx, region);
-    const children = [
-      el("h3", { id: "station-windows-heading", text: `Station ${region.station} windows` })
-    ];
+    const children = [];
     if (ctx.errors.stations) {
       children.push(el("p", { class: "inline-alert", text: "Station schedules could not be loaded." }));
     } else if (!plan.active.length) {
@@ -410,13 +424,20 @@
       );
     } else {
       children.push(
-        el("div", { class: "window-list", id: "window-list" }, plan.active.map((item) => trainCard(ctx, region, item)))
+        windowTable(
+          ctx,
+          region,
+          plan.active,
+          "window-list",
+          `Current and upcoming Station ${region.station} windows, with the dark hours of each production weekend`
+        )
       );
     }
-    if (window) {
+    if (window && plan.active.length) {
       children.push(
         common.calcNote(
-          `Dark-hours times pair Microsoft's production dates with its ${window.geo} maintenance window, shown in UTC and ${ctx.zoneName}. Microsoft doesn't say which of these windows updates a given environment.`
+          `Dark hours pair Microsoft's production dates with its ${window.geo} maintenance window, in ${ctx.zoneName} ` +
+            "and UTC. Microsoft doesn't say which of these windows updates a given environment."
         )
       );
     }
@@ -427,34 +448,29 @@
             el("span", { class: "rules-title", text: "Earlier windows" }),
             el("span", { class: "muted", text: ` · ${plan.past.length}` })
           ]),
-          el("div", { class: "rules-body window-list" }, plan.past.map((item) => trainCard(ctx, region, item)))
+          el("div", { class: "rules-body" }, [
+            windowTable(ctx, region, plan.past, "past-window-list", `Earlier Station ${region.station} windows`)
+          ])
         ])
       );
     }
-    return el("section", { class: "region-block", "aria-labelledby": "station-windows-heading" }, children);
+    return common.block("station-windows", `Station ${region.station} windows`, children);
   }
 
   function calendarSection(ctx, region) {
     const calendar = PQU.ui.calendar;
-    return el(
-      "section",
-      { class: "region-block calendar-section", id: "region-calendar", "aria-labelledby": "region-calendar-heading" },
+    return common.block(
+      "region-calendar",
+      "Add to your calendar",
       [
-        el("h3", { id: "region-calendar-heading", text: "Add to your calendar" }),
         el("div", { class: "calendar-blocks" }, [
           calendar.stationBlock(ctx, region.station, "region-calendar"),
           calendar.milestonesBlock(ctx, "region-calendar")
         ]),
         calendar.help()
-      ]
+      ],
+      { class: "calendar-section" }
     );
-  }
-
-  function heading(title, kicker) {
-    return el("div", {}, [
-      el("p", { class: "kicker", text: kicker }),
-      el("h2", { id: "region-heading", tabindex: "-1", dataset: { viewHeading: "" }, text: title })
-    ]);
   }
 
   function render(container, ctx, route) {
@@ -487,8 +503,12 @@
     if (!region) {
       currentTitle = "My region";
       container.replaceChildren(
-        el("section", { class: "section", "aria-labelledby": "region-heading" }, [
-          el("div", { class: "section-head" }, [heading("Find your update windows", "My region")]),
+        el("div", { class: "page region" }, [
+          common.pageHead({
+            id: "region-heading",
+            title: "Find your update windows",
+            sub: "Microsoft updates Azure regions in groups called stations. Pick your region to see its station's sandbox and production windows and the dark hours around them."
+          }),
           ...notices,
           introNote(ctx),
           picker(ctx, null),
@@ -499,13 +519,11 @@
     }
     currentTitle = `${region.region} · My region`;
     container.replaceChildren(
-      el("section", { class: "section", "aria-labelledby": "region-heading" }, [
-        el("div", { class: "section-head" }, [heading(region.region, "My region"), saveLine(region)]),
+      el("div", { class: "page region" }, [
+        common.pageHead({ id: "region-heading", title: region.region, aside: saveLine(region) }),
         ...notices,
         facts(ctx, region),
-        common.calcNote(
-          `Countdowns are calculated from Microsoft's published dates for ${ctx.todayLabel} (${ctx.zoneName}).`
-        ),
+        common.italicNote(ctx),
         stationSection(ctx, region),
         calendarSection(ctx, region),
         unscheduled(ctx),

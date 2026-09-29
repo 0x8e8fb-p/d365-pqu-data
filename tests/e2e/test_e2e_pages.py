@@ -76,12 +76,12 @@ def test_a_missing_path_shows_the_styled_404_page(
     assert failed == [missing]
     assert errors == [NOT_FOUND_LOG]
     errors.clear()
-    assert page.title() == "Page not found · PQU Console"
+    assert page.title() == "Page not found · D365 PQU Tracker"
     assert page.locator("h1").text_content() == "Page not found"
-    # The stylesheet loaded from the site root even at a nested path.
+    # The stylesheet loaded from the site root even at a nested path; the system theme is light.
     background = page.evaluate("() => getComputedStyle(document.body).backgroundColor")
-    assert background == "rgb(9, 9, 11)"
-    assert page.evaluate("() => document.documentElement.dataset.theme") == "dark"
+    assert background == "rgb(251, 251, 249)"
+    assert page.evaluate("() => document.documentElement.dataset.theme") == "light"
     links = {
         str(link.text_content()): str(link.get_attribute("href"))
         for link in page.locator(".not-found-links a").all()
@@ -103,11 +103,11 @@ def test_a_missing_path_shows_the_styled_404_page(
 
 def test_the_404_page_follows_the_saved_theme(pages_page: tuple[Any, list[str], list[str]]) -> None:
     page, errors, failed = pages_page
-    page.add_init_script("window.localStorage.setItem('d365-pqu-theme', 'light')")
+    page.add_init_script("window.localStorage.setItem('d365-pqu-theme', 'dark')")
     page.goto(f"{PAGES_BASE_URL}/nothing-here")
-    assert page.evaluate("() => document.documentElement.dataset.theme") == "light"
+    assert page.evaluate("() => document.documentElement.dataset.theme") == "dark"
     assert page.evaluate("() => getComputedStyle(document.body).backgroundColor") == (
-        "rgb(250, 250, 249)"
+        "rgb(22, 22, 20)"
     )
     assert failed == [f"{PAGES_BASE_URL}/nothing-here"]
     assert errors == [NOT_FOUND_LOG]

@@ -1,19 +1,18 @@
-/* Trains view: filter rail, sortable paged table, and expandable station windows.
- * The view state (filters, sort, page) lives in the URL so every view can be shared. */
+/* Trains view: filter bar, sortable paged table with expandable station windows, and a timeline.
+ * The view state (filters, sort, page, display) lives in the URL so every view can be shared. */
 (function (root) {
   "use strict";
 
   const PQU = (root.PQU = root.PQU || {});
   PQU.views = PQU.views || {};
-  const { el, setText } = PQU.ui.dom;
+  const { el, setText, visuallyHidden } = PQU.ui.dom;
   const dates = PQU.dates;
   const records = PQU.records;
   const versions = PQU.versions;
 
   const COLUMNS = [
     { key: "pqu_id", label: "PQU ID" },
-    { key: "application_version", label: "App version" },
-    { key: "pqu_train", label: "Train", optional: true },
+    { key: "application_version", label: "Version" },
     { key: "status", label: "Status" },
     { key: "change_cutoff_date", label: "Cutoff" },
     { key: "train_start_date", label: "Start" },
@@ -52,23 +51,23 @@
   let syncTimer = null;
   const common = PQU.ui.common;
 
-  function textCell(value, mono = false) {
+  function textCell(value, props = {}) {
     return el("td", {
-      class: mono ? "mono" : null,
+      ...props,
       text: value === null || value === undefined || value === "" ? "—" : String(value)
     });
   }
 
   function statusCell(record) {
-    const cell = el("td", { class: "status-cell" }, [common.statusBadge(record.status)]);
+    const cell = el("td", { class: "status-cell" }, [common.statusText(record.status)]);
     if (records.isDueSoon(record, ctx.todayIso)) {
-      cell.append(el("span", { class: "due", text: "Due soon" }));
+      cell.append(common.tag("Due soon", "due", "Starts within seven days"));
     }
     const phase = ctx.phases.get(record.pqu_id);
     const line = phase ? [phase.text, phase.detail].filter(Boolean).join(" · ") : "";
     if (line) {
       cell.append(
-        el("span", { class: "phase" }, [PQU.ui.dom.visuallyHidden("Calculated from published dates: "), line])
+        el("span", { class: "phase calc" }, [visuallyHidden("Calculated from published dates: "), line])
       );
     }
     if (phase && phase.conflict) {
@@ -89,36 +88,35 @@
     if (!record.station_schedule_available) {
       return el("td", { class: "muted", text: "Not published" });
     }
-    return el("td", {}, ["Published", common.newChip(record)]);
+    return el("td", {}, ["Published", common.newTag(record)]);
   }
 
-  /* Microsoft's own description of the table and its callouts, from learn.json. */
-  function scheduleGuidance() {
+  /* Microsoft's own description of the table, from learn.json. */
+  function tableNote() {
     const rich = PQU.ui.rich;
     const article = rich.article(ctx.learn, "schedule");
     if (!article) {
-      return ctx.errors.learn
-        ? el("p", { class: "inline-alert", text: "Microsoft's schedule notes could not be loaded." })
-        : null;
+      return null;
     }
-    const children = [];
     const { before } = PQU.ui.guidance.datasetContext(article, "trains");
     const intro = before.filter((block) => block.type === "paragraph");
-    if (intro.length) {
-      children.push(el("div", { class: "source-note", id: "train-table-note" }, rich.blocks(intro)));
+    return intro.length ? el("div", { id: "train-table-note" }, rich.blocks(intro)) : null;
+  }
+
+  function rulesPanel() {
+    const rich = PQU.ui.rich;
+    const article = rich.article(ctx.learn, "schedule");
+    if (!article) {
+      return null;
     }
     const callouts = rich.callouts(article).map(({ block }) => block);
-    const panel = PQU.ui.guidance.panel({
+    return PQU.ui.guidance.panel({
       id: "rules-panel",
       title: "Microsoft's rollout rules",
       article,
       blocks: callouts,
       summaryNote: `${callouts.length} ${callouts.length === 1 ? "note" : "notes"}`
     });
-    if (panel) {
-      children.push(panel);
-    }
-    return children.length ? el("div", { class: "guidance" }, children) : null;
   }
 
   function stationWindow(row, startKey, endKey) {
@@ -150,7 +148,7 @@
     for (const row of rows) {
       tableBody.append(
         el("tr", { class: row.station === view.activeStation ? "station-active" : null }, [
-          textCell(row.station_label, true),
+          textCell(row.station_label),
           textCell(stationWindow(row, "sandbox_start_date", "sandbox_end_date")),
           textCell(stationWindow(row, "production_start_date", "production_end_date"))
         ])
@@ -174,18 +172,19 @@
 
   function idCell(record, hasStations, expanded) {
     const flags = ctx.flags[record.pqu_id] || [];
+    const described = flags.map((item) => PQU.health.describe(item, ctx.recordsById));
     const flag = flags.length
       ? el("span", {
           class: "flag",
           role: "img",
-          "aria-label": `Source warning: ${flags.map((item) => PQU.health.describe(item, ctx.recordsById)).join(" ")}`,
-          title: flags.map((item) => PQU.health.describe(item, ctx.recordsById)).join("\n"),
-          text: "⚑"
+          "aria-label": `Source warning: ${described.join(" ")}`,
+          title: described.join("\n"),
+          text: "Source warning"
         })
       : null;
     const link = el("a", { class: "train-id", href: common.trainHref(record.pqu_id), text: record.pqu_id });
     if (!hasStations) {
-      return el("td", { class: "mono id-cell" }, [
+      return el("td", { class: "id-cell" }, [
         el("span", { class: "row-toggle-spacer", "aria-hidden": "true" }),
         link,
         flag
@@ -209,9 +208,9 @@
           }
         }
       },
-      [el("span", { class: "row-toggle-icon", "aria-hidden": "true", text: expanded ? "−" : "+" })]
+      [el("span", { class: "row-toggle-icon", "aria-hidden": "true" })]
     );
-    return el("td", { class: "mono id-cell" }, [toggle, link, flag]);
+    return el("td", { class: "id-cell" }, [toggle, link, flag]);
   }
 
   function filtered() {
@@ -252,20 +251,20 @@
           class: [
             record.pqu_id === (ctx.metadata || {}).latest_pqu_id ? "latest" : null,
             records.isDueSoon(record, ctx.todayIso) ? "due-soon" : null,
-            ctx.flags[record.pqu_id] ? "has-flag" : null
+            ctx.flags[record.pqu_id] ? "has-flag" : null,
+            expanded ? "is-expanded" : null
           ]
         },
         [
           idCell(record, hasStations, expanded),
-          textCell(record.application_version, true),
-          el("td", { class: "mono col-optional", text: record.pqu_train || "—" }),
+          textCell(record.application_version),
           statusCell(record),
-          textCell(dates.formatDate(record.change_cutoff_date)),
-          textCell(dates.formatDate(record.train_start_date)),
-          textCell(dates.formatDate(record.train_end_date)),
-          textCell(record.application_build, true),
-          textCell(record.platform_build, true),
-          el("td", { class: "mono col-optional", text: record.uep_version || "—" }),
+          textCell(dates.formatDate(record.change_cutoff_date), { class: "nowrap" }),
+          textCell(dates.formatDate(record.train_start_date), { class: "nowrap" }),
+          textCell(dates.formatDate(record.train_end_date), { class: "nowrap" }),
+          textCell(record.application_build, { class: "nowrap" }),
+          textCell(record.platform_build, { class: "nowrap" }),
+          textCell(record.uep_version, { class: "col-optional nowrap" }),
           stationsCell(record)
         ]
       );
@@ -281,7 +280,7 @@
       nodes.filterNote,
       `${list.length} of ${ctx.records.length} trains shown` +
         (dueCount > 0 ? ` · ${dueCount} due soon` : "") +
-        (view.activeStation !== null ? ` · Station ${view.activeStation} context` : "")
+        (view.activeStation !== null ? ` · expanded rows show Station ${view.activeStation}` : "")
     );
     setText(
       nodes.pageInfo,
@@ -421,7 +420,14 @@
     nodes.displayButtons = display.buttons;
     nodes.zoomButtons = zoom.buttons;
     nodes.zoomGroup = zoom.group;
-    return el("div", { class: "view-toolbar" }, [display.group, zoom.group]);
+    nodes.tableCalc = common.calcNote(
+      [
+        el("i", { text: "Italic" }),
+        ` lines under a status are calculated from Microsoft's published dates for ${ctx.todayLabel} (${ctx.zoneName}).`
+      ],
+      { id: "calc-note" }
+    );
+    return el("div", { class: "toolbar" }, [display.group, zoom.group, nodes.tableCalc]);
   }
 
   function regionRecords() {
@@ -431,16 +437,16 @@
   function regionResultContent() {
     const match = regionRecords().find((row) => row.region === view.region);
     if (!match) {
-      return ["Select a region to see its station."];
+      return ["Choose a region to show only its station when you expand a train."];
     }
     const peers = regionRecords()
       .filter((row) => row.station === match.station && row.region !== match.region)
       .map((row) => row.region)
       .sort((a, b) => a.localeCompare(b));
     return [
-      `${match.region} is covered by Station ${match.station}.` +
-        (peers.length ? ` Also in Station ${match.station}: ${peers.join(", ")}.` : "") +
-        " Expanded trains show only this station. ",
+      `${match.region} is on Station ${match.station}` +
+        (peers.length ? `, with ${PQU.text.joinList(peers)}` : "") +
+        `. Expanded trains show only Station ${match.station}. `,
       el("a", {
         href: PQU.router.href("region", { region: match.region }),
         text: `Open ${match.region} in My region`
@@ -480,7 +486,7 @@
       .map((version) => ({ value: version, label: version }));
   }
 
-  function buildRail() {
+  function filterBar() {
     const regionOptions = [...new Set(regionRecords().map((row) => row.region))]
       .sort((a, b) => a.localeCompare(b))
       .map((region) => ({ value: region, label: region }));
@@ -494,22 +500,16 @@
         input: (event) => update({ search: event.target.value, page: 1 }, SEARCH_SYNC_DELAY)
       }
     });
-    nodes.regionResult = el(
-      "p",
-      { id: "region-result", "aria-live": "polite" },
-      regionResultContent()
-    );
+    nodes.regionResult = el("p", { id: "region-result", class: "note", "aria-live": "polite" }, regionResultContent());
     const reset = el("button", {
       id: "reset-filters",
-      class: "button small rail-button",
+      class: "link-button",
       type: "button",
       text: "Reset all filters",
       on: { click: resetAll }
     });
-    return el("aside", { class: "filters-rail", "aria-labelledby": "filters-heading" }, [
-      el("h2", { id: "filters-heading", text: "Filters" }),
-      el("fieldset", { class: "filter-group", "aria-label": "Refine dashboard results" }, [
-        el("legend", { text: "Refine" }),
+    return [
+      el("div", { class: "filters", role: "group", "aria-label": "Filter trains" }, [
         el("label", { class: "field field-search" }, [el("span", { text: "Search" }), search]),
         selectField(
           "status-filter",
@@ -520,7 +520,7 @@
         ),
         selectField(
           "version-filter",
-          "Application version",
+          "Version",
           [{ value: "", label: "All versions" }, ...versionChoices()],
           view.version,
           (value) => update({ version: value, page: 1 })
@@ -528,7 +528,7 @@
         selectField(
           "region-select",
           "Region",
-          [{ value: "", label: "Select a region" }, ...regionOptions],
+          [{ value: "", label: "Any region" }, ...regionOptions],
           view.region,
           (value) => {
             applyRegion(value);
@@ -536,7 +536,6 @@
             update({});
           }
         ),
-        el("div", { class: "lookup-result" }, [nodes.regionResult]),
         (nodes.pageSizeField = selectField(
           "page-size",
           "Rows",
@@ -545,30 +544,39 @@
           (value) => update({ pageSize: Number(value) || DEFAULT_PAGE_SIZE, page: 1 })
         )),
         reset
-      ])
-    ]);
+      ]),
+      nodes.regionResult
+    ];
   }
 
   function buildTable() {
     const headerCells = COLUMNS.map((column) =>
-      el("th", { scope: "col", class: column.optional ? "col-optional" : null, "aria-sort": "none" }, [
-        el(
-          "button",
-          {
-            type: "button",
-            class: "th-sort",
-            dataset: { sort: column.key },
-            on: {
-              click: () => {
-                const direction =
-                  view.sort.key === column.key && view.sort.direction === 1 ? -1 : 1;
-                update({ sort: { key: column.key, direction }, page: 1 });
+      el(
+        "th",
+        {
+          scope: "col",
+          class: [`col-${column.key}`, column.optional ? "col-optional" : null],
+          "aria-sort": "none"
+        },
+        [
+          el(
+            "button",
+            {
+              type: "button",
+              class: "th-sort",
+              dataset: { sort: column.key },
+              on: {
+                click: () => {
+                  const direction =
+                    view.sort.key === column.key && view.sort.direction === 1 ? -1 : 1;
+                  update({ sort: { key: column.key, direction }, page: 1 });
+                }
               }
-            }
-          },
-          [`${column.label} `, el("span", { class: "sort-indicator", "aria-hidden": "true" })]
-        )
-      ])
+            },
+            [column.label, el("span", { class: "sort-indicator", "aria-hidden": "true" })]
+          )
+        ]
+      )
     );
     nodes.tbody = el("tbody");
     nodes.table = el("table", { id: "pqu-table" }, [
@@ -656,7 +664,7 @@
   function build() {
     const container = nodes.container;
     nodes = { container };
-    nodes.filterNote = el("p", { class: "section-note", id: "filter-note", "aria-live": "polite" });
+    nodes.filterNote = el("p", { id: "filter-note", "aria-live": "polite" });
     const notices = [];
     if (ctx.errors.stations) {
       notices.push("Station schedules could not be loaded; station windows are unavailable.");
@@ -664,31 +672,24 @@
     if (ctx.errors.regions) {
       notices.push("The region mapping could not be loaded; region lookup is unavailable.");
     }
-    const main = el("div", { class: "workspace-main" }, [
-      el("section", { class: "section", "aria-labelledby": "schedule-heading" }, [
-        el("div", { class: "section-head" }, [
-          el("div", {}, [
-            el("p", { class: "kicker", text: "Schedule" }),
-            el("h2", {
-              id: "schedule-heading",
-              tabindex: "-1",
-              dataset: { viewHeading: "" },
-              text: "PQU trains"
-            })
-          ]),
-          nodes.filterNote
-        ]),
-        scheduleGuidance(),
-        (nodes.tableCalc = el("p", { class: "calc-note", id: "calc-note" }, [
-          el("span", { class: "calc-mark", "aria-hidden": "true", text: "↳" }),
-          ` Lines under a status are calculated from Microsoft's published dates for ${ctx.todayLabel} (${ctx.zoneName}).`
-        ])),
-        notices.map((notice) => el("p", { class: "inline-alert", text: notice })),
+    if (ctx.errors.learn) {
+      notices.push("Microsoft's schedule notes could not be loaded.");
+    }
+    container.replaceChildren(
+      el("div", { class: "page trains" }, [
+        common.pageHead({
+          id: "schedule-heading",
+          title: "PQU trains",
+          sub: tableNote(),
+          aside: nodes.filterNote
+        }),
+        ...filterBar(),
         toolbar(),
-        (nodes.panel = el("div", { class: "results", id: "results" }))
+        notices.map((notice) => el("p", { class: "inline-alert", text: notice })),
+        (nodes.panel = el("div", { class: "results", id: "results" })),
+        rulesPanel()
       ])
-    ]);
-    container.replaceChildren(el("div", { class: "workspace" }, [buildRail(), main]));
+    );
     showDisplay();
   }
 

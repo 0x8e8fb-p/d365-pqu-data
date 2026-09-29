@@ -28,7 +28,7 @@ def _pqu5_status(page) -> str:
     row = page.locator(
         "#pqu-table tbody tr", has=page.locator("a.train-id", has_text="10.0.48-PQU-5")
     )
-    return _text(row.locator(".status-cell .badge"))
+    return _text(row.locator(".status-cell .status"))
 
 
 def _swap_api(page, old_base: str, new_base: str) -> dict[str, bool]:
@@ -124,7 +124,7 @@ def test_midnight_recalculates_dates_and_keeps_open_answers(fixture_site, open_p
 
     page.evaluate("() => { location.hash = '#/'; }")
     wait_for_render(page)
-    assert page.locator(".overview .kicker").text_content() == "Tue 29 Sep 2026"
+    assert page.locator("#overview-heading").text_content() == "Tuesday 29 September 2026"
     opened.assert_clean()
 
 
@@ -139,13 +139,13 @@ def test_dark_hours_turn_on_when_the_window_starts(fixture_site, open_page) -> N
         storage={REGION_KEY: "North Europe"},
     )
     page = opened.page
-    friday = page.locator("#window-list article[data-pqu='10.0.48-PQU-6'] .dark-hours li").first
+    friday = page.locator("#window-list tr[data-pqu='10.0.48-PQU-6'] .dark-hours li").first
     assert "occ-upcoming" in (friday.get_attribute("class") or "")
     page.locator("#region-calendar-station-address").focus()
 
     page.clock.run_for("01:00")
     page.wait_for_function(
-        "() => document.querySelector(\"#window-list article[data-pqu='10.0.48-PQU-6'] .dark-hours li\").classList.contains('occ-now')"
+        "() => document.querySelector(\"#window-list tr[data-pqu='10.0.48-PQU-6'] .dark-hours li\").classList.contains('occ-now')"
     )
     assert "Now" in _text(friday)
     assert page.evaluate("() => document.activeElement.id") == "region-calendar-station-address"

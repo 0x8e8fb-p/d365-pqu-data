@@ -47,21 +47,21 @@ def test_toggle_between_table_and_timeline(fixture_site, open_page) -> None:
     assert page.locator("#zoom").is_visible()
     assert not page.locator("#page-size").is_visible()
     assert not page.locator("#calc-note").is_visible()
-    assert page.title() == "PQU train timeline · PQU Console"
+    assert page.title() == "PQU train timeline · D365 PQU Tracker"
     assert _text(page.locator("#filter-note")) == "59 of 59 trains match · 23 on the timeline"
 
     page.locator("#display-table").click()
     page.wait_for_function("() => location.hash === '#/trains'")
     assert page.locator("#pqu-table").is_visible()
     assert page.locator("#page-size").is_visible()
-    assert page.title() == "PQU trains · PQU Console"
+    assert page.title() == "PQU trains · D365 PQU Tracker"
     opened.assert_clean()
 
 
 def test_timeline_lanes_bars_and_today_line(fixture_site, open_page) -> None:
     opened = open_page(_live(fixture_site), "#/trains?view=timeline")
     page = opened.page
-    assert page.title() == "PQU train timeline · PQU Console"
+    assert page.title() == "PQU train timeline · D365 PQU Tracker"
     assert _text(page.locator("#timeline-range")) == "29 Aug \u2013 28 Nov 2026"
     lanes = page.locator("#timeline .tl-lane")
     assert [lane.get_attribute("data-version") for lane in lanes.all()] == [
@@ -99,7 +99,7 @@ def test_timeline_lanes_bars_and_today_line(fixture_site, open_page) -> None:
     )
     not_drawn = page.locator(".tl-not-drawn[data-pqu='10.0.46-PQU-1']")
     assert _text(not_drawn) == (
-        "\u2691 Not drawn: 10.0.46 PQU-1. Microsoft lists the start as 9 Feb 2025 and the "
+        "Not drawn: 10.0.46 PQU-1. Microsoft lists the start as 9 Feb 2025 and the "
         "change cutoff as 4 Feb 2026; the years differ."
     )
     assert page.locator("#timeline a.tl-bar[data-pqu='10.0.46-PQU-1']").count() == 0

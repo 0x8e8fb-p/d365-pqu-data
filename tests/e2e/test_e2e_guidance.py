@@ -27,9 +27,9 @@ def test_rules_panel_quotes_microsoft_callouts_with_source(fixture_site, open_pa
     body = panel.locator(".rules-body")
     assert body.locator(".callout").count() == 3
     assert [label.inner_text() for label in body.locator(".callout-label").all()] == [
-        "IMPORTANT",
-        "NOTE",
-        "IMPORTANT",
+        "Important",
+        "Note",
+        "Important",
     ]
     text = body.inner_text()
     assert "receive PQUs on weekends" in text
@@ -49,19 +49,19 @@ def test_new_station_schedules_are_marked(fixture_site, open_page) -> None:
     opened = open_page(fixture_site((LIVE_FIXTURES, E2E_SYNC_AT)), "#/trains?status=On-Going")
     page = opened.page
     marked = sorted(
-        row.locator("td").first.inner_text().replace("+", "").replace("⚑", "").strip()
-        for row in page.locator("#pqu-table tbody tr", has=page.locator(".chip-new")).all()
+        row.locator("a.train-id").inner_text()
+        for row in page.locator("#pqu-table tbody tr", has=page.locator(".tag-new")).all()
     )
     assert marked == ["10.0.46-PQU-8", "10.0.47-PQU-13", "10.0.48-PQU-6"]
-    assert _row(page, "10.0.48-PQU-5").locator(".chip-new").count() == 0
+    assert _row(page, "10.0.48-PQU-5").locator(".tag-new").count() == 0
     opened.assert_clean()
 
 
-def test_status_footnote_is_shown_under_the_badge(fixture_site, open_page) -> None:
+def test_status_footnote_is_shown_under_the_status(fixture_site, open_page) -> None:
     opened = open_page(fixture_site((FOOTNOTE, E2E_SYNC_AT)), "#/trains")
     page = opened.page
     cell = _row(page, "10.0.47-PQU-2").locator("td.status-cell")
-    assert cell.locator(".badge").inner_text() == "Canceled"
+    assert cell.locator(".status").inner_text() == "Canceled"
     assert cell.locator(".status-note").inner_text() == (
         "Microsoft note: PQU will occur only on Station-1. Releases for other stations have been "
         "canceled due to the holiday deployment freeze, and the build will be available for "

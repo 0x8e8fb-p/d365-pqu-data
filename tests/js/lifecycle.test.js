@@ -99,20 +99,57 @@ test("missing dates are skipped and no dates means unknown", () => {
   assert.equal(empty.summary, "Dates not published");
 });
 
-test("bar positions segments and today proportionally", () => {
-  const geometry = lifecycle.bar(V49, TODAY);
-  assert.equal(geometry.start, "2026-07-27");
-  assert.equal(geometry.end, "2027-05-21");
+test("chart puts every version on one axis with today's position", () => {
+  const geometry = lifecycle.chart([V50, V49, V47, V46], TODAY);
+  assert.equal(geometry.start, "2025-10-24");
+  assert.equal(geometry.end, "2027-08-20");
   assert.deepEqual(
-    geometry.segments.map((segment) => segment.state),
-    ["preview", "available", "autoupdate", "supported"]
+    geometry.rows.map((row) => [row.version, row.state]),
+    [
+      ["10.0.50", "upcoming"],
+      ["10.0.49", "available"],
+      ["10.0.47", "supported"],
+      ["10.0.46", "end-of-service"]
+    ]
   );
-  const total = geometry.segments.reduce((sum, segment) => sum + segment.width, 0);
-  assert.ok(Math.abs(total + geometry.segments[0].left - 100) < 1e-9);
-  assert.equal(geometry.segments[0].left, 0);
-  assert.ok(geometry.today > 0 && geometry.today < 30);
-  assert.equal(lifecycle.bar(V46, TODAY).today, null);
-  assert.equal(lifecycle.bar({ version: "x", preview_date: "2026-01-01" }, TODAY), null);
+  const v46 = geometry.rows[3];
+  assert.deepEqual(
+    v46.segments.map((segment) => [segment.kind, segment.start, segment.end]),
+    [
+      ["preview", "2025-10-24", "2025-12-26"],
+      ["service", "2025-12-26", "2026-08-21"]
+    ]
+  );
+  assert.equal(v46.segments[0].left, 0);
+  const v50 = geometry.rows[0].segments[1];
+  assert.ok(Math.abs(v50.left + v50.width - 100) < 1e-9);
+  assert.deepEqual(
+    geometry.rows[1].marks.map((mark) => mark.date),
+    ["2026-10-02", "2026-11-01"]
+  );
+  // 28 Sep 2026 is 339 of the axis's 665 days.
+  assert.ok(Math.abs(geometry.today - (339 / 665) * 100) < 1e-9);
+  assert.deepEqual(
+    geometry.ticks.map((tick) => tick.label),
+    ["Jan 2026", "Apr", "Jul", "Oct", "Jan 2027", "Apr", "Jul"]
+  );
+  assert.equal(geometry.ticks[0].iso, "2026-01-01");
+});
+
+test("chart handles missing dates and ranges without today", () => {
+  const partial = { version: "10.0.52", general_availability_date: "2027-05-01" };
+  const geometry = lifecycle.chart([V46, partial], "2030-01-01");
+  assert.equal(geometry.today, null);
+  assert.deepEqual(geometry.rows[1].segments, []);
+  assert.deepEqual(geometry.rows[1].marks, []);
+  assert.equal(lifecycle.chart([partial], TODAY), null);
+  assert.equal(lifecycle.chart([{ version: "10.0.99" }], TODAY), null);
+  assert.equal(lifecycle.chart([], TODAY), null);
+  const quarterStart = lifecycle.chart([{ version: "x", preview_date: "2026-04-01", end_of_service_date: "2026-10-01" }], TODAY);
+  assert.deepEqual(
+    quarterStart.ticks.map((tick) => tick.iso),
+    ["2026-04-01", "2026-07-01", "2026-10-01"]
+  );
 });
 
 test("mergeVersions combines lifecycle rows and trains, newest first", () => {

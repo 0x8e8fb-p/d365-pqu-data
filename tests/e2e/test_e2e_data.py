@@ -23,7 +23,7 @@ def test_data_view_lists_every_published_file(fixture_site, open_page) -> None:
     base = _live(fixture_site)
     opened = open_page(base, "#/data")
     page = opened.page
-    assert page.title() == "Data & API · PQU Console"
+    assert page.title() == "Data & API · D365 PQU Tracker"
     assert page.locator("#data-heading").text_content() == "Data & API"
     assert page.locator("#data-link").get_attribute("aria-current") == "page"
     assert page.locator("#tabs a[aria-current]").count() == 0
@@ -39,10 +39,10 @@ def test_data_view_lists_every_published_file(fixture_site, open_page) -> None:
     assert facts["Schema version"] == "1.1.0"
 
     index = json.loads(page.request.get(base + "api/index.json").text())
-    files = page.locator("#data-files li.data-file")
+    files = page.locator("#data-files tr.data-file")
     assert files.count() == len(index["endpoints"])
-    master = page.locator("#data-files li.data-file[data-path='./pqu.json']")
-    assert _text(master.locator("h4")) == "PQU master"
+    master = page.locator("#data-files tr.data-file[data-path='./pqu.json']")
+    assert _text(master.locator(".data-name")) == "PQU master"
     assert _text(master.locator(".data-address code")) == f"{base}api/pqu.json"
     links = {
         str(link.get_attribute("aria-label")): str(link.get_attribute("href"))
@@ -53,7 +53,7 @@ def test_data_view_lists_every_published_file(fixture_site, open_page) -> None:
         "PQU master (CSV)": "./api/pqu.csv",
         "PQU master (Schema)": "./schemas/pqu.schema.json",
     }
-    feed = page.locator("#data-files li.data-file[data-path='./../feed.xml'] .data-links a")
+    feed = page.locator("#data-files tr.data-file[data-path='./../feed.xml'] .data-links a")
     assert (feed.get_attribute("href"), feed.text_content()) == ("./feed.xml", "Atom")
 
     # Every link on the page that points into the site resolves.

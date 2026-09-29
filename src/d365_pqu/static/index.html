@@ -1,74 +1,63 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' '__INLINE_SCRIPT_HASHES__'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>D365 PQU Console · Finance &amp; Operations updates</title>
-  <meta name="description" content="Dark-first operational console for Microsoft Dynamics 365 Finance and Operations proactive quality updates, with JSON, CSV, and Excel from one validated dataset.">
-  <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafaf9">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b">
+  <title>D365 PQU Tracker</title>
+  <meta name="description" content="Microsoft's proactive quality update (PQU) schedule for Dynamics 365 Finance and Operations: trains, station windows, maintenance windows and service update dates, published as JSON, CSV and Excel from one validated dataset.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfbf9">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#161614">
   <link rel="icon" type="image/svg+xml" href="./assets/icon.svg">
-  <link rel="mask-icon" href="./assets/icon.svg" color="#0b5fa5">
+  <link rel="mask-icon" href="./assets/icon.svg" color="#1c1c1a">
   <link rel="stylesheet" href="./assets/styles.css">
   <link rel="alternate" type="application/atom+xml" title="PQU changes (Atom feed)" href="./feed.xml">
   <script>
     try {
-      var storedTheme = window.localStorage.getItem("d365-pqu-theme");
-      document.documentElement.setAttribute("data-theme", storedTheme === "light" ? "light" : "dark");
+      var theme = window.localStorage.getItem("d365-pqu-theme");
+      if (theme !== "light" && theme !== "dark") {
+        theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.setAttribute("data-theme", theme);
     } catch (error) {
-      document.documentElement.setAttribute("data-theme", "dark");
+      document.documentElement.setAttribute("data-theme", "light");
     }
   </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="topbar">
-    <div class="wrap topbar-inner">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 64 64" fill="none" aria-hidden="true"><rect width="64" height="64" rx="14" class="brand-tile"/><g stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" class="brand-mark-lines"><path d="M25 48 V16 h11 a10.5 10.5 0 0 1 0 21 H25"/><path d="M36 40 L45 49"/></g></svg></span>
-        <div class="brand-text">
-          <p class="eyebrow">Dynamics 365 · Finance &amp; Operations</p>
-          <h1>PQU Console</h1>
-        </div>
-      </div>
-      <div class="topbar-side">
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="site-name" href="#/">
+        <svg class="site-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <path class="mark-line" d="M11 32 H53" stroke-width="5" stroke-linecap="round"/>
+          <path class="mark-done" d="M2 32a9 9 0 1 0 18 0a9 9 0 1 0 -18 0Z"/>
+          <path class="mark-now" d="M23 32a9 9 0 1 0 18 0a9 9 0 1 0 -18 0Z"/>
+          <path class="mark-next" d="M45.5 32a7.5 7.5 0 1 0 15 0a7.5 7.5 0 1 0 -15 0Z" stroke-width="3"/>
+        </svg>
+        <span>D365 PQU Tracker</span>
+      </a>
+      <nav class="tabs" aria-label="Sections">
+        <div class="tabs-list" id="tabs"></div>
+      </nav>
+      <div class="header-tools">
         <div class="health">
           <button id="health-toggle" class="sync" type="button" aria-expanded="false" aria-controls="health-panel" data-state="loading">
-            <span class="dot" aria-hidden="true"></span>
-            <span id="sync-label">Loading dataset…</span>
+            <span id="sync-label">Loading…</span>
             <time id="sync-time"></time>
           </button>
           <div id="health-panel" class="health-panel" hidden></div>
           <p id="health-status" class="visually-hidden" role="status" aria-live="polite"></p>
         </div>
-        <div class="topbar-actions">
-          <label class="zone-field" title="Time zone for today and for times">
-            <span class="visually-hidden">Time zone</span>
-            <svg class="zone-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M1.75 8h12.5M8 1.75c1.8 1.7 2.7 3.8 2.7 6.25S9.8 12.55 8 14.25C6.2 12.55 5.3 10.45 5.3 8S6.2 3.45 8 1.75Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-            </svg>
-            <select id="zone-select"></select>
-          </label>
-          <button id="theme-toggle" class="icon-button" type="button" aria-pressed="false" aria-label="Light theme">
-            <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M13.5 9.5A5.5 5.5 0 0 1 6.5 2.5a5.5 5.5 0 1 0 7 7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-            </svg>
-            <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" hidden>
-              <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M8 1.5v1.8M8 12.7v1.8M1.5 8h1.8M12.7 8h1.8M3.4 3.4l1.3 1.3M11.3 11.3l1.3 1.3M12.6 3.4l-1.3 1.3M4.7 11.3l-1.3 1.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </button>
-          <a class="button primary" href="./downloads/D365-PQU-Tracker.xlsx" download>Excel</a>
-        </div>
+        <label class="zone-field" title="Time zone used for today and for times">
+          <span class="zone-label">Time zone</span>
+          <select id="zone-select"></select>
+        </label>
+        <a class="header-excel" href="./downloads/D365-PQU-Tracker.xlsx" download>Download Excel</a>
       </div>
     </div>
-    <nav class="tabs" aria-label="Sections">
-      <div class="wrap tabs-inner" id="tabs"></div>
-    </nav>
   </header>
 
   <main id="main" class="wrap" tabindex="-1">
@@ -78,18 +67,25 @@
     <div id="view"></div>
 
     <noscript>
-      <section class="section" aria-labelledby="noscript-heading">
-        <h2 id="noscript-heading">Static access</h2>
-        <p class="section-note">JavaScript is disabled. The dashboard needs JavaScript, but the Excel tracker remains available.</p>
-        <p><a href="./downloads/D365-PQU-Tracker.xlsx">Excel tracker</a></p>
-      </section>
+      <h1>D365 PQU Tracker</h1>
+      <p>This page needs JavaScript. The data is also published as files: the <a href="./downloads/D365-PQU-Tracker.xlsx">Excel workbook</a> and the <a href="./api/index.json">API index</a>.</p>
     </noscript>
   </main>
 
   <footer class="site-footer">
-    <div class="wrap footer-inner">
-      <p><a href="https://github.com/0x8e8fb-p/d365-pqu-data">Source repository</a> · <a href="./downloads/D365-PQU-Tracker.xlsx">Excel tracker</a> · <a id="data-link" href="#/data">Data &amp; API</a> · <span class="footer-meta">Source date <time id="source-date" datetime="">—</time></span></p>
-      <p class="footer-credit">0x8e8fb</p>
+    <div class="wrap footer-row">
+      <p class="footer-links"><a id="data-link" href="#/data">Data &amp; API</a> · <a href="./downloads/D365-PQU-Tracker.xlsx">Excel workbook</a> · <a href="./feed.xml">Atom feed</a> · <a href="https://github.com/0x8e8fb-p/d365-pqu-data">Source repository</a></p>
+      <p class="footer-source">Schedule article updated <time id="source-date" datetime="">—</time>. Microsoft's text and data are reused under CC BY 4.0. This site is not affiliated with Microsoft.</p>
+      <div class="footer-prefs">
+        <label class="theme-field">Theme
+          <select id="theme-select">
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
+        <span class="footer-credit">0x8e8fb</span>
+      </div>
     </div>
   </footer>
 

@@ -10,6 +10,7 @@
   const dates = PQU.dates;
   const text = PQU.text;
   const changes = PQU.changes;
+  const common = PQU.ui.common;
 
   const DAYS_PER_PAGE = 14;
   const SEARCH_SYNC_DELAY = 300;
@@ -273,9 +274,9 @@
     const relative = offset === null ? "" : dates.daysPhrase(offset);
     const headingId = `changes-day-${day.day}`;
     return el("li", { class: "change-day", dataset: { day: day.day } }, [
-      el("h3", { class: "change-day-title", id: headingId, tabindex: "-1" }, [
+      el("h2", { class: "change-day-title", id: headingId, tabindex: "-1" }, [
         el("time", { datetime: day.day, text: dates.formatDate(day.day, { weekday: true }) }),
-        relative ? el("span", { class: "muted", text: ` · ${relative}` }) : null
+        relative ? el("span", { class: "muted calc", text: ` · ${relative}` }) : null
       ]),
       el("ol", { class: "change-groups" }, day.syncs.map(syncItem))
     ]);
@@ -305,7 +306,7 @@
         const remaining = allLines(hidden).length;
         children.push(
           el("button", {
-            class: "button small",
+            class: "button small changes-more",
             type: "button",
             id: "changes-more",
             text: `Show older changes (${text.plural(remaining, "more change")})`,
@@ -336,28 +337,14 @@
     const doc = ctx.changes;
     const failed = ctx.errors.changes || !doc || !Array.isArray(doc.records);
     days = failed ? [] : prepare(doc.records);
-    const head = el("div", { class: "section-head" }, [
-      el("div", {}, [
-        el("p", { class: "kicker", text: "History" }),
-        el("h2", {
-          id: "changes-heading",
-          tabindex: "-1",
-          dataset: { viewHeading: "" },
-          text: "Changes in Microsoft's articles"
-        })
-      ]),
-      el("p", { class: "section-note" }, [
-        el("a", { class: "feed-link", href: "./feed.xml", type: "application/atom+xml" }, [
-          el("span", { class: "feed-icon", "aria-hidden": "true" }),
-          "Atom feed"
-        ]),
-        visuallyHidden(" of these changes")
-      ])
-    ]);
+    const feed = [
+      el("a", { class: "feed-link", href: "./feed.xml", type: "application/atom+xml", text: "Atom feed" }),
+      visuallyHidden(" of these changes")
+    ];
     if (failed) {
       container.replaceChildren(
-        el("section", { class: "section changes", "aria-labelledby": "changes-heading" }, [
-          head,
+        el("div", { class: "page changes" }, [
+          common.pageHead({ id: "changes-heading", title: "Changes in Microsoft's articles", aside: feed }),
           el("p", { class: "inline-alert", id: "changes-error", text: "The change history could not be loaded." })
         ])
       );
@@ -367,10 +354,16 @@
     nodes.list = el("div", { class: "changes-list", id: "changes-list" });
     const total = allLines(days).length;
     container.replaceChildren(
-      el("section", { class: "section changes", "aria-labelledby": "changes-heading" }, [
-        head,
-        el("p", { class: "section-lead", id: "changes-summary", text: summaryText() }),
-        el("p", { class: "muted changes-method", text: methodText() }),
+      el("div", { class: "page changes" }, [
+        common.pageHead({
+          id: "changes-heading",
+          title: "Changes in Microsoft's articles",
+          sub: [
+            el("p", { id: "changes-summary", text: summaryText() }),
+            el("p", { class: "changes-method note", text: methodText() })
+          ],
+          aside: feed
+        }),
         total ? filters() : null,
         nodes.status,
         nodes.list

@@ -22,7 +22,7 @@ def test_my_region_offers_its_station_calendar(fixture_site, open_page) -> None:
     opened = open_page(base, "#/region/North%20Europe")
     page = opened.page
     section = page.locator("#region-calendar")
-    assert _text(section.locator("h3")) == "Add to your calendar"
+    assert _text(section.locator("h2")) == "Add to your calendar"
 
     station = page.locator("#region-calendar-station")
     assert station.get_attribute("data-calendar") == "station-4.ics"

@@ -23,13 +23,15 @@ def _text(locator) -> str:
 def test_train_page_deep_link(fixture_site, open_page) -> None:
     opened = open_page(_live(fixture_site), "#/train/10.0.48-PQU-6")
     page = opened.page
-    assert page.title() == "10.0.48 PQU-6 · PQU Console"
+    assert page.title() == "10.0.48 PQU-6 · D365 PQU Tracker"
     assert page.locator("#train-heading").text_content() == "10.0.48 PQU-6"
     assert page.locator("#tabs a[aria-current]").text_content() == "Trains"
-    badges = _text(page.locator(".train-badges"))
-    assert "In-Progress" in badges
-    assert "New" in badges
-    assert "Newest active train" in badges
+    badges = page.locator(".train-badges")
+    assert badges.locator(".status").text_content() == "In-Progress"
+    assert [_text(tag) for tag in badges.locator(".tag").all()] == [
+        "New station schedule",
+        "Newest active train",
+    ]
     assert _text(page.locator("#train-phase")).endswith(
         "Day 13 of 25 · Now: Station 4 sandbox (28 Sep \u2013 1 Oct)"
     )
@@ -150,7 +152,7 @@ def test_train_changes_after_an_update(fixture_site, open_page) -> None:
 def test_unknown_and_differently_cased_train_ids(fixture_site, open_page) -> None:
     opened = open_page(_live(fixture_site), "#/train/10.0.99-PQU-1")
     page = opened.page
-    assert page.title() == "Train not found · PQU Console"
+    assert page.title() == "Train not found · D365 PQU Tracker"
     assert page.locator("#train-heading").text_content() == "Train not found"
     assert (
         _text(page.locator("#train-missing"))

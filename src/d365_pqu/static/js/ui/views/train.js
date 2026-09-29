@@ -54,8 +54,12 @@
   function fact(label, value, note) {
     return el("div", {}, [
       el("dt", { text: label }),
-      el("dd", {}, [value, note ? [" ", el("span", { class: "fact-note", text: note })] : null])
+      el("dd", {}, [value, note ? [" ", note] : null])
     ]);
+  }
+
+  function noteText(value, calculated = false) {
+    return el("span", { class: ["fact-note", calculated ? "calc" : null], text: value });
   }
 
   /* ---- Header ---- */
@@ -89,33 +93,26 @@
   function header(ctx, record) {
     const back = ctx.lastHash.trains || PQU.router.href("trains");
     const latest = (ctx.metadata || {}).latest_pqu_id === record.pqu_id;
-    return [
-      el("p", { class: "crumbs" }, [el("a", { href: back, text: "PQU trains" }), el("span", { "aria-hidden": "true", text: " / " }), text.trainLabel(record.pqu_id)]),
-      el("div", { class: "section-head train-head" }, [
-        el("div", {}, [
-          el("p", { class: "kicker", text: `Application version ${record.application_version} · Release ${record.release_number}` }),
-          el("h2", {
-            id: "train-heading",
-            tabindex: "-1",
-            dataset: { viewHeading: "" },
-            text: text.trainLabel(record.pqu_id)
-          }),
-          el("p", { class: "train-badges" }, [
-            visuallyHidden("Microsoft status: "),
-            common.statusBadge(record.status),
-            common.newChip(record),
-            latest
-              ? el("span", {
-                  class: "chip chip-latest",
-                  title: "The newest train Microsoft lists as In-Progress",
-                  text: "Newest active train"
-                })
-              : null
-          ])
-        ]),
-        siblings(ctx, record)
-      ])
-    ];
+    return common.pageHead({
+      id: "train-heading",
+      title: text.trainLabel(record.pqu_id),
+      before: el("p", { class: "crumbs" }, [
+        el("a", { href: back, text: "PQU trains" }),
+        el("span", { "aria-hidden": "true", text: " / " }),
+        text.trainLabel(record.pqu_id)
+      ]),
+      sub: [
+        el("p", { class: "train-badges" }, [
+          visuallyHidden("Microsoft status: "),
+          common.statusText(record.status),
+          record.station_schedule_new
+            ? common.tag("New station schedule", "new", "Microsoft marks this detailed station schedule as [NEW]")
+            : null,
+          latest ? common.tag("Newest active train", null, "The newest train Microsoft lists as In-Progress") : null
+        ])
+      ],
+      aside: siblings(ctx, record)
+    });
   }
 
   function statusLines(ctx, record) {
@@ -124,8 +121,7 @@
     const flags = ctx.flags[record.pqu_id] || [];
     return [
       line
-        ? el("p", { class: "train-phase", id: "train-phase" }, [
-            el("span", { class: "calc-mark", "aria-hidden": "true", text: "↳ " }),
+        ? el("p", { class: "train-phase calc", id: "train-phase" }, [
             visuallyHidden("Calculated from published dates: "),
             line
           ])
@@ -138,10 +134,7 @@
           ])
         : null,
       flags.map((item) =>
-        el("p", { class: "inline-alert train-flag" }, [
-          el("span", { class: "flag", "aria-hidden": "true", text: "⚑ " }),
-          `Source warning: ${PQU.health.describe(item, ctx.recordsById)}`
-        ])
+        el("p", { class: "inline-alert train-flag", text: `Source warning: ${PQU.health.describe(item, ctx.recordsById)}` })
       )
     ];
   }
@@ -157,11 +150,12 @@
       return null;
     }
     if (!position.newerCount) {
-      return `Newest build published for ${record.application_version}`;
+      return noteText(`Newest build published for ${record.application_version}`, true);
     }
-    return (
+    return noteText(
       `${text.plural(position.newerCount, "newer build")} published for ${record.application_version} ` +
-      `(latest ${position.latest.application_build}, ${text.trainLabel(position.latest.pqu_id)})`
+        `(latest ${position.latest.application_build}, ${text.trainLabel(position.latest.pqu_id)})`,
+      true
     );
   }
 
@@ -178,10 +172,11 @@
     return fact(
       `Version ${record.application_version}`,
       el("a", {
+        class: "calc",
         href: PQU.router.href("versions", {}, { version: record.application_version }),
         text: assessment.label
       }),
-      assessment.summary
+      noteText(assessment.summary, true)
     );
   }
 
@@ -193,29 +188,29 @@
       dates.isIsoDate(record.train_start_date) && dates.isIsoDate(record.train_end_date)
         ? dates.diffDays(record.train_start_date, record.train_end_date) + 1
         : null;
-    return el("dl", { class: "stat-strip train-facts", id: "train-facts" }, [
+    return el("dl", { class: "facts train-facts", id: "train-facts" }, [
       fact(
         "Change cutoff",
         dates.formatDate(record.change_cutoff_date, { weekday: true }),
-        cutoffDays === null ? null : text.capitalize(dates.daysPhrase(cutoffDays))
+        cutoffDays === null ? null : noteText(text.capitalize(dates.daysPhrase(cutoffDays)), true)
       ),
       fact(
         "Train",
         rangeText(record.train_start_date, record.train_end_date, ctx.todayIso),
-        length ? text.plural(length, "day") : null
+        length ? noteText(text.plural(length, "day"), true) : null
       ),
       versionFact(ctx, record),
-      fact(
-        "Application build",
-        el("span", { class: "mono", text: record.application_build || "Not published yet" }),
-        buildNote(ctx, record)
-      ),
-      fact("Platform build", el("span", { class: "mono", text: record.platform_build || "Not published yet" })),
-      fact("UEP version", el("span", { class: "mono", text: record.uep_version || "Not published" }))
+      fact("Application build", record.application_build || "Not published yet", buildNote(ctx, record)),
+      fact("Platform build", record.platform_build || "Not published yet"),
+      fact("UEP version", record.uep_version || "Not published")
     ]);
   }
 
   /* ---- Station rollout ---- */
+
+  function legendItem(swatch, label) {
+    return el("li", {}, [el("span", { class: ["legend-swatch", swatch], "aria-hidden": "true" }), label]);
+  }
 
   function chart(ctx, record, rows, yours) {
     const geometry = PQU.rollout.chart(rows, ctx.todayIso);
@@ -227,67 +222,75 @@
       (geometry.today === null ? "Today is outside this range. " : `Today is ${dates.formatDate(ctx.todayIso)}. `) +
       "The table below lists every window.";
     const lanes = geometry.rows.map((row) =>
-      el("div", { class: ["rollout-row", yours && yours.station === row.station ? "is-yours" : null], dataset: { station: String(row.station) } }, [
-        el("span", { class: "rollout-label", text: `Station ${row.station}` }),
-        el(
-          "div",
-          { class: "rollout-lane" },
-          row.bars.map((bar) =>
-            el("span", {
-              class: ["rollout-bar", `bar-${bar.kind}`, `bar-${bar.state}`],
-              title: `Station ${row.station} ${bar.kind}: ${dates.formatDateRange(bar.start, bar.end, { weekday: true })}`,
-              vars: { "--left": `${bar.left}%`, "--width": `${bar.width}%` }
-            })
+      el(
+        "div",
+        {
+          class: ["rollout-row", yours && yours.station === row.station ? "is-yours" : null],
+          dataset: { station: String(row.station) }
+        },
+        [
+          el("span", { class: "rollout-label", text: `Station ${row.station}` }),
+          el(
+            "div",
+            { class: "rollout-lane" },
+            row.bars.map((bar) =>
+              el("span", {
+                class: ["rollout-bar", `bar-${bar.kind}`, `bar-${bar.state}`],
+                title: `Station ${row.station} ${bar.kind}: ${dates.formatDateRange(bar.start, bar.end, { weekday: true })}`,
+                vars: { "--left": `${bar.left}%`, "--width": `${bar.width}%` }
+              })
+            )
           )
-        )
-      ])
+        ]
+      )
     );
     return el("figure", { class: "rollout-chart", id: "rollout-chart" }, [
       el("div", { class: "rollout-plot", role: "img", "aria-label": label }, [
         ...geometry.ticks.map((tick) => el("span", { class: "rollout-grid", vars: { "--f": String(tick.left / 100) } })),
         ...lanes,
-        el(
-          "div",
-          { class: "rollout-row rollout-axis" },
-          [
-            el("span", { class: "rollout-label" }),
-            el(
-              "div",
-              { class: "rollout-lane" },
-              geometry.ticks.map((tick) =>
-                el("span", {
-                  class: "rollout-tick",
-                  vars: { "--left": `${tick.left}%` },
-                  text: dates.formatDate(tick.iso, { year: false })
-                })
-              )
+        el("div", { class: "rollout-row rollout-axis" }, [
+          el("span", { class: "rollout-label" }),
+          el(
+            "div",
+            { class: "rollout-lane" },
+            geometry.ticks.map((tick) =>
+              el("span", {
+                class: "rollout-tick",
+                vars: { "--left": `${tick.left}%` },
+                text: dates.formatDate(tick.iso, { year: false })
+              })
             )
-          ]
-        ),
+          )
+        ]),
         geometry.today === null
           ? null
           : el("span", { class: "rollout-today", vars: { "--f": String(geometry.today / 100) } })
       ]),
-      el("figcaption", { class: "legend" }, [
-        el("span", {}, [el("span", { class: "legend-swatch bar-sandbox", "aria-hidden": "true" }), "Sandbox"]),
-        el("span", {}, [el("span", { class: "legend-swatch bar-production", "aria-hidden": "true" }), "Production"]),
-        geometry.today === null
-          ? null
-          : el("span", {}, [el("span", { class: "legend-today", "aria-hidden": "true" }), "Today"])
+      el("figcaption", {}, [
+        el("ul", { class: "legend", "aria-label": "Chart key" }, [
+          legendItem("swatch-hollow", "Sandbox"),
+          legendItem("swatch-solid", "Production"),
+          legendItem("swatch-now", "In progress today"),
+          legendItem("swatch-past", "Ended"),
+          geometry.today === null
+            ? null
+            : el("li", {}, [el("span", { class: "legend-today", "aria-hidden": "true" }), "Today"])
+        ])
       ])
     ]);
   }
 
   function windowCell(ctx, row, kind) {
+    const label = KINDS.find((item) => item.key === kind).label;
     const startIso = row[`${kind}_start_date`];
     if (!startIso) {
-      return el("td", { class: "muted", text: "N/A" });
+      return el("td", { class: "muted", "data-label": label, text: "N/A" });
     }
     const state = windows.rangeState(startIso, row[`${kind}_end_date`], ctx.todayIso);
-    return el("td", {}, [
+    return el("td", { "data-label": label }, [
       el("span", { class: "window-dates", text: rangeText(startIso, row[`${kind}_end_date`], ctx.todayIso) }),
       state
-        ? [" ", el("span", { class: `window-state state-${state.state}` }, [visuallyHidden("Calculated: "), state.text])]
+        ? [" ", el("span", { class: ["window-state", `state-${state.state}`] }, [visuallyHidden("Calculated: "), state.text])]
         : null
     ]);
   }
@@ -296,7 +299,7 @@
     const rows = ctx.regions.filter((row) => row.station === station);
     const regions = rows.filter((row) => row.is_region).sort((a, b) => a.region.localeCompare(b.region));
     const notes = rows.filter((row) => !row.is_region).map((row) => row.region);
-    return el("td", { class: "regions-cell" }, [
+    return el("td", { class: "regions-cell", "data-label": "Regions" }, [
       notes.map((note) => el("span", { class: "step-note", text: note })),
       regions.length
         ? el("details", { class: "step-regions" }, [
@@ -318,7 +321,7 @@
     return el("tr", { class: mine ? "is-yours" : null, dataset: { station: String(row.station) } }, [
       el("th", { scope: "row" }, [
         row.station_label || `Station ${row.station}`,
-        mine ? el("span", { class: "chip chip-yours", text: "Your station" }) : null
+        mine ? common.tag("Your station", "yours") : null
       ]),
       ...KINDS.map((kind) => windowCell(ctx, row, kind.key)),
       regionsCell(ctx, row.station)
@@ -326,7 +329,7 @@
   }
 
   function stationTable(ctx, record, rows, yours) {
-    const table = el("table", { class: "station-table", id: "station-table" }, [
+    const table = el("table", { class: "station-table stack-table", id: "station-table" }, [
       el("caption", { class: "visually-hidden", text: `Station windows for ${text.trainLabel(record.pqu_id)}` }),
       el("thead", {}, [
         el("tr", {}, [
@@ -341,7 +344,7 @@
         rows.map((row) => stationRow(ctx, row, yours))
       )
     ]);
-    return el("div", { class: "table-panel" }, [el("div", { class: "table-scroll" }, [table])]);
+    return el("div", { class: "table-scroll" }, [table]);
   }
 
   function rulesPanel(ctx) {
@@ -362,7 +365,7 @@
   function rolloutSection(ctx, record) {
     const rows = ctx.stationsByTrain[record.pqu_id] || [];
     const yours = savedRegion(ctx);
-    const children = [el("h3", { id: "train-rollout-heading", text: "Station rollout" })];
+    const children = [];
     if (ctx.errors.stations) {
       children.push(el("p", { class: "inline-alert", text: "Station schedules could not be loaded." }));
     } else if (!rows.length) {
@@ -378,7 +381,7 @@
       if (yours) {
         const row = rows.find((item) => item.station === yours.station);
         children.push(
-          el("p", { class: "section-lead", id: "train-your-station" }, [
+          el("p", { id: "train-your-station" }, [
             row
               ? `${yours.region} (your region) is on Station ${yours.station}. `
               : `${yours.region} (your region) is on Station ${yours.station}, which is not in this train's schedule. `,
@@ -389,20 +392,19 @@
       children.push(
         chart(ctx, record, rows, yours),
         stationTable(ctx, record, rows, yours),
-        common.calcNote(`Window states are calculated for ${ctx.todayLabel} (${ctx.zoneName}).`),
         sectionUrl
-          ? el("p", { class: "source-line" }, ["Station windows from ", extLink(sectionUrl, "Microsoft's station schedule")])
+          ? el("p", { class: "source-line" }, ["Station windows from ", extLink(sectionUrl, "Microsoft's station schedule"), "."])
           : null
       );
     }
     children.push(rulesPanel(ctx));
-    return el("section", { class: "train-section", id: "train-rollout", "aria-labelledby": "train-rollout-heading" }, children);
+    return common.block("train-rollout", "Station rollout", children, { class: "train-section" });
   }
 
   /* ---- Changes ---- */
 
   function changesSection(ctx, record) {
-    const children = [el("h3", { id: "train-changes-heading", text: "Changes to this train" })];
+    const children = [];
     const doc = ctx.changes;
     if (ctx.errors.changes || !doc || !Array.isArray(doc.records)) {
       children.push(el("p", { class: "inline-alert", text: "The change history could not be loaded." }));
@@ -447,7 +449,7 @@
         );
       }
     }
-    return el("section", { class: "train-section", id: "train-changes", "aria-labelledby": "train-changes-heading" }, children);
+    return common.block("train-changes", "Changes to this train", children, { class: "train-section" });
   }
 
   /* ---- Source ---- */
@@ -457,21 +459,27 @@
     const metadataSource = (ctx.metadata || {}).source || {};
     const trainUrl = eventUrl(ctx, `train_window:${record.pqu_id}`) || source.url;
     const commit = String(source.commit || "");
-    return el("section", { class: "train-section", id: "train-source", "aria-labelledby": "train-source-heading" }, [
-      el("h3", { id: "train-source-heading", text: "Source" }),
-      el("p", {}, [
-        "Microsoft's article ",
-        extLink(trainUrl, "Release schedule for proactive quality updates"),
-        metadataSource.markdown_date ? ` (updated ${dates.formatDate(metadataSource.markdown_date)})` : "",
-        ". ",
-        source.raw_url ? extLink(source.raw_url, `Markdown at commit ${commit.slice(0, 7)}`) : null,
-        source.raw_url ? "." : null
-      ]),
-      el("p", { class: "muted" }, [
-        `First seen in this dataset ${dates.formatDateTime(record.first_seen_at, ctx.zone, { locale: ctx.locale })}; ` +
-          `last changed ${dates.formatDateTime(record.last_changed_at, ctx.zone, { locale: ctx.locale })}.`
-      ])
-    ]);
+    return common.block(
+      "train-source",
+      "Source",
+      [
+        el("p", {}, [
+          "Microsoft's article ",
+          extLink(trainUrl, "Release schedule for proactive quality updates"),
+          metadataSource.markdown_date ? ` (updated ${dates.formatDate(metadataSource.markdown_date)})` : "",
+          ". ",
+          source.raw_url ? extLink(source.raw_url, `Markdown at commit ${commit.slice(0, 7)}`) : null,
+          source.raw_url ? "." : null
+        ]),
+        el("p", {
+          class: "note",
+          text:
+            `First seen in this dataset ${dates.formatDateTime(record.first_seen_at, ctx.zone, { locale: ctx.locale })}; ` +
+            `last changed ${dates.formatDateTime(record.last_changed_at, ctx.zone, { locale: ctx.locale })}.`
+        })
+      ],
+      { class: "train-section" }
+    );
   }
 
   /* ---- Not found ---- */
@@ -484,16 +492,18 @@
             .sort((a, b) => String(b.changed_at).localeCompare(String(a.changed_at)))[0]
         : null;
     container.replaceChildren(
-      el("section", { class: "section", "aria-labelledby": "train-heading" }, [
-        el("p", { class: "kicker", text: "PQU train" }),
-        el("h2", { id: "train-heading", tabindex: "-1", dataset: { viewHeading: "" }, text: "Train not found" }),
-        el("p", { id: "train-missing" }, [
-          `“${id}” is not in Microsoft's current schedule.`,
-          removed
-            ? ` It was removed on ${dates.formatDate(String(removed.changed_at).slice(0, 10))}` +
-              `${(removed.old_value || {}).status ? ` (last status ${removed.old_value.status})` : ""}.`
-            : ""
-        ]),
+      el("div", { class: "page" }, [
+        common.pageHead({
+          id: "train-heading",
+          title: "Train not found",
+          sub: el("p", { id: "train-missing" }, [
+            `“${id}” is not in Microsoft's current schedule.`,
+            removed
+              ? ` It was removed on ${dates.formatDate(String(removed.changed_at).slice(0, 10))}` +
+                `${(removed.old_value || {}).status ? ` (last status ${removed.old_value.status})` : ""}.`
+              : ""
+          ])
+        }),
         el("p", {}, [el("a", { href: PQU.router.href("trains", {}, { q: id }), text: "Search all trains" })])
       ])
     );
@@ -510,14 +520,11 @@
       PQU.app.replaceHash(common.trainHref(record.pqu_id));
     }
     container.replaceChildren(
-      el("article", { class: "section train-page", "aria-labelledby": "train-heading", dataset: { pqu: record.pqu_id } }, [
-        ...header(ctx, record),
+      el("article", { class: "page train-page", "aria-labelledby": "train-heading", dataset: { pqu: record.pqu_id } }, [
+        header(ctx, record),
         ...statusLines(ctx, record),
         facts(ctx, record),
-        common.calcNote(
-          `Countdowns, the phase line and build positions are calculated from Microsoft's published data for ${ctx.todayLabel} (${ctx.zoneName}).`,
-          { id: "train-calc-note" }
-        ),
+        common.italicNote(ctx, null, { id: "train-calc-note" }),
         rolloutSection(ctx, record),
         changesSection(ctx, record),
         sourceSection(ctx, record)

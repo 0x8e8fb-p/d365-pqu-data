@@ -24,7 +24,7 @@ Every run:
 
 Published provenance is pinned to the commit where the published content was retrieved. When a later commit leaves the content unchanged, `content_commit` stays the same while `checked_commit` moves forward.
 
-The dashboard's status pill reads `/api/health.json`. It shows **Up to date** after a recent check, **N source warnings** when the source has non-fatal warnings, **Stale** when no check succeeded within three check intervals, **Last check failed** when the published health records a failure, and **Unavailable** when the dataset cannot be loaded.
+The data status in the dashboard header reads `/api/health.json`. It shows **Up to date** after a recent check, **N source warnings** when the source has non-fatal warnings, **Stale** when no check succeeded within three check intervals, **Last check failed** when the published health records a failure, and **Unavailable** when the dataset cannot be loaded.
 
 An open dashboard fetches `/api/metadata.json` again at the check interval while the page is visible. When `generated_at` has changed, it reloads the documents it uses and redraws in place; nothing else is re-downloaded when the data is unchanged.
 

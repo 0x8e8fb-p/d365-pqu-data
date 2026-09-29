@@ -1,7 +1,8 @@
-"""WCAG 2.2 contrast of the colour pairs the dashboard uses for text, in both themes.
+"""WCAG 2.2 contrast of the colour pairs the dashboard uses, in both themes.
 
 Colours are read from the design tokens in styles.css, so a token change that makes text hard to
-read fails here. Normal-size text needs 4.5:1 (success criterion 1.4.3).
+read fails here. Text needs 4.5:1 (success criterion 1.4.3); chart shapes and control borders
+that carry meaning need 3:1 against the page (1.4.11).
 """
 
 from __future__ import annotations
@@ -13,32 +14,39 @@ import pytest
 
 STYLES = Path(__file__).resolve().parents[1] / "src" / "d365_pqu" / "static" / "styles.css"
 AA_TEXT = 4.5
+AA_GRAPHICS = 3.0
 Colour = tuple[float, float, float, float]
 
-# (foreground token, background token, soft token laid over the background or None)
+# (foreground token, background token): text set in the first colour on the second.
 TEXT_PAIRS = [
-    ("text", "bg", None),
-    ("text", "surface", None),
-    ("text", "bg-subtle", None),
-    ("muted", "bg", None),
-    ("muted", "surface", None),
-    ("muted", "surface-raised", None),
-    ("muted", "bg-subtle", None),
-    ("accent", "bg", None),
-    ("accent", "surface", None),
-    ("accent", "bg-subtle", None),
-    ("accent-ink", "accent", None),
-    ("warning-ink", "warning", None),
-    ("success", "surface", "success-soft"),
-    ("warning", "surface", "warning-soft"),
-    ("danger", "surface", "danger-soft"),
-    ("accent", "surface", "accent-soft"),
-    ("muted", "surface", "neutral-soft"),
-    ("text", "surface", "neutral-soft"),
-    ("phase-preview", "surface", None),
-    ("phase-available", "surface", None),
-    ("phase-autoupdate", "surface", None),
-    ("phase-supported", "surface", None),
+    ("text", "bg"),
+    ("text", "bg-inset"),
+    ("muted", "bg"),
+    ("muted", "bg-inset"),
+    ("link", "bg"),
+    ("link", "bg-inset"),
+    # In-Progress status, today in the agenda, New and Due soon tags.
+    ("signal", "bg"),
+    ("signal", "bg-inset"),
+    # Warnings: source flags, stale data, inline alerts.
+    ("warn", "bg"),
+    ("warn", "warn-bg"),
+    ("text", "warn-bg"),
+    # Errors and Canceled.
+    ("danger", "bg"),
+    ("danger", "danger-bg"),
+    ("text", "danger-bg"),
+    # Timeline bar labels: completed, in progress; primary buttons and pressed toggles.
+    ("muted", "past-bg"),
+    ("on-signal", "signal"),
+    ("bg", "text"),
+]
+
+# Chart marks and the borders of inputs and buttons, against the page.
+GRAPHIC_PAIRS = [
+    ("text", "bg"),
+    ("signal", "bg"),
+    ("past", "bg"),
 ]
 
 
@@ -51,8 +59,8 @@ def _block(css: str, selector: str) -> dict[str, str]:
 def _tokens(theme: str) -> dict[str, str]:
     css = STYLES.read_text(encoding="utf-8")
     tokens = _block(css, ":root")
-    if theme == "light":
-        tokens.update(_block(css, 'html[data-theme="light"]'))
+    if theme == "dark":
+        tokens.update(_block(css, 'html[data-theme="dark"]'))
     return tokens
 
 
@@ -98,22 +106,28 @@ def contrast(foreground: Colour, background: Colour) -> float:
     return (lighter + 0.05) / (darker + 0.05)
 
 
+def _failures(tokens: dict[str, str], pairs: list[tuple[str, str]], minimum: float) -> list[str]:
+    failures = []
+    for foreground, background in pairs:
+        base = _parse(tokens[background])
+        ratio = contrast(_over(_parse(tokens[foreground]), base), base)
+        if ratio < minimum:
+            failures.append(f"{foreground} on {background}: {ratio:.2f}")
+    return failures
+
+
 def test_contrast_formula_matches_known_values() -> None:
     assert round(contrast(_parse("#000000"), _parse("#ffffff")), 2) == 21.0
     assert round(contrast(_parse("#777777"), _parse("#ffffff")), 2) == 4.48
 
 
-@pytest.mark.parametrize("theme", ["dark", "light"])
+@pytest.mark.parametrize("theme", ["light", "dark"])
 def test_text_colours_meet_wcag_aa(theme: str) -> None:
-    tokens = _tokens(theme)
-    failures = []
-    for foreground, background, soft in TEXT_PAIRS:
-        base = _parse(tokens[background])
-        if soft:
-            base = _over(_parse(tokens[soft]), base)
-        fore = _over(_parse(tokens[foreground]), base)
-        ratio = contrast(fore, base)
-        if ratio < AA_TEXT:
-            label = f"{foreground} on {soft + ' over ' if soft else ''}{background}"
-            failures.append(f"{label}: {ratio:.2f}")
+    failures = _failures(_tokens(theme), TEXT_PAIRS, AA_TEXT)
+    assert failures == [], f"{theme} theme: " + "; ".join(failures)
+
+
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_chart_marks_are_distinguishable_from_the_page(theme: str) -> None:
+    failures = _failures(_tokens(theme), GRAPHIC_PAIRS, AA_GRAPHICS)
     assert failures == [], f"{theme} theme: " + "; ".join(failures)

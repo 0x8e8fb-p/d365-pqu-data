@@ -134,25 +134,42 @@ def test_skip_link_moves_focus_to_the_content(fixture_site, open_page) -> None:
     assert page.evaluate("() => document.activeElement.textContent") == "Skip to content"
     page.keyboard.press("Enter")
     assert page.evaluate("() => document.activeElement.id") == "main"
+    # The skip link must not be read as a route.
+    assert page.evaluate("() => location.hash") == "#/trains"
+    assert page.locator("#pqu-table").count() == 1
     page.keyboard.press("Tab")
     focused = page.evaluate("() => document.activeElement.closest('main') !== null")
     assert focused
     opened.assert_clean()
 
 
-def test_theme_toggle_keeps_one_name_and_reports_its_state(fixture_site, open_page) -> None:
-    opened = open_page(fixture_site((LIVE_FIXTURES, E2E_SYNC_AT)), "#/")
-    page = opened.page
-    toggle = page.locator("#theme-toggle")
-    assert (toggle.get_attribute("aria-label"), toggle.get_attribute("aria-pressed")) == (
-        "Light theme",
-        "false",
+def test_theme_follows_the_system_until_the_viewer_chooses(e2e_browser, fixture_site) -> None:
+    base = fixture_site((LIVE_FIXTURES, E2E_SYNC_AT))
+    context = e2e_browser.new_context(
+        timezone_id="Asia/Kolkata", locale="en-IN", color_scheme="dark"
     )
-    toggle.click()
-    assert (toggle.get_attribute("aria-label"), toggle.get_attribute("aria-pressed")) == (
-        "Light theme",
-        "true",
-    )
-    assert page.evaluate("() => document.documentElement.dataset.theme") == "light"
-    assert toggle.get_attribute("title") == "Switch to the dark theme"
-    opened.assert_clean()
+    try:
+        page = context.new_page()
+        page.goto(base + "#/")
+        page.wait_for_selector("body[data-ready='true']")
+        select = page.locator("#theme-select")
+        assert select.input_value() == "system"
+        assert page.evaluate("() => document.documentElement.dataset.theme") == "dark"
+        page.emulate_media(color_scheme="light")
+        page.wait_for_function("() => document.documentElement.dataset.theme === 'light'")
+
+        select.select_option("dark")
+        assert page.evaluate("() => document.documentElement.dataset.theme") == "dark"
+        assert page.evaluate("() => localStorage.getItem('d365-pqu-theme')") == "dark"
+        # An explicit choice is kept when the system theme changes and after a reload.
+        page.emulate_media(color_scheme="light")
+        page.reload()
+        page.wait_for_selector("body[data-ready='true']")
+        assert page.evaluate("() => document.documentElement.dataset.theme") == "dark"
+        assert page.locator("#theme-select").input_value() == "dark"
+
+        page.locator("#theme-select").select_option("system")
+        assert page.evaluate("() => localStorage.getItem('d365-pqu-theme')") is None
+        assert page.evaluate("() => document.documentElement.dataset.theme") == "light"
+    finally:
+        context.close()

@@ -24,6 +24,10 @@ def _visible(locator) -> str:
     return " ".join(str(locator.evaluate(VISIBLE_TEXT)).split())
 
 
+def _text(locator) -> str:
+    return " ".join((locator.text_content() or "").split())
+
+
 def _live(fixture_site) -> str:
     return fixture_site((LIVE_FIXTURES, E2E_SYNC_AT))
 
@@ -37,35 +41,51 @@ def test_overview_is_the_landing_page(fixture_site, open_page) -> None:
     page = opened.page
     assert page.locator("#tabs a").first.inner_text() == "Overview"
     assert page.locator("#tabs a[aria-current='page']").inner_text() == "Overview"
-    assert page.locator("#overview-heading").inner_text() == "Proactive quality updates today"
-    assert page.title() == "Overview · PQU Console"
-    assert page.locator(".overview .kicker").inner_text().lower() == "mon 28 sep 2026"
+    # Today's date, in the viewer's time zone, is the page heading.
+    assert page.locator("#overview-heading").text_content() == "Monday 28 September 2026"
+    assert page.locator("h1").count() == 1
+    assert page.title() == "Overview · D365 PQU Tracker"
     summary = page.locator("#ov-summary")
     assert summary.locator(".visually-hidden").text_content() == "Summary: "
     assert _visible(summary) == (
-        "Microsoft lists 5 trains as In-Progress, the next change cutoff is 10.0.48 PQU-7 in "
-        "2 days (Wed 30 Sep) and 10.0.47, 10.0.48 and 10.0.49 are in service."
+        "Microsoft lists 5 trains as In-Progress. The next change cutoff, for 10.0.48 PQU-7, is "
+        "in 2 days (Wed 30 Sep). 10.0.47, 10.0.48 and 10.0.49 are in service."
+    )
+    # Calculated words are set in italics; Microsoft's values are not.
+    assert summary.locator(".calc").all_text_contents() == ["in 2 days", "in service"]
+    note = page.locator(".page-head .calc-note")
+    assert _text(note) == (
+        "Italic values are calculated from Microsoft's published dates for Mon 28 Sep 2026 "
+        "(Asia/Kolkata)."
     )
     opened.assert_clean()
 
 
-def test_in_progress_card_lists_every_running_train_with_its_phase(fixture_site, open_page) -> None:
+def test_in_progress_table_lists_every_running_train_with_its_phase(
+    fixture_site, open_page
+) -> None:
     opened = open_page(_live(fixture_site))
     page = opened.page
-    items = page.locator("#ov-running li")
-    assert [item.get_attribute("data-pqu") for item in items.all()] == [
+    rows = page.locator("#ov-running tbody tr")
+    assert [row.get_attribute("data-pqu") for row in rows.all()] == [
         "10.0.46-PQU-8",
         "10.0.47-PQU-12",
         "10.0.47-PQU-13",
         "10.0.48-PQU-5",
         "10.0.48-PQU-6",
     ]
-    stale = page.locator("#ov-running li[data-pqu='10.0.48-PQU-5']")
-    assert "Scheduled end passed 2 days ago" in stale.inner_text()
-    assert "Microsoft still lists this train as In-Progress" in stale.inner_text()
-    running = page.locator("#ov-running li[data-pqu='10.0.48-PQU-6']")
-    assert "Day 13 of 25 · Now: Station 4 sandbox (28 Sep \u2013 1 Oct)" in running.inner_text()
-    assert running.locator(".chip-new").count() == 1
+    headers = page.locator("#ov-running thead th").all_text_contents()
+    assert headers == ["Train", "Application build", "Where it is today"]
+    stale = page.locator("#ov-running tr[data-pqu='10.0.48-PQU-5']")
+    assert "Scheduled end passed 2 days ago" in _text(stale)
+    assert "Microsoft still lists this train as In-Progress" in _text(stale)
+    running = page.locator("#ov-running tr[data-pqu='10.0.48-PQU-6']")
+    phase = running.locator(".phase-line")
+    assert _visible(phase) == "Day 13 of 25 · Now: Station 4 sandbox (28 Sep \u2013 1 Oct)"
+    assert phase.locator(".visually-hidden").text_content() == "Calculated: "
+    assert "calc" in (phase.get_attribute("class") or "")
+    assert _text(running.locator("td").first) == "10.0.2645.136"
+    assert running.locator(".tag-new").text_content() == "New"
     link = page.get_by_role("link", name="All in-progress trains")
     link.click()
     wait_for_render(page)
@@ -74,20 +94,21 @@ def test_in_progress_card_lists_every_running_train_with_its_phase(fixture_site,
     opened.assert_clean()
 
 
-def test_next_dates_card_names_the_change_cutoff(fixture_site, open_page) -> None:
+def test_next_dates_list_names_the_change_cutoff(fixture_site, open_page) -> None:
     opened = open_page(_live(fixture_site))
-    rows = opened.page.locator("#ov-next li").all_inner_texts()
-    assert rows[0] == "Wed 30 Sep\nin 2 days\n10.0.48 PQU-7 · change cutoff and train start"
-    assert len(rows) == 4
+    rows = opened.page.locator("#ov-next li")
+    assert rows.count() == 4
+    assert _text(rows.first) == "Wed 30 Sep in 2 days 10.0.48 PQU-7 · change cutoff and train start"
+    assert rows.first.locator(".calc").text_content() == "in 2 days"
     opened.assert_clean()
 
 
-def test_region_card_prompts_until_a_region_is_saved(fixture_site, open_page) -> None:
+def test_region_block_prompts_until_a_region_is_saved(fixture_site, open_page) -> None:
     opened = open_page(_live(fixture_site))
     page = opened.page
-    card = page.locator("#ov-region")
-    assert "Pick your Azure region" in card.inner_text()
-    card.get_by_role("link", name="Pick your region").click()
+    block = page.locator("#ov-region")
+    assert "Pick your Azure region" in block.inner_text()
+    block.get_by_role("link", name="Pick your region").click()
     wait_for_render(page)
     assert page.evaluate("location.hash") == "#/region"
     assert page.locator("#agenda").count() == 0
@@ -97,21 +118,26 @@ def test_region_card_prompts_until_a_region_is_saved(fixture_site, open_page) ->
 def test_saved_region_shows_its_next_production_window(fixture_site, open_page) -> None:
     opened = open_page(_live(fixture_site), storage={REGION_KEY: "North Europe"})
     page = opened.page
-    card = page.locator("#ov-region")
-    assert card.locator(".ov-region-name").inner_text() == "North Europe · Station 4"
-    big = card.locator(".ov-big")
+    block = page.locator("#ov-region")
+    assert block.locator(".ov-region-name").inner_text() == "North Europe · Station 4"
+    big = block.locator(".ov-big")
     assert big.locator(".visually-hidden").text_content() == "Next production window: "
     assert _visible(big) == "Sat 3 Oct \u2013 Sun 4 Oct"
-    assert "Production · 10.0.48 PQU-6 · Starts in 5 days" in card.inner_text()
-    assert card.locator(".ov-dark-hours li").all_inner_texts() == [
+    facts = {
+        _text(item.locator("dt")): _text(item.locator("dd"))
+        for item in block.locator(".ov-region-facts > div").all()
+    }
+    assert facts["Next production window"].endswith("10.0.48 PQU-6 · starts in 5 days")
+    assert "Europe dark hours that weekend" in facts
+    assert block.locator(".ov-dark-hours li").all_inner_texts() == [
         "Sat 3 Oct 03:30 \u2013 09:30 IST",
         "Sun 4 Oct 03:30 \u2013 09:30 IST",
     ]
-    assert "Sandbox now: 10.0.48 PQU-6 (in progress · day 1 of 4)" in card.inner_text()
+    assert facts["Sandbox now"] == "10.0.48 PQU-6 · in progress · day 1 of 4"
     opened.assert_clean()
 
 
-def test_versions_card_shows_serviced_versions_newest_first(fixture_site, open_page) -> None:
+def test_versions_list_shows_serviced_versions_newest_first(fixture_site, open_page) -> None:
     opened = open_page(_live(fixture_site))
     rows = opened.page.locator("#ov-versions li")
     assert [row.get_attribute("data-version") for row in rows.all()] == [
@@ -122,9 +148,7 @@ def test_versions_card_shows_serviced_versions_newest_first(fixture_site, open_p
     assert _visible(rows.first) == (
         "10.0.49 Generally available First autoupdate in 4 days · Fri 2 Oct"
     )
-    assert rows.first.locator(".ov-version-next .visually-hidden").text_content() == (
-        "Calculated: "
-    )
+    assert rows.first.locator(".phase-name .visually-hidden").text_content() == "Calculated: "
     assert (
         rows.nth(2)
         .locator(".ov-version-next")
@@ -159,17 +183,18 @@ def test_agenda_covers_fourteen_days_filtered_to_the_saved_station(fixture_site,
     ]
     today = _agenda_day(page, "2026-09-28")
     assert "is-today" in (today.get_attribute("class") or "")
+    assert _text(today.locator(".agenda-date")) == "Mon 28 Sep today"
     assert [item.get_attribute("data-event") for item in today.locator(".agenda-event").all()] == [
         "sandbox_window:10.0.48-PQU-6:station-4"
     ]
     cutoff_day = _agenda_day(page, "2026-09-30")
-    assert cutoff_day.locator(".agenda-event").first.inner_text() == ("Change cutoff 10.0.48 PQU-7")
+    assert _text(cutoff_day.locator(".agenda-event").first) == "Change cutoff 10.0.48 PQU-7"
     production = _agenda_day(page, "2026-10-03").locator(".agenda-event")
-    assert production.all_inner_texts() == [
+    assert [_text(item) for item in production.all()] == [
         "Production window 10.0.48 PQU-6 · Station 4 · 3\u20134 Oct"
     ]
     assert page.locator("#agenda .agenda-event[data-event*='station-5']").count() == 0
-    assert _agenda_day(page, "2026-10-02").inner_text().endswith("First autoupdate 10.0.49")
+    assert _text(_agenda_day(page, "2026-10-02")).endswith("First autoupdate 10.0.49")
     opened.assert_clean()
 
 
@@ -182,9 +207,7 @@ def test_agenda_without_a_region_lists_every_station(fixture_site, open_page) ->
     today = _agenda_day(page, "2026-09-28").locator(".agenda-event")
     assert today.count() == 5
     # Windows that start today show their dates; they are not "open" yet.
-    assert today.first.inner_text() == (
-        "Sandbox window 10.0.47 PQU-12 · Station 5 · 28 Sep \u2013 1 Oct"
-    )
+    assert _text(today.first) == "Sandbox window 10.0.47 PQU-12 · Station 5 · 28 Sep \u2013 1 Oct"
     # Running trains are in "In progress now", not repeated in the agenda.
     assert (
         page.locator("#agenda .agenda-event[data-event^='train_window:10.0.48-PQU-6']").count() == 0
@@ -199,14 +222,13 @@ def test_windows_already_open_are_listed_under_today(fixture_site, open_page) ->
     assert "is-today" in (today.get_attribute("class") or "")
     events = today.locator(".agenda-event")
     assert events.count() == 5
-    assert events.first.inner_text() == (
-        "Sandbox window 10.0.47 PQU-12 · Station 5 · until Thu 1 Oct"
-    )
+    assert _text(events.first) == "Sandbox window 10.0.47 PQU-12 · Station 5 · until Thu 1 Oct"
+    assert events.first.locator(".calc").text_content() == "until Thu 1 Oct"
     assert _agenda_day(page, "2026-09-28").count() == 0
     opened.assert_clean()
 
 
-def test_insights_and_sources_strips(fixture_site, open_page) -> None:
+def test_insights_and_sources_lists(fixture_site, open_page) -> None:
     opened = open_page(_live(fixture_site))
     page = opened.page
     assert page.locator("#ov-insights li").all_inner_texts()[0] == (
@@ -222,6 +244,9 @@ def test_insights_and_sources_strips(fixture_site, open_page) -> None:
         "Proactive quality updates FAQ",
     ]
     assert all((link.get_attribute("rel") or "") == "noopener noreferrer" for link in sources.all())
+    assert _text(page.locator("#ov-sources li").first).endswith(
+        "Microsoft Learn · updated 21 Sep 2026"
+    )
     opened.assert_clean()
 
 
@@ -229,7 +254,7 @@ def test_overview_with_only_the_schedule_article(fixture_site, open_page) -> Non
     opened = open_page(fixture_site((FIXTURES / "source-minimal.md", E2E_SYNC_AT)))
     page = opened.page
     assert _visible(page.locator("#ov-summary")) == (
-        "Microsoft lists 2 trains as In-Progress and the next change cutoff is 10.0.48 PQU-7 "
+        "Microsoft lists 2 trains as In-Progress. The next change cutoff, for 10.0.48 PQU-7, is "
         "in 2 days (Wed 30 Sep)."
     )
     assert "not part of this dataset" in page.locator("#ov-versions").inner_text()

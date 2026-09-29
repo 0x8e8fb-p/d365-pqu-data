@@ -286,10 +286,13 @@ def test_site_has_no_external_cdn_assets(tmp_path: Path) -> None:
     assert "fonts.googleapis" not in html
 
 
-def test_dashboard_shell_supports_dark_first_console() -> None:
+def test_dashboard_shell_follows_the_system_theme() -> None:
     html = (STATIC_ROOT / "index.html").read_text(encoding="utf-8")
-    assert '<html lang="en" data-theme="dark">' in html
-    assert 'id="theme-toggle"' in html
+    assert '<html lang="en" data-theme="light">' in html
+    assert "prefers-color-scheme: dark" in html
+    assert 'id="theme-select"' in html
+    for choice in ("system", "light", "dark"):
+        assert f'<option value="{choice}">' in html
     assert 'id="view"' in html
     assert 'id="load-error"' in html
     assert 'rel="icon"' in html
@@ -297,7 +300,7 @@ def test_dashboard_shell_supports_dark_first_console() -> None:
     assert 'name="theme-color"' in html
     assert "./assets/icon.svg" in html
     assert "./assets/app.js" in html
-    assert "http://" not in html
+    assert "http://" not in html.replace('xmlns="http://www.w3.org/2000/svg"', "")
     assert "fonts.googleapis" not in html
     assert "<noscript>" in html
 
@@ -351,10 +354,10 @@ def test_trains_view_keeps_table_controls() -> None:
     assert "Due soon" in script
 
 
-def test_dashboard_css_uses_responsive_dark_light_tokens() -> None:
+def test_dashboard_css_uses_responsive_light_dark_tokens() -> None:
     css = (STATIC_ROOT / "styles.css").read_text(encoding="utf-8")
     assert ":root" in css
-    assert '[data-theme="light"]' in css
+    assert 'html[data-theme="dark"]' in css
     assert "--bg:" in css
     assert "tabular-nums" in css
     assert ".row-toggle" in css

@@ -14,12 +14,12 @@ def _live(fixture_site) -> str:
 
 
 def _card(page, pqu_id: str, container: str = "#window-list"):
-    return page.locator(f"{container} article.window-card[data-pqu='{pqu_id}']")
+    return page.locator(f"{container} tr[data-pqu='{pqu_id}']")
 
 
 def _line(card, kind: str) -> tuple[str, str]:
-    """(dates, calculated state) of a card's sandbox or production line."""
-    line = card.locator(".window-line", has_text=kind)
+    """(dates, calculated state) of a row's sandbox or production cell."""
+    line = card.locator(f"td[data-kind='{kind.lower()}']")
     state = line.locator(".window-state")
     return (
         line.locator(".window-dates").inner_text(),
@@ -65,7 +65,7 @@ def test_region_shows_station_windows_and_dark_hours_in_ist(fixture_site, open_p
     opened = open_page(_live(fixture_site), "#/region/North%20Europe")
     page = opened.page
     assert page.locator("#region-heading").inner_text() == "North Europe"
-    assert page.title() == "North Europe · My region · PQU Console"
+    assert page.title() == "North Europe · My region · D365 PQU Tracker"
     facts = dict(
         zip(
             page.locator("#region-facts dt").all_text_contents(),
@@ -80,13 +80,16 @@ def test_region_shows_station_windows_and_dark_hours_in_ist(fixture_site, open_p
     maintenance = facts["Maintenance window (dark hours)"]
     assert maintenance.startswith("Europe · Friday and Saturday · 22:00 UTC · Six hours")
     assert "Geography matched from the region name." in maintenance
-    assert "Next: Fri 2 Oct 22:00 UTC = Sat 3 Oct 03:30 IST · until 09:30 IST" in maintenance
+    assert "Next: Sat 3 Oct 03:30 \u2013 09:30 IST (Fri 2 Oct 22:00 UTC)" in maintenance
+    assert page.locator("#region-facts .calc").count() == 1
 
-    cards = page.locator("#window-list article.window-card")
-    assert [card.get_attribute("data-pqu") for card in cards.all()] == [
+    rows = page.locator("#window-list tbody tr")
+    assert [row.get_attribute("data-pqu") for row in rows.all()] == [
         "10.0.48-PQU-6",
         "10.0.47-PQU-13",
     ]
+    headers = page.locator("#window-list thead th").all_text_contents()
+    assert headers == ["Train", "Sandbox", "Production", "Europe dark hours that weekend"]
     current = _card(page, "10.0.48-PQU-6")
     assert "is-current" in (current.get_attribute("class") or "")
     assert _line(current, "Sandbox") == (
@@ -97,15 +100,16 @@ def test_region_shows_station_windows_and_dark_hours_in_ist(fixture_site, open_p
         "Sat 3 Oct \u2013 Sun 4 Oct",
         "Calculated: Starts in 5 days",
     )
+    # The viewer's time first, Microsoft's UTC time after it.
     assert current.locator(".dark-hours li").all_inner_texts() == [
-        "Fri 2 Oct 22:00 UTC = Sat 3 Oct 03:30 IST · until 09:30 IST",
-        "Sat 3 Oct 22:00 UTC = Sun 4 Oct 03:30 IST · until 09:30 IST",
+        "Sat 3 Oct 03:30 \u2013 09:30 IST (Fri 2 Oct 22:00 UTC)",
+        "Sun 4 Oct 03:30 \u2013 09:30 IST (Sat 3 Oct 22:00 UTC)",
     ]
     past = page.locator("#past-windows")
     assert past.locator("summary").text_content() == "Earlier windows · 3"
     unscheduled = page.locator("#unscheduled li").all_inner_texts()
     assert unscheduled[0].startswith("10.0.48 PQU-7")
-    assert unscheduled[0].endswith("train starts Wed 30 Sep (in 2 days)")
+    assert unscheduled[0].endswith("train starts Wed 30 Sep, in 2 days")
     assert page.get_by_role("link", name="All 32 Not Started trains").count() == 1
     rules = page.locator("#region-rules")
     rules.locator("summary").click()
@@ -125,9 +129,7 @@ def test_dark_hours_follow_the_chosen_zone_and_mark_the_current_window(
     )
     page = opened.page
     items = _card(page, "10.0.48-PQU-6").locator(".dark-hours li")
-    assert items.first.inner_text() == (
-        "Fri 2 Oct 22:00 UTC = Fri 2 Oct 15:00 PDT · until 21:00 PDT Now"
-    )
+    assert items.first.inner_text() == "Fri 2 Oct 15:00 \u2013 21:00 PDT (Fri 2 Oct 22:00 UTC) Now"
     assert "occ-now" in (items.first.get_attribute("class") or "")
     assert "occ-upcoming" in (items.nth(1).get_attribute("class") or "")
     opened.assert_clean()
@@ -141,9 +143,9 @@ def test_sovereign_cloud_has_no_window_and_no_guess(fixture_site, open_page) -> 
     assert "Station 6" in facts
     assert "Microsoft's planned maintenance table doesn't list a window for this cloud." in facts
     assert page.locator(".dark-hours").count() == 0
+    assert page.locator("#window-list thead th").count() == 3
     assert [
-        card.get_attribute("data-pqu")
-        for card in page.locator("#window-list article.window-card").all()
+        row.get_attribute("data-pqu") for row in page.locator("#window-list tbody tr").all()
     ] == ["10.0.47-PQU-12", "10.0.46-PQU-8", "10.0.48-PQU-6", "10.0.47-PQU-13"]
     opened.assert_clean()
 
@@ -166,7 +168,7 @@ def test_saved_region_is_shared_with_the_trains_view(fixture_site, open_page) ->
     page = opened.page
     assert page.locator("#region-select").input_value() == "North Europe"
     assert page.evaluate("location.hash") == "#/trains?region=North%20Europe"
-    assert page.locator("#filter-note").inner_text().endswith("· Station 4 context")
+    assert page.locator("#filter-note").inner_text().endswith("· expanded rows show Station 4")
     page.get_by_role("link", name="Open North Europe in My region").click()
     wait_for_render(page)
     assert page.locator("#region-heading").inner_text() == "North Europe"

@@ -106,10 +106,10 @@
     }
     const parts = [];
     if (options.weekday) {
-      parts.push(WEEKDAYS[new Date(parsed.time).getUTCDay()]);
+      parts.push((options.long ? WEEKDAYS_LONG : WEEKDAYS)[new Date(parsed.time).getUTCDay()]);
     }
     parts.push(String(parsed.day));
-    parts.push(MONTHS[parsed.month - 1]);
+    parts.push((options.long ? MONTHS_LONG : MONTHS)[parsed.month - 1]);
     if (options.year !== false) {
       parts.push(String(parsed.year));
     }

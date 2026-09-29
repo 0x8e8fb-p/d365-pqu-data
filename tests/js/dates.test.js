@@ -8,6 +8,8 @@ test("formatDate renders calendar dates without shifting by zone", () => {
   assert.equal(dates.formatDate("2026-09-28"), "28 Sep 2026");
   assert.equal(dates.formatDate("2026-09-28", { weekday: true }), "Mon 28 Sep 2026");
   assert.equal(dates.formatDate("2026-09-30", { weekday: true, year: false }), "Wed 30 Sep");
+  assert.equal(dates.formatDate("2026-09-28", { weekday: true, long: true }), "Monday 28 September 2026");
+  assert.equal(dates.formatDate("2027-01-01", { long: true, year: false }), "1 January");
   assert.equal(dates.formatDate("2027-01-01"), "1 Jan 2027");
   assert.equal(dates.formatDate(null), "—");
   assert.equal(dates.formatDate("not a date"), "not a date");

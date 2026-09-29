@@ -86,7 +86,6 @@ JS_BUNDLE = (
     "js/ui/dom.js",
     "js/ui/prefs.js",
     "js/ui/theme.js",
-    "js/ui/layout.js",
     "js/ui/zone.js",
     "js/ui/rich.js",
     "js/ui/guidance.js",

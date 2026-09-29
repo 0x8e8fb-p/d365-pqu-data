@@ -74,7 +74,7 @@
           vars: { "--left": `${bar.left}%`, "--width": `${bar.width}%` }
         },
         [
-          warning ? el("span", { class: "tl-flag", "aria-hidden": "true", text: "⚑" }) : null,
+          warning ? el("span", { class: "tl-flag", "aria-hidden": "true", text: "!" }) : null,
           el("span", { class: "tl-label", "aria-hidden": "true" }, barText(bar.record))
         ]
       ),
@@ -196,8 +196,8 @@
       );
       items.push(
         el("p", { class: "tl-note tl-not-drawn", dataset: { pqu: entry.record.pqu_id } }, [
-          el("span", { class: "flag", "aria-hidden": "true", text: "⚑" }),
-          " Not drawn: ",
+          el("span", { class: "flag", text: "Not drawn:" }),
+          " ",
           PQU.ui.common.trainLink(entry.record.pqu_id),
           reasons.length ? `. ${reasons.join(" ")}` : ". A source warning questions its dates."
         ])
@@ -237,7 +237,7 @@
     children.push(...notes(ctx, layout, onZoom));
     children.push(
       PQU.ui.common.calcNote(
-        "Bars use Microsoft's published change cutoff, start and end dates; the range and today's line " +
+        "Bars use Microsoft's published change cutoff, start and end dates. The range and today's line " +
           `are calculated for ${ctx.todayLabel} (${ctx.zoneName}).`,
         { id: "timeline-calc-note" }
       )
