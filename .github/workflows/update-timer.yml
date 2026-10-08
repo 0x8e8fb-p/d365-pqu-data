@@ -30,6 +30,10 @@ jobs:
       GH_REPO: ${{ github.repository }}
       # A run that starts sooner than this after it was created did not wait, which means the
       # environment has lost its wait timer. Stop instead of starting runs back to back.
+      # A non-completed update run older than three check intervals can only be wedged on
+      # the github-pages environment: a healthy run finishes within 25 minutes and the
+      # concurrency group holds at most one pending run. Cancel it so the queue head frees.
+      STUCK_AFTER_SECONDS: "10800"
       MIN_WAIT_SECONDS: "2700"
     steps:
       - name: Check that this run waited
@@ -53,6 +57,23 @@ jobs:
             echo "::error::The pqu-timer environment did not hold this run (${waited}s). Set its wait timer to 58 minutes as described in docs/operations.md, then run this workflow again."
             exit 1
           fi
+
+      - name: Unblock a wedged update run
+        run: |
+          set -euo pipefail
+          cutoff=$(date -u -d "-$STUCK_AFTER_SECONDS seconds" +%Y-%m-%dT%H:%M:%SZ)
+          stuck=$(gh api "repos/$GH_REPO/actions/workflows/update-pqu.yml/runs?per_page=100" \
+            --jq "[.workflow_runs[]
+                   | select(.status != \"completed\" and .created_at < \"$cutoff\")
+                   | .id]")
+          if [ -z "$stuck" ]; then
+            echo "No wedged update run."
+            exit 0
+          fi
+          for id in $stuck; do
+            echo "Cancelling update run $id, stuck waiting since before $cutoff."
+            gh api --method POST "repos/$GH_REPO/actions/runs/$id/cancel"
+          done
 
       - name: Start the next timer run, then the update
         run: |

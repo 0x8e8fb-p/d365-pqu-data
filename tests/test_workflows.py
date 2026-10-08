@@ -68,6 +68,17 @@ def test_hourly_timer_waits_in_an_environment_then_restarts_itself_and_the_updat
     assert "actions: write" in text
 
 
+def test_timer_unblocks_a_wedged_update_run() -> None:
+    text = TIMER_WORKFLOW.read_text(encoding="utf-8")
+    # The watchdog step must precede the dispatch step: a freshly started update run must
+    # never queue behind a wedged head.
+    watchdog = text.index("name: Unblock a wedged update run")
+    assert watchdog < text.index("name: Start the next timer run, then the update")
+    # Three check intervals: a healthy update run is capped at 25 minutes and the update
+    # group holds at most one pending run, so any non-completed run older than this is wedged.
+    assert f'STUCK_AFTER_SECONDS: "{3 * CHECK_INTERVAL_MINUTES * 60}"' in text
+
+
 def test_update_workflow_restarts_a_stopped_timer() -> None:
     text = UPDATE_WORKFLOW.read_text(encoding="utf-8")
     job = text[text.index("\n  ensure-timer:") :]

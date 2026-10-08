@@ -10,6 +10,9 @@ GitHub's cron scheduler cannot be relied on for this: in this repository it has 
 2. It then starts the next timer run and the update. The next timer starts first, so a failing update does not end the loop.
 3. Timer runs share one concurrency group, so there is never more than one loop. A timer run that starts without having waited at least 45 minutes (the environment lost its wait timer) fails and starts nothing, instead of starting runs back to back.
 4. Every update run ends with an `ensure-timer` job that starts a timer run when none is waiting, so the loop restarts after a failure, a cancelled run, or a GitHub incident.
+   An update run that sits waiting longer than three check intervals (its job stuck evaluating
+   the `github-pages` environment) is cancelled by the timer so a fresh run can queue; a healthy
+   run finishes well within 25 minutes.
 
 The cron schedule at minute 17 stays as a backup and also restarts the loop. It lives in `.github/workflows/update-pqu.yml` and must match `UPDATE_CRON` and `CHECK_INTERVAL_MINUTES` in `src/d365_pqu/config.py`; `tests/test_workflows.py` fails if they drift apart.
 
