@@ -63,9 +63,9 @@ jobs:
           set -euo pipefail
           cutoff=$(date -u -d "-$STUCK_AFTER_SECONDS seconds" +%Y-%m-%dT%H:%M:%SZ)
           stuck=$(gh api "repos/$GH_REPO/actions/workflows/update-pqu.yml/runs?per_page=100" \
-            --jq "[.workflow_runs[]
+            --jq ".workflow_runs[]
                    | select(.status != \"completed\" and .created_at < \"$cutoff\")
-                   | .id]")
+                   | .id") || stuck=""
           if [ -z "$stuck" ]; then
             echo "No wedged update run."
             exit 0

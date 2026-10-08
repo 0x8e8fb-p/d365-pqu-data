@@ -77,6 +77,12 @@ def test_timer_unblocks_a_wedged_update_run() -> None:
     # Three check intervals: a healthy update run is capped at 25 minutes and the update
     # group holds at most one pending run, so any non-completed run older than this is wedged.
     assert f'STUCK_AFTER_SECONDS: "{3 * CHECK_INTERVAL_MINUTES * 60}"' in text
+    # The selector must stream run ids: an array-wrapped jq program prints the literal "[]"
+    # on zero matches, which the step would try to cancel, and it must not fail the tick on
+    # a transient API error.
+    assert '--jq "[.workflow_runs[]' not in text
+    assert '--jq ".workflow_runs[]' in text
+    assert '|| stuck=""' in text
 
 
 def test_update_workflow_restarts_a_stopped_timer() -> None:
