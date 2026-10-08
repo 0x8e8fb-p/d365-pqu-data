@@ -1,7 +1,7 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-10-08T10:33:21.166559Z",
+  "generated_at": "2026-10-08T19:14:10.623818Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
@@ -14,7 +14,7 @@
     "sha256": "a602e92c9987dcdd9320df9a3a6e349e6c065fa3d7e8cd38ccd24ea6f03a959b",
     "retrieved_at": "2026-10-05T13:14:25.524832Z"
   },
-  "count": 64,
+  "count": 65,
   "records": [
     {
       "change_id": "7f6ef8e13f4b3ae236ca",
@@ -925,6 +925,17 @@
       "old_value": "2026-11-01",
       "new_value": "2026-10-30",
       "source_commit": "c4987ba4b48273d8a2f2ea0e54f8769dbeb3b5a2"
+    },
+    {
+      "change_id": "051f5ffbd31f0dea8f3e",
+      "changed_at": "2026-10-08T19:14:10.623818Z",
+      "pqu_id": "dataset",
+      "entity": "service_update",
+      "change_type": "modified",
+      "field": "10.0.52#second_autoupdate_date",
+      "old_value": "2027-07-20",
+      "new_value": "2027-07-30",
+      "source_commit": "b348d48184186e3244de6aae50a1377c5718789f"
     }
   ]
 }

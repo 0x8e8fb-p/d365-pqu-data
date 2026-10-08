@@ -1,7 +1,7 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-10-08T10:33:21.166559Z",
+  "generated_at": "2026-10-08T19:14:10.623818Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
@@ -553,10 +553,10 @@
         }
       ],
       "file_path": "articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
-      "commit": "c4987ba4b48273d8a2f2ea0e54f8769dbeb3b5a2",
-      "sha256": "20fa0482b81a129873eef87c178017d9ae5fa037d43660b3296e98709f761b10",
+      "commit": "b348d48184186e3244de6aae50a1377c5718789f",
+      "sha256": "05421f92e451cdc1c8d3a46d908b9af7c0727ffba398a10b8067706c12af5ed6",
       "markdown_date": "2026-06-04",
-      "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/c4987ba4b48273d8a2f2ea0e54f8769dbeb3b5a2/articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md"
+      "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b348d48184186e3244de6aae50a1377c5718789f/articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md"
     },
     {
       "key": "maintenance",

@@ -1,7 +1,7 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-10-08T10:33:21.166559Z",
+  "generated_at": "2026-10-08T19:14:10.623818Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
@@ -793,7 +793,7 @@
       "unit": "days",
       "statistic": "median",
       "sample_size": 9,
-      "min": 18,
+      "min": 28,
       "max": 28,
       "breakdown": {
         "10.0.45": 28,
@@ -803,11 +803,11 @@
         "10.0.49": 28,
         "10.0.50": 28,
         "10.0.51": 28,
-        "10.0.52": 18,
+        "10.0.52": 28,
         "10.0.53": 28
       },
       "excluded": [],
-      "summary": "The second autoupdate window comes 28 days, or 4 weeks, after the first (median of 9 service updates; range 18–28 days)."
+      "summary": "The second autoupdate window comes 28 days, or 4 weeks, after the first (median of 9 service updates)."
     },
     {
       "id": "ga-to-end-of-service:all",

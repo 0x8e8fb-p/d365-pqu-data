@@ -1,7 +1,7 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-10-08T10:33:21.166559Z",
+  "generated_at": "2026-10-08T19:14:10.623818Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
@@ -3276,21 +3276,6 @@
       "warnings": []
     },
     {
-      "id": "autoupdate_second:10.0.52",
-      "kind": "autoupdate_second",
-      "category": "service_update",
-      "title": "10.0.52 second autoupdate (production)",
-      "start_date": "2027-07-20",
-      "end_date": "2027-07-20",
-      "pqu_id": null,
-      "application_version": "10.0.52",
-      "station": null,
-      "status": null,
-      "source_key": "service_updates",
-      "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases#targeted-release-schedule-dates-subject-to-change",
-      "warnings": []
-    },
-    {
       "id": "preview:10.0.53",
       "kind": "preview",
       "category": "service_update",
@@ -3299,6 +3284,21 @@
       "end_date": "2027-07-26",
       "pqu_id": null,
       "application_version": "10.0.53",
+      "station": null,
+      "status": null,
+      "source_key": "service_updates",
+      "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases#targeted-release-schedule-dates-subject-to-change",
+      "warnings": []
+    },
+    {
+      "id": "autoupdate_second:10.0.52",
+      "kind": "autoupdate_second",
+      "category": "service_update",
+      "title": "10.0.52 second autoupdate (production)",
+      "start_date": "2027-07-30",
+      "end_date": "2027-07-30",
+      "pqu_id": null,
+      "application_version": "10.0.52",
       "station": null,
       "status": null,
       "source_key": "service_updates",
