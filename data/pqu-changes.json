@@ -1,7 +1,7 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-10-05T13:14:25.524832Z",
+  "generated_at": "2026-10-08T10:33:21.166559Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
@@ -14,7 +14,7 @@
     "sha256": "a602e92c9987dcdd9320df9a3a6e349e6c065fa3d7e8cd38ccd24ea6f03a959b",
     "retrieved_at": "2026-10-05T13:14:25.524832Z"
   },
-  "count": 60,
+  "count": 64,
   "records": [
     {
       "change_id": "7f6ef8e13f4b3ae236ca",
@@ -855,6 +855,76 @@
       },
       "new_value": null,
       "source_commit": "aee43141bb5f24e63c1e63805dcd9e1c5452c334"
+    },
+    {
+      "change_id": "9b947246f5e3d050c568",
+      "changed_at": "2026-10-08T10:33:21.166559Z",
+      "pqu_id": "dataset",
+      "entity": "guidance",
+      "change_type": "modified",
+      "field": "service_updates#targeted-release-schedule-dates-subject-to-change",
+      "old_value": {
+        "title": "Targeted release schedule (dates subject to change)",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases#targeted-release-schedule-dates-subject-to-change",
+        "text_sha256": "021c624a18c2f71c97e45351252ccad39143369fb3e71b83403d4958f17724ba"
+      },
+      "new_value": {
+        "title": "Targeted release schedule (dates subject to change)",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases#targeted-release-schedule-dates-subject-to-change",
+        "text_sha256": "8fe3824b5426e5a32b5fcd703af44cca6d8de2408f6064f2869c957d5a82992a"
+      },
+      "source_commit": "c4987ba4b48273d8a2f2ea0e54f8769dbeb3b5a2"
+    },
+    {
+      "change_id": "d674a30d44a585ac155e",
+      "changed_at": "2026-10-08T10:33:21.166559Z",
+      "pqu_id": "dataset",
+      "entity": "service_update",
+      "change_type": "added",
+      "field": "10.0.52",
+      "old_value": null,
+      "new_value": {
+        "release_label": "CY27Q3",
+        "is_major": false,
+        "preview_date": "2027-04-23",
+        "preview_latest_update_date": "2027-05-10",
+        "general_availability_date": "2027-06-04",
+        "first_autoupdate_date": "2027-07-02",
+        "second_autoupdate_date": "2027-07-20",
+        "end_of_service_date": "2028-02-15"
+      },
+      "source_commit": "c4987ba4b48273d8a2f2ea0e54f8769dbeb3b5a2"
+    },
+    {
+      "change_id": "e4103484a7a3b6582408",
+      "changed_at": "2026-10-08T10:33:21.166559Z",
+      "pqu_id": "dataset",
+      "entity": "service_update",
+      "change_type": "added",
+      "field": "10.0.53",
+      "old_value": null,
+      "new_value": {
+        "release_label": "CY27Q4",
+        "is_major": false,
+        "preview_date": "2027-07-26",
+        "preview_latest_update_date": "2027-08-16",
+        "general_availability_date": "2027-09-10",
+        "first_autoupdate_date": "2027-10-01",
+        "second_autoupdate_date": "2027-10-29",
+        "end_of_service_date": "2028-05-20"
+      },
+      "source_commit": "c4987ba4b48273d8a2f2ea0e54f8769dbeb3b5a2"
+    },
+    {
+      "change_id": "c17fb3afaac493a66400",
+      "changed_at": "2026-10-08T10:33:21.166559Z",
+      "pqu_id": "dataset",
+      "entity": "service_update",
+      "change_type": "modified",
+      "field": "10.0.49#second_autoupdate_date",
+      "old_value": "2026-11-01",
+      "new_value": "2026-10-30",
+      "source_commit": "c4987ba4b48273d8a2f2ea0e54f8769dbeb3b5a2"
     }
   ]
 }

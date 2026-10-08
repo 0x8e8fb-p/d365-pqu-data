@@ -1,7 +1,7 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-10-05T13:14:25.524832Z",
+  "generated_at": "2026-10-08T10:33:21.166559Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
@@ -718,7 +718,7 @@
       "value": 91,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 6,
+      "sample_size": 8,
       "min": 77,
       "max": 105,
       "breakdown": {
@@ -727,10 +727,12 @@
         "10.0.47 to 10.0.48": 84,
         "10.0.48 to 10.0.49": 98,
         "10.0.49 to 10.0.50": 102,
-        "10.0.50 to 10.0.51": 80
+        "10.0.50 to 10.0.51": 80,
+        "10.0.51 to 10.0.52": 84,
+        "10.0.52 to 10.0.53": 98
       },
       "excluded": [],
-      "summary": "A new service update becomes generally available every 91 days, or 13 weeks (median of 6 intervals; range 77–105 days)."
+      "summary": "A new service update becomes generally available every 91 days, or 13 weeks (median of 8 intervals; range 77–105 days)."
     },
     {
       "id": "preview-to-ga:all",
@@ -740,7 +742,7 @@
       "value": 46,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 7,
+      "sample_size": 9,
       "min": 42,
       "max": 63,
       "breakdown": {
@@ -750,10 +752,12 @@
         "10.0.48": 42,
         "10.0.49": 46,
         "10.0.50": 60,
-        "10.0.51": 46
+        "10.0.51": 46,
+        "10.0.52": 42,
+        "10.0.53": 46
       },
       "excluded": [],
-      "summary": "General availability comes 46 days after preview availability (median of 7 service updates; range 42–63 days)."
+      "summary": "General availability comes 46 days after preview availability (median of 9 service updates; range 42–63 days)."
     },
     {
       "id": "ga-to-first-autoupdate:all",
@@ -763,7 +767,7 @@
       "value": 21,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 7,
+      "sample_size": 9,
       "min": 21,
       "max": 40,
       "breakdown": {
@@ -773,10 +777,12 @@
         "10.0.48": 28,
         "10.0.49": 21,
         "10.0.50": 40,
-        "10.0.51": 21
+        "10.0.51": 21,
+        "10.0.52": 28,
+        "10.0.53": 21
       },
       "excluded": [],
-      "summary": "The first production autoupdate comes 21 days, or 3 weeks, after general availability (median of 7 service updates; range 21–40 days)."
+      "summary": "The first production autoupdate comes 21 days, or 3 weeks, after general availability (median of 9 service updates; range 21–40 days)."
     },
     {
       "id": "first-to-second-autoupdate:all",
@@ -786,20 +792,22 @@
       "value": 28,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 7,
-      "min": 28,
-      "max": 30,
+      "sample_size": 9,
+      "min": 18,
+      "max": 28,
       "breakdown": {
         "10.0.45": 28,
         "10.0.46": 28,
         "10.0.47": 28,
         "10.0.48": 28,
-        "10.0.49": 30,
+        "10.0.49": 28,
         "10.0.50": 28,
-        "10.0.51": 28
+        "10.0.51": 28,
+        "10.0.52": 18,
+        "10.0.53": 28
       },
       "excluded": [],
-      "summary": "The second autoupdate window comes 28 days, or 4 weeks, after the first (median of 7 service updates; range 28–30 days)."
+      "summary": "The second autoupdate window comes 28 days, or 4 weeks, after the first (median of 9 service updates; range 18–28 days)."
     },
     {
       "id": "ga-to-end-of-service:all",
@@ -809,7 +817,7 @@
       "value": 252,
       "unit": "days",
       "statistic": "median",
-      "sample_size": 7,
+      "sample_size": 9,
       "min": 238,
       "max": 256,
       "breakdown": {
@@ -819,10 +827,12 @@
         "10.0.48": 256,
         "10.0.49": 252,
         "10.0.50": 241,
-        "10.0.51": 252
+        "10.0.51": 252,
+        "10.0.52": 256,
+        "10.0.53": 253
       },
       "excluded": [],
-      "summary": "End of service comes 252 days, or 36 weeks, after general availability (median of 7 service updates; range 238–256 days)."
+      "summary": "End of service comes 252 days, or 36 weeks, after general availability (median of 9 service updates; range 238–256 days)."
     }
   ]
 }

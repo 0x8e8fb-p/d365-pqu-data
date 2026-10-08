@@ -1,7 +1,7 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-10-05T13:14:25.524832Z",
+  "generated_at": "2026-10-08T10:33:21.166559Z",
   "source_key": "service_updates",
   "state": "current",
   "source": {
@@ -9,14 +9,14 @@
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
     "branch": "main",
     "file_path": "articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
-    "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
+    "commit": "c4987ba4b48273d8a2f2ea0e54f8769dbeb3b5a2",
     "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases",
-    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/c4987ba4b48273d8a2f2ea0e54f8769dbeb3b5a2/articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
     "markdown_date": "2026-06-04",
-    "sha256": "7faa5cb88f216fce19c4a5292a7af0c727bb18d1a057f64e4e72b0967b2fdaf1",
-    "retrieved_at": "2026-09-28T04:01:44.646801Z"
+    "sha256": "20fa0482b81a129873eef87c178017d9ae5fa037d43660b3296e98709f761b10",
+    "retrieved_at": "2026-10-08T10:33:21.166559Z"
   },
-  "count": 7,
+  "count": 9,
   "records": [
     {
       "version": "10.0.45",
@@ -70,7 +70,7 @@
       "preview_latest_update_date": "2026-08-17",
       "general_availability_date": "2026-09-11",
       "first_autoupdate_date": "2026-10-02",
-      "second_autoupdate_date": "2026-11-01",
+      "second_autoupdate_date": "2026-10-30",
       "end_of_service_date": "2027-05-21"
     },
     {
@@ -94,6 +94,28 @@
       "first_autoupdate_date": "2027-04-02",
       "second_autoupdate_date": "2027-04-30",
       "end_of_service_date": "2027-11-19"
+    },
+    {
+      "version": "10.0.52",
+      "release_label": "CY27Q3",
+      "is_major": false,
+      "preview_date": "2027-04-23",
+      "preview_latest_update_date": "2027-05-10",
+      "general_availability_date": "2027-06-04",
+      "first_autoupdate_date": "2027-07-02",
+      "second_autoupdate_date": "2027-07-20",
+      "end_of_service_date": "2028-02-15"
+    },
+    {
+      "version": "10.0.53",
+      "release_label": "CY27Q4",
+      "is_major": false,
+      "preview_date": "2027-07-26",
+      "preview_latest_update_date": "2027-08-16",
+      "general_availability_date": "2027-09-10",
+      "first_autoupdate_date": "2027-10-01",
+      "second_autoupdate_date": "2027-10-29",
+      "end_of_service_date": "2028-05-20"
     }
   ]
 }

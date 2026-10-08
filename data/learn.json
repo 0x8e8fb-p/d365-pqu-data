@@ -1,7 +1,7 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-10-05T13:14:25.524832Z",
+  "generated_at": "2026-10-08T10:33:21.166559Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
@@ -316,7 +316,7 @@
           "title": "Targeted release schedule (dates subject to change)",
           "level": 2,
           "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases#targeted-release-schedule-dates-subject-to-change",
-          "text_sha256": "021c624a18c2f71c97e45351252ccad39143369fb3e71b83403d4958f17724ba",
+          "text_sha256": "8fe3824b5426e5a32b5fcd703af44cca6d8de2408f6064f2869c957d5a82992a",
           "blocks": [
             {
               "type": "callout",
@@ -407,66 +407,6 @@
             {
               "type": "dataset",
               "name": "service_updates"
-            },
-            {
-              "type": "callout",
-              "kind": "note",
-              "blocks": [
-                {
-                  "type": "paragraph",
-                  "runs": [
-                    {
-                      "text": "The "
-                    },
-                    {
-                      "text": "Software lifecycle policy",
-                      "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/migration-upgrade/versions-update-policy"
-                    },
-                    {
-                      "text": " applies to customers who are enrolled in the First Release program and to the date when the service update is made generally available."
-                    }
-                  ]
-                },
-                {
-                  "type": "paragraph",
-                  "runs": [
-                    {
-                      "text": "Release naming convention as of the 10.0.38 release",
-                      "strong": true
-                    }
-                  ]
-                },
-                {
-                  "type": "paragraph",
-                  "runs": [
-                    {
-                      "text": "The first half of the release label refers to the calendar year and quarter when the auto update production start date is scheduled. The second part is the product version as it appears in Lifecycle Services. An asterisk (*) at the end of the label indicates a major release. For example: "
-                    },
-                    {
-                      "text": "CY25Q4: 10.0.45*",
-                      "strong": true
-                    },
-                    {
-                      "text": " is product version 10.0.45 that's made available for autoupdate in the fourth quarter of 2025. It's a major update (the \"October\" release)."
-                    }
-                  ]
-                },
-                {
-                  "type": "paragraph",
-                  "runs": [
-                    {
-                      "text": "Previews and preview updates are available as a deployable package in the Shared asset library in Lifecycle Services. For more information, see "
-                    },
-                    {
-                      "text": "One Version service updates FAQ",
-                      "href": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/one-version"
-                    },
-                    {
-                      "text": "."
-                    }
-                  ]
-                }
-              ]
             }
           ]
         },
@@ -613,10 +553,10 @@
         }
       ],
       "file_path": "articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
-      "commit": "d21e69eecf3c47e3a74d992d6e2032b6bd570bb4",
-      "sha256": "7faa5cb88f216fce19c4a5292a7af0c727bb18d1a057f64e4e72b0967b2fdaf1",
+      "commit": "c4987ba4b48273d8a2f2ea0e54f8769dbeb3b5a2",
+      "sha256": "20fa0482b81a129873eef87c178017d9ae5fa037d43660b3296e98709f761b10",
       "markdown_date": "2026-06-04",
-      "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/d21e69eecf3c47e3a74d992d6e2032b6bd570bb4/articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md"
+      "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/c4987ba4b48273d8a2f2ea0e54f8769dbeb3b5a2/articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md"
     },
     {
       "key": "maintenance",
