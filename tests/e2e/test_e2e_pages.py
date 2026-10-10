@@ -80,7 +80,7 @@ def test_a_missing_path_shows_the_styled_404_page(
     assert page.locator("h1").text_content() == "Page not found"
     # The stylesheet loaded from the site root even at a nested path; the system theme is light.
     background = page.evaluate("() => getComputedStyle(document.body).backgroundColor")
-    assert background == "rgb(251, 251, 249)"
+    assert background == "rgb(250, 250, 250)"
     assert page.evaluate("() => document.documentElement.dataset.theme") == "light"
     links = {
         str(link.text_content()): str(link.get_attribute("href"))
@@ -107,7 +107,7 @@ def test_the_404_page_follows_the_saved_theme(pages_page: tuple[Any, list[str], 
     page.goto(f"{PAGES_BASE_URL}/nothing-here")
     assert page.evaluate("() => document.documentElement.dataset.theme") == "dark"
     assert page.evaluate("() => getComputedStyle(document.body).backgroundColor") == (
-        "rgb(22, 22, 20)"
+        "rgb(23, 23, 23)"
     )
     assert failed == [f"{PAGES_BASE_URL}/nothing-here"]
     assert errors == [NOT_FOUND_LOG]

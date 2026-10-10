@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="D365 PQU Tracker">
   <style>
-    .line { stroke: #1c1c1a; }
-    .done { fill: #1c1c1a; }
-    .now { fill: #bf3d17; }
-    .next { fill: #ffffff; stroke: #1c1c1a; }
+    .line { stroke: #171717; }
+    .done { fill: #171717; }
+    .now { fill: #297a3a; }
+    .next { fill: #ffffff; stroke: #171717; }
     @media (prefers-color-scheme: dark) {
-      .line { stroke: #ebeae4; }
-      .done { fill: #ebeae4; }
-      .now { fill: #f0825c; }
-      .next { fill: #161614; stroke: #ebeae4; }
+      .line { stroke: #fafafa; }
+      .done { fill: #fafafa; }
+      .now { fill: #5fd08a; }
+      .next { fill: #171717; stroke: #fafafa; }
     }
   </style>
   <path class="line" d="M11 32 H53" stroke-width="5" stroke-linecap="round"/>
