@@ -484,8 +484,7 @@ main {
   padding: 20px 0 28px;
 }
 
-.footer-links,
-.footer-source {
+.footer-links {
   grid-column: 1;
 }
 
