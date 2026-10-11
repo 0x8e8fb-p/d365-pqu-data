@@ -109,7 +109,6 @@
             : "—",
           source && source.raw_url ? [" · ", extLink(source.raw_url, "Markdown")] : null
         ]),
-        el("td", { text: source && source.markdown_date ? dates.formatDate(source.markdown_date) : "—" }),
         el("td", {
           class: "col-optional",
           text: source && source.retrieved_at ? dates.formatDateTime(source.retrieved_at, ctx.zone, { locale: ctx.locale }) : "—"
@@ -127,9 +126,7 @@
           el("caption", { class: "visually-hidden", text: "Microsoft Learn articles used by this dataset" }),
           el("thead", {}, [
             el("tr", {}, [
-              ...["Article", "State", "Microsoft commit", "Article date"].map((label) =>
-                el("th", { scope: "col", text: label })
-              ),
+              ...["Article", "State", "Microsoft commit"].map((label) => el("th", { scope: "col", text: label })),
               el("th", { scope: "col", class: "col-optional", text: "Retrieved" })
             ])
           ]),

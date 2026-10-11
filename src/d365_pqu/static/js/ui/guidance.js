@@ -12,11 +12,10 @@
     if (!article || !article.url) {
       return null;
     }
-    const updated = article.markdown_date ? ` · updated ${dates.formatDate(article.markdown_date)}` : "";
     return el("p", { class: options.class || "rules-source" }, [
       "Source: ",
       extLink(article.url, article.title || "Microsoft Learn"),
-      ` (Microsoft Learn, CC BY 4.0)${updated}`
+      " (Microsoft Learn, CC BY 4.0)"
     ]);
   }
 
@@ -26,11 +25,10 @@
     if (!article || rendered.length === 0) {
       return null;
     }
-    const updated = article.markdown_date ? ` · updated ${dates.formatDate(article.markdown_date)}` : "";
     return el("details", { class: "rules", id, open }, [
       el("summary", {}, [
         el("span", { class: "rules-title", text: title }),
-        el("span", { class: "muted", text: ` · ${summaryNote || ""}${updated}`.replace(" · · ", " · ") })
+        el("span", { class: "muted", text: summaryNote ? ` · ${summaryNote}` : "" })
       ]),
       el("div", { class: "rules-body prose" }, rendered),
       sourceLine(article)

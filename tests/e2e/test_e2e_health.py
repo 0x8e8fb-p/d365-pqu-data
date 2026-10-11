@@ -63,8 +63,6 @@ def test_pill_reports_source_warnings_and_flags_the_row(fixture_site, open_page)
     text = panel.text_content() or ""
     assert "Source warnings (1)" in text
     assert "the years differ" in text
-    assert "Microsoft article updated" in text
-    assert "21 Sep 2026" in text
     page.keyboard.press("Escape")
     assert not panel.is_visible()
     opened.assert_clean()

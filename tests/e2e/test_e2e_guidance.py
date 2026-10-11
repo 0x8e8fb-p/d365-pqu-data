@@ -21,7 +21,7 @@ def test_rules_panel_quotes_microsoft_callouts_with_source(fixture_site, open_pa
     panel = page.locator("#rules-panel")
     summary = panel.locator("summary").inner_text()
     assert "Microsoft's rollout rules" in summary
-    assert "3 notes · updated 21 Sep 2026" in summary
+    assert "3 notes" in summary
     assert panel.get_attribute("open") is None
     panel.locator("summary").click()
     body = panel.locator(".rules-body")

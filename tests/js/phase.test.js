@@ -105,18 +105,18 @@ test("running train without a detailed station schedule says so", () => {
 });
 
 test("ended In-Progress train is flagged when no window remains", () => {
-  const result = phase.compute(PQU5, PQU5_STATIONS, "2026-09-28", { markdownDate: "2026-09-21" });
+  const result = phase.compute(PQU5, PQU5_STATIONS, "2026-09-28");
   assert.equal(result.kind, "ended");
   assert.equal(result.text, "Scheduled end passed 2 days ago");
   assert.equal(result.detail, null);
   assert.equal(
     result.conflict,
-    "Microsoft still lists this train as In-Progress (article updated 21 Sep 2026)."
+    "Microsoft still lists this train as In-Progress."
   );
 });
 
 test("production window after the train end keeps In-Progress consistent", () => {
-  const result = phase.compute(PQU5, PQU5_STATIONS, "2026-09-27", { markdownDate: "2026-09-21" });
+  const result = phase.compute(PQU5, PQU5_STATIONS, "2026-09-27");
   assert.equal(result.text, "Scheduled end passed 1 day ago");
   assert.equal(result.detail, "Now: Stations 5 and 6 production (26–27 Sep)");
   assert.equal(result.conflict, null);
@@ -135,11 +135,11 @@ test("before the change cutoff and before the start", () => {
 });
 
 test("Not Started after its start date is flagged", () => {
-  const result = phase.compute(OLD_STYLE, [], "2026-09-02", { markdownDate: "2026-08-28" });
+  const result = phase.compute(OLD_STYLE, [], "2026-09-02");
   assert.equal(result.text, "Day 3 of 34");
   assert.equal(
     result.conflict,
-    "Microsoft still lists this train as Not Started (article updated 28 Aug 2026)."
+    "Microsoft still lists this train as Not Started."
   );
   const ended = phase.compute(OLD_STYLE, [], "2026-10-05");
   assert.equal(ended.text, "Scheduled end passed 2 days ago");
@@ -172,7 +172,7 @@ test("Completed, Canceled, and undated trains get no calculated line", () => {
 });
 
 test("searchText joins every calculated sentence", () => {
-  const result = phase.compute(PQU5, PQU5_STATIONS, "2026-09-28", { markdownDate: "2026-09-21" });
+  const result = phase.compute(PQU5, PQU5_STATIONS, "2026-09-28");
   assert.match(phase.searchText(result), /Scheduled end passed 2 days ago Microsoft still lists/);
   assert.equal(phase.searchText(null), "");
 });

@@ -450,9 +450,6 @@
         entries.map((entry) =>
           el("li", {}, [
             extLink(entry.article_url, entry.label),
-            entry.source.markdown_date
-              ? el("span", { class: "fact-note", text: `Microsoft Learn · updated ${dates.formatDate(entry.source.markdown_date)}` })
-              : null,
             entry.state === "stale" ? el("span", { class: "phase-note", text: "Showing the last published copy" }) : null
           ])
         )

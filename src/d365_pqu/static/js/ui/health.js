@@ -68,9 +68,6 @@
         )
       );
     }
-    if (source.markdown_date) {
-      rows.push(panelRow("Microsoft article updated", dates.formatDate(source.markdown_date)));
-    }
     children.push(el("dl", { class: "panel-facts" }, rows));
 
     if (result.state === "unavailable") {

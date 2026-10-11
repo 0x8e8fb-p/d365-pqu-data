@@ -57,10 +57,7 @@ def test_brief_cards_quote_the_overview_with_links_and_attribution(fixture_site,
     )
     assert link.get_attribute("rel") == "noopener noreferrer"
     source = page.locator("#learn-brief > .source-line").inner_text()
-    assert source == (
-        "Source: Proactive quality updates overview (Microsoft Learn, CC BY 4.0) · "
-        "updated 26 Mar 2026"
-    )
+    assert source == "Source: Proactive quality updates overview (Microsoft Learn, CC BY 4.0)"
     license_note = page.locator("#learn-license")
     assert "Converted to structured text" in license_note.inner_text()
     license_link = license_note.get_by_role(
@@ -389,9 +386,7 @@ def test_what_the_data_says_shows_calculated_figures_next_to_the_faq(
     stations_method.locator("summary").click()
     assert "Left out Station 1: Only for opted-in environments" in (stations_method.inner_text())
     source = page.locator("#insights-service-updates .source-line")
-    assert source.inner_text() == (
-        "Calculated from Service update availability (updated 4 Jun 2026)."
-    )
+    assert source.inner_text() == "Calculated from Service update availability."
     assert source.locator("a").get_attribute("href") == (
         "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/"
         "public-preview-releases"

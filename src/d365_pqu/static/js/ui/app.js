@@ -149,30 +149,16 @@
     });
   }
 
-  function renderFooter() {
-    const metadata = state.docs.metadata || {};
-    const sourceDate = document.getElementById("source-date");
-    if (sourceDate) {
-      const raw = (metadata.source || {}).markdown_date || null;
-      sourceDate.textContent = dates.formatDate(raw);
-      if (raw) {
-        sourceDate.setAttribute("datetime", String(raw));
-      }
-    }
-  }
-
   function context() {
     const zone = PQU.ui.zone.get().zone;
     const locale = PQU.ui.zone.locale();
     const todayIso = dates.todayIn(zone);
-    const metadata = state.docs.metadata || {};
-    const markdownDate = (metadata.source || {}).markdown_date || null;
     const byTrain = stationsByTrain();
     const phases = new Map();
     for (const record of records()) {
       phases.set(
         record.pqu_id,
-        PQU.phase.compute(record, byTrain[record.pqu_id] || [], todayIso, { markdownDate })
+        PQU.phase.compute(record, byTrain[record.pqu_id] || [], todayIso)
       );
     }
     const zoneName = dates.displayZone(zone);
@@ -489,7 +475,6 @@
       state.pending = {};
       state.docs = docs;
       state.errors = errors;
-      renderFooter();
       await renderRoute({ preserve: true });
       const zone = PQU.ui.zone.get().zone;
       announce(
@@ -569,7 +554,6 @@
       document.body.dataset.ready = "true";
       return;
     }
-    renderFooter();
     root.addEventListener("hashchange", () => {
       renderRoute({ focus: true }).catch(showLoadError);
     });

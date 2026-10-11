@@ -548,11 +548,7 @@
           title: "Service updates",
           sub: "Each service update (version) moves from preview to general availability, two autoupdates and end of service. PQU trains deliver fixes to the versions in service.",
           aside: source
-            ? [
-                "Dates from ",
-                extLink(source.article_url, "Service update availability"),
-                source.markdown_date ? ` · updated ${dates.formatDate(source.markdown_date)}` : ""
-              ]
+            ? ["Dates from ", extLink(source.article_url, "Service update availability")]
             : null
         }),
         sourceNotice(ctx),

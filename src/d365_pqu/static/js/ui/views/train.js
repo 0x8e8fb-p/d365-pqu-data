@@ -466,7 +466,6 @@
         el("p", {}, [
           "Microsoft's article ",
           extLink(trainUrl, "Release schedule for proactive quality updates"),
-          metadataSource.markdown_date ? ` (updated ${dates.formatDate(metadataSource.markdown_date)})` : "",
           ". ",
           source.raw_url ? extLink(source.raw_url, `Markdown at commit ${commit.slice(0, 7)}`) : null,
           source.raw_url ? "." : null

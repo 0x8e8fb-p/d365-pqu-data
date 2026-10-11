@@ -492,10 +492,8 @@
       .map((key) => sources[key])
       .filter(Boolean)
       .map((entry) => {
-        const updated =
-          entry.source && entry.source.markdown_date ? ` (updated ${dates.formatDate(entry.source.markdown_date)})` : "";
         const stale = entry.state === "stale" ? ", last published copy" : "";
-        return [extLink(entry.article_url, entry.label), `${updated}${stale}`];
+        return [extLink(entry.article_url, entry.label), stale];
       });
     return parts.length ? el("p", { class: "source-line" }, ["Calculated from ", ...joinNodes(parts), "."]) : null;
   }

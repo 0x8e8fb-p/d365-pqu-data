@@ -20,7 +20,7 @@ def test_phase_lines_follow_published_dates_in_ist(fixture_site, open_page) -> N
     ended = _status_text(page, "10.0.48-PQU-5")
     assert "In-Progress" in ended
     assert "Scheduled end passed 2 days ago" in ended
-    assert "Microsoft still lists this train as In-Progress (article updated 21 Sep 2026)." in ended
+    assert "Microsoft still lists this train as In-Progress." in ended
     running = _status_text(page, "10.0.48-PQU-6")
     assert "Day 13 of 25 · Now: Station 4 sandbox (28 Sep \u2013 1 Oct)" in running
     upcoming = _status_text(page, "10.0.48-PQU-7")

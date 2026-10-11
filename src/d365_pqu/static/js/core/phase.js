@@ -169,14 +169,11 @@
       }
     }
 
-    const updated = dates.isIsoDate(options.markdownDate)
-      ? ` (article updated ${dates.formatDate(options.markdownDate)})`
-      : "";
     const windowsOpen = activity.state === "active" || activity.state === "upcoming";
     if (status === "Not Started" && todayIso >= start) {
-      result.conflict = `Microsoft still lists this train as Not Started${updated}.`;
+      result.conflict = `Microsoft still lists this train as Not Started.`;
     } else if (status === "In-Progress" && todayIso > end && !windowsOpen) {
-      result.conflict = `Microsoft still lists this train as In-Progress${updated}.`;
+      result.conflict = `Microsoft still lists this train as In-Progress.`;
     }
     return result;
   }

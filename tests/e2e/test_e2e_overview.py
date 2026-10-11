@@ -245,7 +245,7 @@ def test_insights_and_sources_lists(fixture_site, open_page) -> None:
     ]
     assert all((link.get_attribute("rel") or "") == "noopener noreferrer" for link in sources.all())
     assert _text(page.locator("#ov-sources li").first).endswith(
-        "Microsoft Learn · updated 21 Sep 2026"
+        "Release schedule for proactive quality updates"
     )
     opened.assert_clean()
 
