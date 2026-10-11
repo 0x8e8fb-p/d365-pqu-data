@@ -197,19 +197,12 @@
     const rows = running.map((record) => {
       const phase = ctx.phases.get(record.pqu_id);
       const line = phase ? [phase.text, phase.detail].filter(Boolean).join(" · ") : "";
-      const flags = ctx.flags[record.pqu_id] || [];
       return el("tr", { dataset: { pqu: record.pqu_id } }, [
         el("th", { scope: "row" }, [common.trainLink(record.pqu_id), common.newTag(record)]),
         el("td", { class: "num", "data-label": "Application build", text: record.application_build || "Not published" }),
         el("td", { "data-label": "Where it is today" }, [
           line ? common.calc(line, { class: "phase-line", announce: true }) : null,
           phase && phase.conflict ? el("span", { class: "phase-note", text: phase.conflict }) : null,
-          flags.length
-            ? el("span", {
-                class: "phase-note",
-                text: `Source warning: ${flags.map((item) => PQU.health.describe(item, ctx.recordsById)).join(" ")}`
-              })
-            : null
         ])
       ]);
     });
@@ -290,9 +283,6 @@
                             ? [" · ", el("span", { class: "calc", text: agenda.whenText(event, ctx.todayIso) })]
                             : ` · ${dates.formatDateRange(event.start_date, event.end_date, { year: false })}`
                           : null,
-                        event.warnings.length
-                          ? el("span", { class: "flag", title: "Microsoft's article contradicts itself here", text: "Source warning" })
-                          : null
                       ])
                     ])
                   )

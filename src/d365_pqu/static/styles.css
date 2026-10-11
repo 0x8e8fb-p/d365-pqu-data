@@ -348,7 +348,6 @@ main:focus {
   font-weight: 600;
 }
 
-.sync[data-state="warnings"] #sync-label,
 .sync[data-state="stale"] #sync-label {
   color: var(--warn);
 }

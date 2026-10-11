@@ -14,7 +14,7 @@
     stations: "station schedules",
     regions: "region mapping",
     health: "check status",
-    quality: "source warnings",
+    quality: "date validation report",
     learn: "Microsoft guidance text",
     service_updates: "service update schedule",
     maintenance: "maintenance windows",
@@ -107,40 +107,6 @@
           text: `Could not load: ${optionalMissing.map((name) => DOCUMENT_LABELS[name] || name).join(", ")}.`
         })
       );
-    }
-
-    if (result.warningCount > 0) {
-      children.push(
-        el("h3", {
-          class: "panel-subtitle",
-          text: `Source warnings (${result.warningCount})`
-        })
-      );
-      if (!result.warningDetailsAvailable) {
-        children.push(el("p", { class: "muted", text: "Warning details could not be loaded." }));
-      } else {
-        children.push(
-          el(
-            "ul",
-            { class: "panel-list" },
-            result.warnings.map((item) =>
-              el("li", {}, [
-                el("p", { text: health.describe(item, ctx.recordsById) }),
-                item.pqu_id && ctx.recordsById[item.pqu_id]
-                  ? el("a", {
-                      class: "panel-link",
-                      href: ctx.trainHref(item.pqu_id),
-                      text: `Show ${item.pqu_id}`,
-                      on: { click: () => setOpen(false) }
-                    })
-                  : null
-              ])
-            )
-          )
-        );
-      }
-    } else if (result.state === "healthy") {
-      children.push(el("p", { class: "muted", text: "No source warnings in the published dataset." }));
     }
 
     if (source.article_url) {

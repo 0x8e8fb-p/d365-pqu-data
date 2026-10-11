@@ -161,7 +161,6 @@ class _Context:
         self,
         events: Sequence[Row],
         *,
-        quality: Sequence[Row],
         metadata: Row,
         pages_url: str,
     ) -> None:
@@ -178,36 +177,18 @@ class _Context:
             for event in events
             if event.get("kind") == "train_window"
         }
-        self.messages: dict[tuple[str, str], str] = {}
-        for item in quality:
-            subject = item.get("pqu_id") or item.get("field")
-            if item.get("severity") == "warning" and subject and item.get("message"):
-                key = (str(subject), str(item.get("code")))
-                self.messages.setdefault(key, str(item["message"]))
 
     def details_url(self, event: Row) -> str:
         if event.get("pqu_id"):
             return f"{self.base}/#/train/{quote(str(event['pqu_id']), safe='')}"
         return f"{self.base}/#/versions?version={quote(str(event.get('application_version')), safe='')}"
 
-    def warning_lines(self, event: Row) -> list[str]:
-        lines = []
-        for code in event.get("warnings") or []:
-            if event.get("pqu_id"):
-                subject = str(event["pqu_id"])
-            else:
-                field = SERVICE_UPDATE_FIELDS.get(str(event.get("kind")), "")
-                subject = f"{event.get('application_version')}#{field}"
-            message = self.messages.get((subject, str(code)), str(code))
-            lines.append(f"Source warning: {_sentence(message)}")
-        return lines
-
 
 def _description(event: Row, context: _Context) -> str:
     kind = str(event.get("kind"))
     label = _train_label(event.get("pqu_id"))
     status = event.get("status")
-    lines = context.warning_lines(event)
+    lines = []
     if kind in STATION_KINDS:
         window = "Sandbox" if kind == "sandbox_window" else "Production"
         lines.append(f"{window} window for Station {event.get('station')}, {label}.")
@@ -244,8 +225,6 @@ def _summary(event: Row) -> str:
     summary = str(event.get("title"))
     if event.get("status") == "Canceled":
         summary += " (Canceled)"
-    if event.get("warnings"):
-        summary += " (source warning)"
     return summary
 
 
@@ -324,12 +303,11 @@ def calendar_files(
     events: Sequence[Row],
     *,
     regions: Sequence[Row],
-    quality: Sequence[Row],
     metadata: Row,
     pages_url: str = PAGES_BASE_URL,
 ) -> dict[str, dict[str, Any]]:
     """File name -> {name, description, events (count), content (bytes)} for every calendar."""
-    context = _Context(events, quality=quality, metadata=metadata, pages_url=pages_url)
+    context = _Context(events, metadata=metadata, pages_url=pages_url)
     files: dict[str, dict[str, Any]] = {}
     for station in ALLOWED_STATIONS:
         chosen = [

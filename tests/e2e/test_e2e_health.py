@@ -44,42 +44,27 @@ def test_pill_reports_a_failed_check_and_keeps_the_last_dataset(fixture_site, op
     opened.assert_clean()
 
 
-def test_pill_reports_source_warnings_and_flags_the_row(fixture_site, open_page) -> None:
-    opened = open_page(fixture_site((LIVE_FIXTURES, E2E_SYNC_AT)), "#/trains")
+def test_pill_stays_healthy_and_the_train_stays_suppressed(fixture_site, open_page) -> None:
+    opened = open_page(fixture_site((LIVE_FIXTURES, E2E_SYNC_AT)), "#/trains?view=timeline")
     page = opened.page
-    assert page.locator("#health-toggle").get_attribute("data-state") == "warnings"
-    assert page.locator("#sync-label").inner_text() == "1 source warning"
-    flag = page.locator("#pqu-table tbody tr.has-flag .flag")
-    assert flag.count() == 1
-    label = flag.get_attribute("aria-label") or ""
-    assert label.startswith("Source warning: Microsoft lists the start as 9 Feb 2025")
-    assert "4 Feb 2026" in label
-    assert "10.0.46-PQU-1" in page.locator("#pqu-table tbody tr.has-flag").inner_text()
-
-    page.locator("#health-toggle").click()
-    panel = page.locator("#health-panel")
-    assert panel.is_visible()
-    assert page.locator("#health-toggle").get_attribute("aria-expanded") == "true"
-    text = panel.text_content() or ""
-    assert "Source warnings (1)" in text
-    assert "the years differ" in text
-    page.keyboard.press("Escape")
-    assert not panel.is_visible()
+    assert page.locator("#health-toggle").get_attribute("data-state") == "healthy"
+    assert page.locator("#sync-label").inner_text() == "Up to date"
+    assert not page.locator(".tl-flag").count()
+    note = page.locator(".tl-not-drawn")
+    assert note.count() == 1
+    assert "10.0.46 PQU-1" in note.inner_text()
+    assert "the years differ" in note.inner_text()
+    assert not page.locator("#pqu-table tbody tr.has-flag").count()
     opened.assert_clean()
 
 
-def test_warning_link_opens_the_affected_train(fixture_site, open_page) -> None:
-    opened = open_page(fixture_site((LIVE_FIXTURES, E2E_SYNC_AT)))
+def test_train_page_renders_without_a_warning_flag(fixture_site, open_page) -> None:
+    opened = open_page(fixture_site((LIVE_FIXTURES, E2E_SYNC_AT)), "#/train/10.0.46-PQU-1")
     page = opened.page
-    page.locator("#health-toggle").click()
-    page.get_by_role("link", name="Show 10.0.46-PQU-1").click()
-    page.wait_for_function("() => location.hash === '#/train/10.0.46-PQU-1'")
     wait_for_render(page)
     assert page.locator("#train-heading").text_content() == "10.0.46 PQU-1"
-    flag = page.locator(".train-flag").text_content() or ""
-    assert "Source warning:" in flag
-    assert "the years differ" in flag
-    assert not page.locator("#health-panel").is_visible()
+    assert not page.locator(".train-flag").count()
+    assert not page.locator(".flag").count()
     opened.assert_clean()
 
 

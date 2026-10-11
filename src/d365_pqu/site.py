@@ -297,7 +297,6 @@ def _write_calendars(
     files = calendar_files(
         _records(data_dir / "events.json"),
         regions=_records(data_dir / "pqu-regions.json"),
-        quality=_records(data_dir / "quality-report.json"),
         metadata=metadata,
     )
     target.mkdir(parents=True, exist_ok=True)
@@ -408,7 +407,7 @@ def api_index_document(
             "name": "Quality report",
             "path": f"{base}/quality-report.json",
             "csv": None,
-            "description": "Non-fatal source warnings and validation details.",
+            "description": "Validation details for the published dates.",
         },
         {
             "name": "Learn content",

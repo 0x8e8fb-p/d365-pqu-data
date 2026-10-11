@@ -379,7 +379,7 @@ def test_what_the_data_says_shows_calculated_figures_next_to_the_faq(
     method.locator("summary").click()
     left_out = method.locator(".left-out li").all_inner_texts()
     assert left_out[0] == (
-        "Left out 10.0.46-PQU-1: Source warning: Change cutoff 2026-02-04 and train start "
+        "Left out 10.0.46-PQU-1: Change cutoff 2026-02-04 and train start "
         "2025-02-09 are in different years"
     )
     stations_method = page.locator("#insights-stations .insight-method")

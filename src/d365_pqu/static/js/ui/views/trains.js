@@ -171,23 +171,11 @@
   }
 
   function idCell(record, hasStations, expanded) {
-    const flags = ctx.flags[record.pqu_id] || [];
-    const described = flags.map((item) => PQU.health.describe(item, ctx.recordsById));
-    const flag = flags.length
-      ? el("span", {
-          class: "flag",
-          role: "img",
-          "aria-label": `Source warning: ${described.join(" ")}`,
-          title: described.join("\n"),
-          text: "Source warning"
-        })
-      : null;
     const link = el("a", { class: "train-id", href: common.trainHref(record.pqu_id), text: record.pqu_id });
     if (!hasStations) {
       return el("td", { class: "id-cell" }, [
         el("span", { class: "row-toggle-spacer", "aria-hidden": "true" }),
-        link,
-        flag
+        link
       ]);
     }
     const toggle = el(
@@ -210,7 +198,7 @@
       },
       [el("span", { class: "row-toggle-icon", "aria-hidden": "true" })]
     );
-    return el("td", { class: "id-cell" }, [toggle, link, flag]);
+    return el("td", { class: "id-cell" }, [toggle, link]);
   }
 
   function filtered() {
@@ -251,7 +239,6 @@
           class: [
             record.pqu_id === (ctx.metadata || {}).latest_pqu_id ? "latest" : null,
             records.isDueSoon(record, ctx.todayIso) ? "due-soon" : null,
-            ctx.flags[record.pqu_id] ? "has-flag" : null,
             expanded ? "is-expanded" : null
           ]
         },

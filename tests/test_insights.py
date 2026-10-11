@@ -19,9 +19,7 @@ from d365_pqu.pipeline import load_json, run_sync, verify_artifacts
 from d365_pqu.source import bundle_from_directory
 from d365_pqu.validation import validate_document
 
-PQU_1_WARNING = (
-    "Source warning: Change cutoff 2026-02-04 and train start 2025-02-09 are in different years"
-)
+PQU_1_WARNING = "Change cutoff 2026-02-04 and train start 2025-02-09 are in different years"
 
 
 @pytest.fixture(scope="module")

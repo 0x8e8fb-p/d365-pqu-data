@@ -118,7 +118,6 @@
   function statusLines(ctx, record) {
     const phase = ctx.phases.get(record.pqu_id);
     const line = phase ? [phase.text, phase.detail].filter(Boolean).join(" · ") : "";
-    const flags = ctx.flags[record.pqu_id] || [];
     return [
       line
         ? el("p", { class: "train-phase calc", id: "train-phase" }, [
@@ -133,9 +132,6 @@
             record.status_note
           ])
         : null,
-      flags.map((item) =>
-        el("p", { class: "inline-alert train-flag", text: `Source warning: ${PQU.health.describe(item, ctx.recordsById)}` })
-      )
     ];
   }
 

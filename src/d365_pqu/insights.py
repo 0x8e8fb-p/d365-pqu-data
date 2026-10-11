@@ -46,8 +46,9 @@ METRICS: tuple[dict[str, Any], ...] = (
         "method": (
             "The trains of each application version are put in train-number order. For each "
             "pair of consecutive train numbers, the days between their published start dates "
-            "are counted, and the figure is the median. A train whose start date has a source "
-            "warning is left out, together with the intervals next to it."
+            "are counted, and the figure is the median. A train whose published start date "
+            "contradicts Microsoft's other published dates is left out, together with the "
+            "intervals next to it."
         ),
     },
     {
@@ -60,8 +61,8 @@ METRICS: tuple[dict[str, Any], ...] = (
         "sources": ["schedule"],
         "method": (
             "For each train, the days from its published change cutoff date to its published "
-            "start date. The figure is the median per application version. Trains with a "
-            "source warning on either date are left out."
+            "start date. The figure is the median per application version. Trains whose "
+            "published dates contradict Microsoft's other published dates are left out."
         ),
     },
     {
@@ -75,8 +76,8 @@ METRICS: tuple[dict[str, Any], ...] = (
         "method": (
             "Calendar days from each train's published start date to its published end date, "
             "counting both dates (the same count as “Day X of Y” on the Trains tab). The figure "
-            "is the median per application version. Trains with a source warning on either "
-            "date are left out."
+            "is the median per application version. Trains whose published dates contradict "
+            "Microsoft's other published dates are left out."
         ),
     },
     {
@@ -258,7 +259,7 @@ def _basis(size: int, unit: str, low: int, high: int) -> str:
 
 
 def _flags(quality: Sequence[Row]) -> dict[tuple[str, str], str]:
-    """(pqu_id, date field) -> reason, for warnings about a train's published dates."""
+    """(pqu_id, date field) -> reason, for a train whose published dates contradict each other."""
     flags: dict[tuple[str, str], str] = {}
     for item in quality:
         pqu_id = item.get("pqu_id")
@@ -266,7 +267,7 @@ def _flags(quality: Sequence[Row]) -> dict[tuple[str, str], str]:
             continue
         fallback = (item["field"],) if item.get("field") else ()
         for date_field in DATE_FLAG_FIELDS.get(str(item.get("code")), fallback):
-            flags.setdefault((str(pqu_id), date_field), f"Source warning: {item.get('message')}")
+            flags.setdefault((str(pqu_id), date_field), str(item.get("message")))
     return flags
 
 

@@ -40,7 +40,7 @@
 
   /*
    * States, most severe first: unavailable (a required document failed to load), failed (the last
-   * published check failed), stale (no check within three intervals), warnings, healthy.
+   * published check failed), stale (no check within three intervals), healthy.
    */
   function assess({ health, metadata, quality, errors = {}, now = Date.now() }) {
     const missing = Object.keys(errors).filter((name) => errors[name]);
@@ -49,10 +49,6 @@
     const checkedDate = dates.toDate(checked);
     const ageMinutes = checkedDate ? Math.floor((now - checkedDate.getTime()) / 60000) : null;
     const staleAfter = interval ? interval * STALE_MULTIPLIER : null;
-    const warnings = warningItems(quality);
-    const warningCount = quality
-      ? warnings.length
-      : Number((health && health.warning_count) || 0);
     const result = {
       state: "healthy",
       label: "Up to date",
@@ -65,9 +61,6 @@
       ageMinutes,
       intervalMinutes: interval,
       staleAfterMinutes: staleAfter,
-      warnings,
-      warningCount,
-      warningDetailsAvailable: Boolean(quality),
       missing
     };
     if (REQUIRED.some((name) => errors[name])) {
@@ -78,10 +71,6 @@
     }
     if (staleAfter !== null && ageMinutes !== null && ageMinutes > staleAfter) {
       return { ...result, state: "stale", label: "Stale" };
-    }
-    if (warningCount > 0) {
-      const noun = warningCount === 1 ? "source warning" : "source warnings";
-      return { ...result, state: "warnings", label: `${warningCount} ${noun}` };
     }
     return result;
   }
@@ -123,8 +112,8 @@
     return byTrain;
   }
 
-  /* Warnings about a train's published dates and the date fields each makes unreliable. This
-   * mirrors DATE_FLAG_FIELDS in the pipeline (insights.py); a test keeps the two in step. */
+  /* Date fields each problem code makes unreliable. This mirrors DATE_FLAG_FIELDS in the
+   * pipeline (insights.py); a test keeps the two in step. */
   const DATE_FLAG_FIELDS = {
     "cutoff-start-year-mismatch": ["change_cutoff_date", "train_start_date"],
     "invalid-train-duration": ["train_start_date", "train_end_date"],
@@ -132,7 +121,7 @@
     "invalid-cutoff-date": ["change_cutoff_date"]
   };
 
-  /* {pqu_id: Set(date fields)} questioned by source warnings. */
+  /* {pqu_id: Set(date fields)} that contradict Microsoft's other published dates. */
   function unreliableDates(quality) {
     const byTrain = {};
     for (const item of warningItems(quality)) {

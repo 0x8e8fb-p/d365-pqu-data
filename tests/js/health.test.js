@@ -39,23 +39,13 @@ test("healthy when checked recently with no warnings", () => {
   assert.equal(result.ageMinutes, 60);
 });
 
-test("warnings count only warning severity items", () => {
+test("stays healthy when quality records include warnings", () => {
   const info = { ...WARNING, severity: "info", code: "maintenance-geo-unmapped" };
   const result = health.assess(doc({ qualityRecords: [WARNING, info] }));
-  assert.equal(result.state, "warnings");
-  assert.equal(result.label, "1 source warning");
-  assert.equal(result.warnings.length, 1);
+  assert.equal(result.state, "healthy");
+  assert.equal(result.label, "Up to date");
   const two = health.assess(doc({ qualityRecords: [WARNING, { ...WARNING, pqu_id: "x" }] }));
-  assert.equal(two.label, "2 source warnings");
-});
-
-test("falls back to the health warning count when quality details are missing", () => {
-  const input = doc({ health: { warning_count: 3 } });
-  input.quality = undefined;
-  const result = health.assess(input);
-  assert.equal(result.state, "warnings");
-  assert.equal(result.warningCount, 3);
-  assert.equal(result.warningDetailsAvailable, false);
+  assert.equal(two.state, "healthy");
 });
 
 test("stale after three check intervals without a successful check", () => {

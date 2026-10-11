@@ -23,9 +23,6 @@
     return `tl-lane-${String(version).replace(/[^0-9a-z]+/gi, "-")}`;
   }
 
-  function flagged(ctx, pquId) {
-    return (ctx.flags[pquId] || []).length > 0;
-  }
 
   /* Accessible name and tooltip: Microsoft's values, then the calculated phase. */
   function describeBar(ctx, bar) {
@@ -37,9 +34,6 @@
     const phase = ctx.phases.get(record.pqu_id);
     if (phase && phase.text) {
       parts.push(`${phase.text} (calculated)`);
-    }
-    if (flagged(ctx, record.pqu_id)) {
-      parts.push("source warning");
     }
     return parts;
   }
@@ -55,7 +49,6 @@
 
   function barItem(ctx, bar) {
     const parts = describeBar(ctx, bar);
-    const warning = flagged(ctx, bar.pqu_id);
     return el("li", { class: "tl-item", vars: { "--row": String(bar.row) } }, [
       el(
         "a",
@@ -64,8 +57,7 @@
             "tl-bar",
             `status-${statusSlug(bar.record.status)}`,
             bar.clipStart ? "clip-start" : null,
-            bar.clipEnd ? "clip-end" : null,
-            warning ? "has-flag" : null
+            bar.clipEnd ? "clip-end" : null
           ],
           href: PQU.ui.common.trainHref(bar.pqu_id),
           dataset: { pqu: bar.pqu_id },
@@ -73,10 +65,7 @@
           title: parts.join(" · "),
           vars: { "--left": `${bar.left}%`, "--width": `${bar.width}%` }
         },
-        [
-          warning ? el("span", { class: "tl-flag", "aria-hidden": "true", text: "!" }) : null,
-          el("span", { class: "tl-label", "aria-hidden": "true" }, barText(bar.record))
-        ]
+        [el("span", { class: "tl-label", "aria-hidden": "true" }, barText(bar.record))]
       ),
       bar.cutoffLeft === null
         ? null
@@ -199,7 +188,7 @@
           el("span", { class: "flag", text: "Not drawn:" }),
           " ",
           PQU.ui.common.trainLink(entry.record.pqu_id),
-          reasons.length ? `. ${reasons.join(" ")}` : ". A source warning questions its dates."
+          reasons.length ? `. ${reasons.join(" ")}` : ". Microsoft's published dates for it disagree."
         ])
       );
     }

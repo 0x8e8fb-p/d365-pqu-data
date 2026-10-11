@@ -174,13 +174,12 @@ def test_milestones_calendar(live_site: Path) -> None:
     assert canceled["SUMMARY"] == "10.0.47 PQU-2 change cutoff (Canceled)"
 
     flagged = events[f"change_cutoff:10.0.46-PQU-1@{DOMAIN}"]
-    assert flagged["SUMMARY"] == "10.0.46 PQU-1 change cutoff (source warning)"
-    lines = flagged["DESCRIPTION"].split("\\n")
-    assert lines[0] == (
-        "Source warning: Change cutoff 2026-02-04 and train start 2025-02-09 are in different "
-        "years."
+    assert flagged["SUMMARY"] == "10.0.46 PQU-1 change cutoff"
+    assert "Source warning" not in flagged["DESCRIPTION"]
+    assert (
+        "Microsoft lists the train as running 9 Feb 2025 \u2013 14 Mar 2026."
+        in flagged["DESCRIPTION"]
     )
-    assert "Microsoft lists the train as running 9 Feb 2025 \u2013 14 Mar 2026." in lines
 
     ga = events[f"general_availability:10.0.49@{DOMAIN}"]
     assert ga["DTSTART;VALUE=DATE"] == "20260911"
@@ -193,7 +192,6 @@ def test_calendars_are_deterministic(live_site: Path) -> None:
     metadata = _json(live_site, "metadata.json")
     inputs = {
         "regions": _json(live_site, "regions.json")["records"],
-        "quality": _json(live_site, "quality-report.json")["records"],
         "metadata": metadata,
     }
     events = _json(live_site, "events.json")["records"]
@@ -223,14 +221,10 @@ def test_an_event_keeps_its_uid_when_microsoft_moves_it() -> None:
     moved = {**event, "start_date": "2026-10-10", "end_date": "2026-10-11"}
     metadata = {"generated_at": "2026-09-28T03:00:00Z"}
     before = _events(
-        calendar_files([event], regions=[], quality=[], metadata=metadata)[station_file(4)][
-            "content"
-        ]
+        calendar_files([event], regions=[], metadata=metadata)[station_file(4)]["content"]
     )
     after = _events(
-        calendar_files([moved], regions=[], quality=[], metadata=metadata)[station_file(4)][
-            "content"
-        ]
+        calendar_files([moved], regions=[], metadata=metadata)[station_file(4)]["content"]
     )
     assert list(before) == list(after)
     uid = next(iter(after))
@@ -239,16 +233,14 @@ def test_an_event_keeps_its_uid_when_microsoft_moves_it() -> None:
 
 
 def test_calendars_without_events_are_valid() -> None:
-    files = calendar_files(
-        [], regions=[], quality=[], metadata={"generated_at": "2026-09-28T03:00:00Z"}
-    )
+    files = calendar_files([], regions=[], metadata={"generated_at": "2026-09-28T03:00:00Z"})
     assert sorted(files) == [MILESTONES_FILE, *(station_file(n) for n in range(1, 7))]
     for entry in files.values():
         _assert_well_formed(entry["content"])
         assert entry["events"] == 0
         assert _events(entry["content"]) == {}
     with pytest.raises(ValueError, match="generated_at"):
-        calendar_files([], regions=[], quality=[], metadata={})
+        calendar_files([], regions=[], metadata={})
 
 
 def test_the_api_index_lists_the_calendars(live_site: Path) -> None:

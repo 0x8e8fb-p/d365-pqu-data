@@ -2,8 +2,8 @@
  * its published start date to its end date, change cutoff ticks, month grid lines and today's
  * position. Positions are percentages of the visible range.
  *
- * Nothing is estimated. A train without a published start date, or whose start or end date is
- * questioned by a source warning, is reported as not drawn instead of being placed. */
+ * Nothing is estimated. A train without a published start date, or whose start or end date
+ * contradicts Microsoft's other published dates, is reported as not drawn instead of placed. */
 (function (root, factory) {
   "use strict";
   const api = factory(root);
@@ -37,8 +37,8 @@
 
   /*
    * A train's drawable dates: {start, end, cutoff|null}, or {reason: "undated" | "unreliable",
-   * fields} when it cannot be placed. `unreliable` is a Set of date fields a source warning
-   * questions. A missing or earlier end date draws a one-day bar at the start.
+   * fields} when it cannot be placed. `unreliable` is a Set of date fields that contradict
+   * Microsoft's other published dates. A missing or earlier end date draws a one-day bar.
    */
   function extent(record, unreliable) {
     const flagged = unreliable || new Set();
