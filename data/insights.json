@@ -1,18 +1,18 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-10-08T19:14:10.623818Z",
+  "generated_at": "2026-10-13T13:44:17.669863Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
     "branch": "main",
     "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
-    "commit": "aee43141bb5f24e63c1e63805dcd9e1c5452c334",
+    "commit": "7d86a35169692606d303c21e204ae6032d44d44e",
     "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/aee43141bb5f24e63c1e63805dcd9e1c5452c334/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
-    "markdown_date": "2026-09-21",
-    "sha256": "a602e92c9987dcdd9320df9a3a6e349e6c065fa3d7e8cd38ccd24ea6f03a959b",
-    "retrieved_at": "2026-10-05T13:14:25.524832Z"
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/7d86a35169692606d303c21e204ae6032d44d44e/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "markdown_date": "2026-10-13",
+    "sha256": "8431bf5fb97becf088a0eaa4eec8f42cb7f86dcafc7f68f9d4b3d972b5cf1eb0",
+    "retrieved_at": "2026-10-13T13:44:17.669863Z"
   },
   "categories": [
     {
@@ -42,7 +42,7 @@
       "sources": [
         "schedule"
       ],
-      "method": "The trains of each application version are put in train-number order. For each pair of consecutive train numbers, the days between their published start dates are counted, and the figure is the median. A train whose start date has a source warning is left out, together with the intervals next to it.",
+      "method": "The trains of each application version are put in train-number order. For each pair of consecutive train numbers, the days between their published start dates are counted, and the figure is the median. A train whose published start date contradicts Microsoft's other published dates is left out, together with the intervals next to it.",
       "excluded": []
     },
     {
@@ -55,7 +55,7 @@
       "sources": [
         "schedule"
       ],
-      "method": "For each train, the days from its published change cutoff date to its published start date. The figure is the median per application version. Trains with a source warning on either date are left out.",
+      "method": "For each train, the days from its published change cutoff date to its published start date. The figure is the median per application version. Trains whose published dates contradict Microsoft's other published dates are left out.",
       "excluded": []
     },
     {
@@ -68,7 +68,7 @@
       "sources": [
         "schedule"
       ],
-      "method": "Calendar days from each train's published start date to its published end date, counting both dates (the same count as “Day X of Y” on the Trains tab). The figure is the median per application version. Trains with a source warning on either date are left out.",
+      "method": "Calendar days from each train's published start date to its published end date, counting both dates (the same count as “Day X of Y” on the Trains tab). The figure is the median per application version. Trains whose published dates contradict Microsoft's other published dates are left out.",
       "excluded": []
     },
     {
@@ -216,7 +216,7 @@
       "excluded": [
         {
           "item": "10.0.46-PQU-1",
-          "reason": "Source warning: Change cutoff 2026-02-04 and train start 2025-02-09 are in different years"
+          "reason": "Change cutoff 2026-02-04 and train start 2025-02-09 are in different years"
         }
       ],
       "summary": "10.0.46: a new train starts every 28 days, or 4 weeks (median of 6 intervals; range 28–35 days)."
@@ -281,7 +281,7 @@
       "excluded": [
         {
           "item": "10.0.46-PQU-1",
-          "reason": "Source warning: Change cutoff 2026-02-04 and train start 2025-02-09 are in different years"
+          "reason": "Change cutoff 2026-02-04 and train start 2025-02-09 are in different years"
         }
       ],
       "summary": "10.0.46: the change cutoff is 5 days before the train starts (median of 7 trains; range 5–10 days)."
@@ -346,7 +346,7 @@
       "excluded": [
         {
           "item": "10.0.46-PQU-1",
-          "reason": "Source warning: Change cutoff 2026-02-04 and train start 2025-02-09 are in different years"
+          "reason": "Change cutoff 2026-02-04 and train start 2025-02-09 are in different years"
         }
       ],
       "summary": "10.0.46: a train spans 34 days from its start date to its end date, both included (median of 7 trains; range 34–35 days)."
@@ -446,11 +446,11 @@
       "max": null,
       "breakdown": {
         "In-Progress": 2,
-        "Not Started": 10,
-        "Completed": 5
+        "Not Started": 9,
+        "Completed": 6
       },
       "excluded": [],
-      "summary": "10.0.48: 17 trains: 2 In-Progress, 10 Not Started, 5 Completed."
+      "summary": "10.0.48: 17 trains: 2 In-Progress, 9 Not Started, 6 Completed."
     },
     {
       "id": "trains-by-status:10.0.49",
