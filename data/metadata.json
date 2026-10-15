@@ -2,9 +2,9 @@
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
   "pipeline_revision": "2.0.0",
-  "generated_at": "2026-10-15T04:35:05.363122Z",
+  "generated_at": "2026-10-15T04:44:14.760710Z",
   "first_published_at": "2026-09-24T12:00:00Z",
-  "last_published_at": "2026-10-15T04:35:05.363122Z",
+  "last_published_at": "2026-10-15T04:44:14.760710Z",
   "record_count": 59,
   "station_schedule_count": 30,
   "region_count": 31,
@@ -57,18 +57,18 @@
       "required": false,
       "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases",
       "file_path": "articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
-      "state": "stale",
+      "state": "current",
       "source": {
         "publisher": "Microsoft",
         "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
         "branch": "main",
         "file_path": "articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
-        "commit": "b348d48184186e3244de6aae50a1377c5718789f",
+        "commit": "772dd937f34b393df7a2cd03864bb077aaabe2c2",
         "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/public-preview-releases",
-        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/b348d48184186e3244de6aae50a1377c5718789f/articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
+        "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/772dd937f34b393df7a2cd03864bb077aaabe2c2/articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md",
         "markdown_date": "2026-06-04",
         "sha256": "05421f92e451cdc1c8d3a46d908b9af7c0727ffba398a10b8067706c12af5ed6",
-        "retrieved_at": "2026-10-08T19:14:10.623818Z"
+        "retrieved_at": "2026-10-15T04:44:14.760710Z"
       }
     },
     "maintenance": {

@@ -1,10 +1,10 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-10-15T04:35:05.363122Z",
+  "generated_at": "2026-10-15T04:44:14.760710Z",
   "status": "warnings",
   "error_count": 0,
-  "warning_count": 2,
+  "warning_count": 1,
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
@@ -17,7 +17,7 @@
     "sha256": "8431bf5fb97becf088a0eaa4eec8f42cb7f86dcafc7f68f9d4b3d972b5cf1eb0",
     "retrieved_at": "2026-10-13T13:44:17.669863Z"
   },
-  "count": 4,
+  "count": 3,
   "records": [
     {
       "code": "cutoff-start-year-mismatch",
@@ -25,13 +25,6 @@
       "message": "Change cutoff 2026-02-04 and train start 2025-02-09 are in different years",
       "pqu_id": "10.0.46-PQU-1",
       "field": "change_cutoff_date"
-    },
-    {
-      "code": "source-stale",
-      "severity": "warning",
-      "message": "Service update availability could not be refreshed (Could not download https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/772dd937f34b393df7a2cd03864bb077aaabe2c2/articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md: HTTP Error 429: Too Many Requests); showing the last published copy (commit b348d4818418, 2026-10-08).",
-      "pqu_id": null,
-      "field": null
     },
     {
       "code": "maintenance-geo-unmapped",

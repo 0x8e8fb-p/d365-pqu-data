@@ -1,7 +1,7 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-10-15T04:35:05.363122Z",
+  "generated_at": "2026-10-15T04:44:14.760710Z",
   "source_key": "maintenance",
   "state": "current",
   "source": {
