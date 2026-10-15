@@ -1,4 +1,5 @@
 code,severity,message,pqu_id,field
 cutoff-start-year-mismatch,warning,Change cutoff 2026-02-04 and train start 2025-02-09 are in different years,10.0.46-PQU-1,change_cutoff_date
+source-stale,warning,"Service update availability could not be refreshed (Could not download https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/772dd937f34b393df7a2cd03864bb077aaabe2c2/articles/fin-ops-core/dev-itpro/get-started/public-preview-releases.md: HTTP Error 429: Too Many Requests); showing the last published copy (commit b348d4818418, 2026-10-08).",,
 maintenance-geo-unmapped,info,"Microsoft's planned maintenance window table does not list a geography for DoD, so no maintenance window is shown for it.",,region.DoD
 maintenance-geo-unmapped,info,"Microsoft's planned maintenance window table does not list a geography for Government Community Cloud, so no maintenance window is shown for it.",,region.Government Community Cloud
