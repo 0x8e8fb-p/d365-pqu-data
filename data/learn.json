@@ -1,18 +1,18 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-10-15T04:44:14.760710Z",
+  "generated_at": "2026-10-19T19:11:52.848489Z",
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
     "branch": "main",
     "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
-    "commit": "7d86a35169692606d303c21e204ae6032d44d44e",
+    "commit": "cb977385a7ab71c306533725527086bc30d9f548",
     "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/7d86a35169692606d303c21e204ae6032d44d44e/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/cb977385a7ab71c306533725527086bc30d9f548/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
     "markdown_date": "2026-10-13",
-    "sha256": "8431bf5fb97becf088a0eaa4eec8f42cb7f86dcafc7f68f9d4b3d972b5cf1eb0",
-    "retrieved_at": "2026-10-13T13:44:17.669863Z"
+    "sha256": "2cc9773677d90a03e730b761f4f7825cde114e0f72564b27e14fae4ae902a588",
+    "retrieved_at": "2026-10-19T19:11:52.848489Z"
   },
   "license": {
     "name": "Creative Commons Attribution 4.0 International",
@@ -146,7 +146,7 @@
           "title": "High-level PQU train schedule",
           "level": 2,
           "url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule#high-level-pqu-train-schedule",
-          "text_sha256": "f69d121898431056a5c424d33067fc9fd8e2b131b64325223ad6a3a34fbb24df",
+          "text_sha256": "68f839f4fa7ec9f0919eae82c0dabbbff671d23c5ac369b529811c7a4804ffe3",
           "blocks": [
             {
               "type": "paragraph",
@@ -168,7 +168,7 @@
                   "type": "paragraph",
                   "runs": [
                     {
-                      "text": "Any new finance and operations apps environment that is provisioned after August 17th, 2023 is automatically signed up to receive PQUs per the schedule as applicable. Canceled* - PQU will occur only on Station-1. Releases for other stations have been canceled due to the holiday deployment freeze, and the build will be available for manual uptake. For environments configured with a weekday update schedule, updates are applied on the selected weekday following the published rollout schedule."
+                      "text": "Any new finance and operations apps environment that is provisioned after August 17th, 2023 is automatically signed up to receive PQUs per the schedule as applicable. Canceled* - PQU will occur only on Station-1. Releases for other stations have been canceled due to the holiday deployment freeze, and the build will be available for manual uptake. For environments configured with a weekday update schedule, updates are applied on the selected weekday following the published rollout schedule. Canceled* - PQU will occur only on Station-1. Releases for other stations have been canceled due to the holiday deployment freeze, and the build will be available for manual uptake."
                     }
                   ]
                 }
@@ -237,10 +237,10 @@
         }
       ],
       "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
-      "commit": "7d86a35169692606d303c21e204ae6032d44d44e",
-      "sha256": "8431bf5fb97becf088a0eaa4eec8f42cb7f86dcafc7f68f9d4b3d972b5cf1eb0",
+      "commit": "cb977385a7ab71c306533725527086bc30d9f548",
+      "sha256": "2cc9773677d90a03e730b761f4f7825cde114e0f72564b27e14fae4ae902a588",
       "markdown_date": "2026-10-13",
-      "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/7d86a35169692606d303c21e204ae6032d44d44e/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
+      "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/cb977385a7ab71c306533725527086bc30d9f548/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md"
     },
     {
       "key": "service_updates",
