@@ -7,7 +7,7 @@ from typing import Any
 import pytest
 
 from conftest import E2E_SYNC_AT, LIVE_FIXTURES, build_fixture_site
-from d365_pqu.config import PAGES_BASE_URL
+from d365_pqu.config import CHECK_INTERVAL_MINUTES, PAGES_BASE_URL
 from d365_pqu.ics import (
     LINE_LIMIT,
     MILESTONES_FILE,
@@ -108,8 +108,8 @@ def test_station_calendar(live_site: Path) -> None:
     assert header["PRODID"] == "-//0x8e8fb-p//D365 PQU dataset//EN"
     assert header["METHOD"] == "PUBLISH"
     assert header["NAME"] == header["X-WR-CALNAME"] == "PQU Station 4 windows"
-    assert header["REFRESH-INTERVAL;VALUE=DURATION"] == "PT1H"
-    assert header["X-PUBLISHED-TTL"] == "PT1H"
+    assert header["REFRESH-INTERVAL;VALUE=DURATION"] == duration(CHECK_INTERVAL_MINUTES)
+    assert header["X-PUBLISHED-TTL"] == duration(CHECK_INTERVAL_MINUTES)
     assert header["SOURCE;VALUE=URI"] == f"{PAGES_BASE_URL}/calendar/station-4.ics"
     assert "Regions on Station 4: Brazil South\\, East Asia\\, East US" in header["DESCRIPTION"]
     assert "CC BY 4.0" in header["DESCRIPTION"]

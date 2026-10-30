@@ -19,6 +19,10 @@ SCHEMA_DIR = REPO_ROOT / "schema"
 # Default browser clock for e2e tests: Monday 28 Sep 2026, 09:30 IST.
 E2E_NOW = "2026-09-28T04:00:00Z"
 E2E_SYNC_AT = "2026-09-28T03:00:00Z"
+# The dashboard reads its check interval from the published data. E2E sites are built with an
+# hourly interval so clock-driven tests (refresh, stale) stay within one local day and do not
+# also trigger the midnight recalculation; production uses config.CHECK_INTERVAL_MINUTES.
+E2E_CHECK_INTERVAL_MINUTES = 60
 
 
 def parse_instant(value: str) -> datetime:
@@ -77,7 +81,11 @@ def fixture_site(tmp_path_factory: pytest.TempPathFactory) -> Iterator[Callable[
     def _site(*steps: Step) -> str:
         key = tuple(tuple(str(part) for part in step) for step in steps)
         if key not in cache:
-            site = build_fixture_site(tmp_path_factory.mktemp("site"), steps)
+            with pytest.MonkeyPatch.context() as patch:
+                patch.setattr(
+                    "d365_pqu.serialization.CHECK_INTERVAL_MINUTES", E2E_CHECK_INTERVAL_MINUTES
+                )
+                site = build_fixture_site(tmp_path_factory.mktemp("site"), steps)
             cache[key] = stack.enter_context(serve_in_background(site))
         return cache[key]
 

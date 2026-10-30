@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from conftest import FIXTURES, LIVE_FIXTURES, SCHEMA_DIR
-from d365_pqu.config import Paths
+from d365_pqu.config import CHECK_INTERVAL_MINUTES, Paths
 from d365_pqu.errors import ParserError, ValidationError
 from d365_pqu.models import SourceDocument
 from d365_pqu.pipeline import load_json, run_sync
@@ -199,7 +199,7 @@ def test_same_content_at_a_new_commit_is_not_a_data_change(tmp_path: Path) -> No
     assert run_health["run_status"] == "unchanged"
     assert run_health["last_source_change_at"] == "2026-09-24T12:00:00Z"
     assert run_health["sources"]["schedule"]["state"] == "unchanged"
-    assert run_health["check_interval_minutes"] == 60
+    assert run_health["check_interval_minutes"] == CHECK_INTERVAL_MINUTES
 
 
 def test_content_change_rewrites_data_and_run_health(tmp_path: Path) -> None:

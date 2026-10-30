@@ -2,9 +2,9 @@ name: Update D365 PQU dataset
 
 on:
   schedule:
-    # Hourly at minute 17. Must match UPDATE_CRON and CHECK_INTERVAL_MINUTES in
+    # Daily at 00:17 UTC. Must match UPDATE_CRON and CHECK_INTERVAL_MINUTES in
     # src/d365_pqu/config.py (tests/test_workflows.py enforces this).
-    - cron: "17 * * * *"
+    - cron: "17 0 * * *"
   workflow_dispatch:
 
 permissions:
@@ -215,7 +215,7 @@ jobs:
               core.notice(`Created sync issue #${created.data.number}`);
             }
 
-  # Keeps the hourly loop in update-timer.yml going: when no timer run is queued, waiting or
+  # Keeps the daily loop in update-timer.yml going: when no timer run is queued, waiting or
   # running (after a failure, a cancelled run or a GitHub incident), start one. Any update run,
   # scheduled or manual, restarts the loop this way; the timer's own concurrency group keeps
   # a second loop from starting.
@@ -230,14 +230,14 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
     steps:
-      - name: Start the hourly timer if none is waiting
+      - name: Start the daily timer if none is waiting
         run: |
           set -euo pipefail
           if ! state="$(gh api "repos/$GH_REPO/actions/workflows/update-timer.yml" --jq .state 2>/dev/null)"; then
             state="missing"
           fi
           if [ "$state" != "active" ]; then
-            echo "The hourly timer workflow is $state; leaving it off."
+            echo "The daily timer workflow is $state; leaving it off."
             exit 0
           fi
           pending="$(gh api "repos/$GH_REPO/actions/workflows/update-timer.yml/runs?per_page=20" \
@@ -247,4 +247,4 @@ jobs:
             exit 0
           fi
           gh api --method POST "repos/$GH_REPO/actions/workflows/update-timer.yml/dispatches" -f ref=main >/dev/null
-          echo "Started the hourly timer."
+          echo "Started the daily timer."

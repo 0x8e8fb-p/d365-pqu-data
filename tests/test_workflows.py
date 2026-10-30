@@ -10,7 +10,7 @@ TIMER_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "update-timer.yml"
 CI_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "ci.yml"
 OPERATIONS_DOC = REPO_ROOT / "docs" / "operations.md"
 # The wait timer of the pqu-timer environment, a repository setting (see docs/operations.md).
-TIMER_WAIT_MINUTES = 58
+TIMER_WAIT_MINUTES = 1438
 
 
 def _interval_minutes(cron: str) -> int:
@@ -19,6 +19,8 @@ def _interval_minutes(cron: str) -> int:
     assert (day, month, weekday) == ("*", "*", "*"), cron
     if hour == "*":
         return 60
+    if hour.isdigit():
+        return 24 * 60
     match = re.fullmatch(r"\*/(\d+)", hour)
     assert match, cron
     return 60 * int(match.group(1))
@@ -48,12 +50,12 @@ def test_ci_runs_javascript_and_browser_tests_strictly() -> None:
     assert "playwright install --with-deps chromium" in text
 
 
-def test_hourly_timer_waits_in_an_environment_then_restarts_itself_and_the_update() -> None:
+def test_daily_timer_waits_in_an_environment_then_restarts_itself_and_the_update() -> None:
     text = TIMER_WORKFLOW.read_text(encoding="utf-8")
-    # Only dispatch starts it: the hourly cadence must not depend on GitHub's cron scheduler.
+    # Only dispatch starts it: the daily cadence must not depend on GitHub's cron scheduler.
     assert "schedule:" not in text
     assert "workflow_dispatch:" in text
-    # The hour is spent in the environment's wait timer, which holds the job without a runner.
+    # The day is spent in the environment's wait timer, which holds the job without a runner.
     assert re.search(r"environment:\s*\n\s+name: pqu-timer\s*\n\s+deployment: false", text)
     # One loop: a newer run replaces a pending one and never cancels the waiting one.
     assert "group: pqu-update-timer" in text

@@ -1,8 +1,8 @@
-name: Hourly update timer
+name: Daily update timer
 
-# Starts "Update D365 PQU dataset" about once an hour without depending on GitHub's cron
+# Starts "Update D365 PQU dataset" about once a day without depending on GitHub's cron
 # scheduler, which creates this repository's scheduled runs hours late and skips most of them.
-# Each run first waits in the pqu-timer environment: its 58-minute wait timer holds the job
+# Each run first waits in the pqu-timer environment: its 1438-minute wait timer holds the job
 # without a runner and is not billed. The run then starts the next timer run and the update.
 # Every update run restarts this loop if no timer run is waiting; disabling this workflow in the
 # Actions tab stops it. See docs/operations.md.
@@ -33,8 +33,8 @@ jobs:
       # A non-completed update run older than three check intervals can only be wedged on
       # the github-pages environment: a healthy run finishes within 25 minutes and the
       # concurrency group holds at most one pending run. Cancel it so the queue head frees.
-      STUCK_AFTER_SECONDS: "10800"
-      MIN_WAIT_SECONDS: "2700"
+      STUCK_AFTER_SECONDS: "259200"
+      MIN_WAIT_SECONDS: "79200"
     steps:
       - name: Check that this run waited
         run: |
@@ -54,7 +54,7 @@ jobs:
           waited=$(( $(date -u +%s) - $(date -u -d "$created" +%s) ))
           echo "Started ${waited}s after this run was created."
           if [ "$waited" -lt "$MIN_WAIT_SECONDS" ]; then
-            echo "::error::The pqu-timer environment did not hold this run (${waited}s). Set its wait timer to 58 minutes as described in docs/operations.md, then run this workflow again."
+            echo "::error::The pqu-timer environment did not hold this run (${waited}s). Set its wait timer to 1438 minutes as described in docs/operations.md, then run this workflow again."
             exit 1
           fi
 

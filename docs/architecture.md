@@ -66,7 +66,7 @@ Azure region names are matched to maintenance-window geographies by name tokens 
 
 ## No-op behavior
 
-When every source's content and state and the pipeline revision are unchanged, the normalized data is not rewritten. A health-only heartbeat is committed at most once every 30 days, which keeps GitHub's scheduled workflow active in a quiet repository without an hourly commit.
+When every source's content and state and the pipeline revision are unchanged, the normalized data is not rewritten. A health-only heartbeat is committed at most once every 30 days, which keeps GitHub's scheduled workflow active in a quiet repository without a daily commit.
 
 ## The site
 
