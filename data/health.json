@@ -2,10 +2,10 @@
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
   "status": "degraded",
-  "checked_at": "2026-10-29T13:11:46.192301Z",
-  "last_successful_check_at": "2026-10-29T13:11:46.192301Z",
-  "last_successful_publish_at": "2026-10-29T13:11:46.192301Z",
-  "last_source_change_at": "2026-10-29T13:11:46.192301Z",
+  "checked_at": "2026-10-31T05:34:44.199947Z",
+  "last_successful_check_at": "2026-10-31T05:34:44.199947Z",
+  "last_successful_publish_at": "2026-10-31T05:34:44.199947Z",
+  "last_source_change_at": "2026-10-31T05:34:44.199947Z",
   "source_reachable": true,
   "parser_success": true,
   "validation_passed": true,
@@ -14,7 +14,7 @@
   "upcoming_records": 14,
   "warning_count": 1,
   "error_count": 0,
-  "check_interval_minutes": 60,
+  "check_interval_minutes": 1440,
   "source_commit": "c4cce79a3ded830fff97c00e088ef98a15115e0e",
   "source_sha256": "ebb143820e31d1fd854984c8ed328d1cf8e3fb0a6fadcf2924c18b1d6cc365b3"
 }
