@@ -8,7 +8,12 @@ import pytest
 from conftest import FIXTURES
 from d365_pqu.errors import ParserError, ValidationError
 from d365_pqu.models import SourceDocument
-from d365_pqu.normalize import canonical_status, normalize_source, parse_date_range
+from d365_pqu.normalize import (
+    canonical_status,
+    normalize_source,
+    parse_date_range,
+    parse_station_date_range,
+)
 from d365_pqu.parser import parse_source
 from d365_pqu.source import parse_markdown_date
 from d365_pqu.validation import validate_quality, validate_records
@@ -96,6 +101,78 @@ def test_station_heading_and_build_must_agree() -> None:
     dataset = normalize_source(parse_source(markdown), _source("source-minimal.md"))
     errors = [item for item in dataset.quality if item["severity"] == "error"]
     assert any(item["code"] == "station-schedule-match" for item in errors)
+
+
+def test_station_date_cells_accept_only_the_canceled_footnote() -> None:
+    assert parse_station_date_range("Canceled*") == (None, None)
+    assert parse_station_date_range("Canceled†") == (None, None)
+    assert parse_station_date_range("N/A") == (None, None)
+    assert parse_station_date_range("December 28 to January 3, 2027") == (
+        "2026-12-28",
+        "2027-01-03",
+    )
+    # Train durations and every other date range keep the original strict parsing.
+    with pytest.raises(ParserError):
+        parse_date_range("Canceled*")
+
+
+def test_canceled_footnote_station_rows_have_no_dates() -> None:
+    markdown = (
+        (FIXTURES / "source-minimal.md")
+        .read_text(encoding="utf-8")
+        .replace(
+            "| Station 2 | September 21 to September 24, 2026 | September 26 to September 27, 2026 |",
+            "| Station 2 | Canceled* | Canceled* |",
+        )
+    )
+    dataset = normalize_source(parse_source(markdown), _source("source-minimal.md"))
+    assert not any(item["code"] == "invalid-station-dates" for item in dataset.quality)
+    canceled = [
+        row for row in dataset.stations if row["pqu_id"] == "10.0.48-PQU-6" and row["station"] == 2
+    ]
+    assert len(canceled) == 1
+    assert canceled[0]["sandbox_start_date"] is None
+    assert canceled[0]["sandbox_end_date"] is None
+    assert canceled[0]["production_start_date"] is None
+    assert canceled[0]["production_end_date"] is None
+    validate_quality(dataset)
+
+
+def test_reciprocal_station_build_swap_is_a_warning() -> None:
+    # Microsoft exchanged the build labels of two station sections on 2026-11-04 while the
+    # high-level table stayed canonical. The headings and rollout dates are still correct.
+    text = (FIXTURES / "source-minimal.md").read_text(encoding="utf-8")
+    text = (
+        text.replace("**App version: 10.0.2645.136**", "**App version: 10.0.9999.001**")
+        .replace("**Platform version: 7.0.7996.119**", "**Platform version: 7.0.9999.001**")
+        .replace("**App version: 10.0.2645.124**", "**App version: 10.0.2645.136**")
+        .replace("**Platform version: 7.0.7996.111**", "**Platform version: 7.0.7996.119**")
+        .replace("**App version: 10.0.9999.001**", "**App version: 10.0.2645.124**")
+        .replace("**Platform version: 7.0.9999.001**", "**Platform version: 7.0.7996.111**")
+    )
+    dataset = normalize_source(parse_source(text), _source("source-minimal.md"))
+    mismatches = [
+        item for item in dataset.quality if item["code"] == "station-schedule-build-mismatch"
+    ]
+    assert len(mismatches) == 2
+    assert all(item["severity"] == "warning" for item in mismatches)
+    assert not any(item["severity"] == "error" for item in dataset.quality)
+    assert len(dataset.stations) == 12  # neither schedule was discarded
+    validate_quality(dataset)
+
+
+def test_one_sided_station_build_mismatch_stays_fatal() -> None:
+    markdown = (
+        (FIXTURES / "source-minimal.md")
+        .read_text(encoding="utf-8")
+        .replace("**App version: 10.0.2645.136**", "**App version: 10.0.2645.124**")
+        .replace("**Platform version: 7.0.7996.119**", "**Platform version: 7.0.7996.111**")
+    )
+    dataset = normalize_source(parse_source(markdown), _source("source-minimal.md"))
+    errors = [item for item in dataset.quality if item["severity"] == "error"]
+    assert any(item["code"] == "station-schedule-match" for item in errors)
+    with pytest.raises(ValidationError):
+        validate_quality(dataset)
 
 
 def test_invalid_calendar_date_is_a_parser_error() -> None:

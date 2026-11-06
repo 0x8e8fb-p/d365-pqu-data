@@ -140,6 +140,20 @@ def split_status_marker(value: str) -> tuple[str, str | None]:
     return match.group("status"), match.group("marker")
 
 
+def parse_station_date_range(value: str) -> tuple[str | None, str | None]:
+    """Parse a station date cell, allowing the cancellation footnote in place of a range.
+
+    Microsoft writes "Canceled*" into both station date columns when a rollout was
+    canceled for that station (holiday deployment freeze). It means no dates, not an
+    unparseable range. This is scoped to station cells; train durations still go through
+    ``parse_date_range`` unchanged.
+    """
+    status, marker = split_status_marker(value)
+    if marker and canonical_status(status) == "Canceled":
+        return None, None
+    return parse_date_range(value)
+
+
 def status_notes(parsed: ParsedSource) -> dict[tuple[str, str], str]:
     notes: dict[tuple[str, str], str] = {}
     for note in parsed.status_notes:
@@ -216,6 +230,41 @@ def _quality(
         pqu_id=pqu_id,
         field=field,
     )
+
+
+def _swapped_station_builds(parsed: ParsedSource, records: list[PquRecord]) -> frozenset[str]:
+    """Station sections whose build labels Microsoft exchanged between two trains.
+
+    The high-level table is canonical for builds; a station section only supplies rollout
+    dates and the UEP version, and its build labels are never published. A reciprocal swap
+    (section A carries train B's builds and section B carries train A's builds) is therefore
+    a provenance warning, not a reason to discard both schedules. Every other kind of build
+    disagreement stays fatal so unknown or mislabeled builds are still caught.
+    """
+    by_id = {record["pqu_id"]: record for record in records}
+    sections = [
+        (s.release_train, s.application_version, (s.application_build, s.platform_build))
+        for s in parsed.station_schedules
+    ]
+    swapped: set[str] = set()
+    for train, app_version, pair in sections:
+        master = by_id.get(train.replace(" ", "-"))
+        if master is None or master["application_version"] != app_version:
+            continue
+        own = (master["application_build"], master["platform_build"])
+        if own == pair:
+            continue
+        for other_train, other_app, other_pair in sections:
+            if other_train == train or other_app != app_version:
+                continue
+            other_master = by_id.get(other_train.replace(" ", "-"))
+            if other_master is None or other_master["application_version"] != app_version:
+                continue
+            their_own = (other_master["application_build"], other_master["platform_build"])
+            if pair == their_own and other_pair == own:
+                swapped.add(train)
+                break
+    return frozenset(swapped)
 
 
 def normalize_source(
@@ -361,6 +410,7 @@ def normalize_source(
 
     station_records: list[StationRecord] = []
     matched_ids: set[str] = set()
+    swapped_builds = _swapped_station_builds(parsed, records)
     for schedule in parsed.station_schedules:
         schedule_pqu_id = schedule.release_train.replace(" ", "-")
         matches = [record for record in records if record["pqu_id"] == schedule_pqu_id]
@@ -371,10 +421,11 @@ def normalize_source(
                 or master["application_build"] != schedule.application_build
                 or master["platform_build"] != schedule.platform_build
             ):
+                tolerated = schedule.release_train in swapped_builds
                 quality.append(
                     _quality(
                         "station-schedule-build-mismatch",
-                        "error",
+                        "warning" if tolerated else "error",
                         (
                             f"Station schedule {schedule.release_train} has app "
                             f"{schedule.application_build} and platform {schedule.platform_build}, "
@@ -384,7 +435,8 @@ def normalize_source(
                         pqu_id=schedule_pqu_id,
                     )
                 )
-                matches = []
+                if not tolerated:
+                    matches = []
         if len(matches) != 1:
             quality.append(
                 _quality(
@@ -441,8 +493,10 @@ def normalize_source(
                 )
                 continue
             try:
-                sandbox_start, sandbox_end = parse_date_range(station_row.sandbox_schedule)
-                production_start, production_end = parse_date_range(station_row.production_schedule)
+                sandbox_start, sandbox_end = parse_station_date_range(station_row.sandbox_schedule)
+                production_start, production_end = parse_station_date_range(
+                    station_row.production_schedule
+                )
             except ParserError as exc:
                 quality.append(
                     _quality(
