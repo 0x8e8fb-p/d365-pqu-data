@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "",
+  "buildCommand": "bash scripts/build-static.sh",
+  "outputDirectory": "build/site",
+  "rewrites": [
+    { "source": "/d365-pqu-data", "destination": "/" },
+    { "source": "/d365-pqu-data/:path*", "destination": "/:path*" }
+  ]
+}

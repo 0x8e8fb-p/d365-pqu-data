@@ -1,0 +1,27 @@
+# Netlify deployment of the published static site.
+# Renders build/site from the committed dataset; no sync, no data changes, no network
+# calls to Microsoft. GitHub Pages and .github/workflows/update-pqu.yml are untouched.
+
+[build]
+  command = "bash scripts/build-static.sh"
+  publish = "build/site"
+
+[build.environment]
+  # requirements/runtime.lock is compiled for Python 3.12.
+  PYTHON_VERSION = "3.12"
+
+# 404.html uses GitHub Pages' /d365-pqu-data/ prefix for its stylesheet, icon and links.
+# At a Netlify root domain those paths have to resolve to the site root instead.
+[[redirects]]
+  from = "/d365-pqu-data"
+  to = "/"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/d365-pqu-data/*"
+  to = "/:splat"
+  status = 200
+  force = true
+
+# Netlify serves 404.html from the publish directory for every other missing path.
