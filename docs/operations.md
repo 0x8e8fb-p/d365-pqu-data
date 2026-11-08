@@ -87,6 +87,8 @@ The published site contains the dashboard, `api/`, `schemas/`, `downloads/`, `fe
 
 Static mirrors built by `scripts/build-static.sh` have no `build/run-health.json`, so their built `api/health.json` is the committed health of the last **data change**, not of the last **check**. `netlify.toml` therefore proxies `/api/health.json` to the Pages endpoint with a forced `200` rewrite, so the mirror shows the same current check status as Pages without a rebuild after every daily run. The browser still requests a same-origin path, so the CSP is unchanged; every other document is served from the mirror's own static build. If the Pages address changes, update both `PAGES_HEALTH_URL` in `tests/test_workflows.py` and the redirect in `netlify.toml`.
 
+`netlify.toml` intentionally sets no `PYTHON_VERSION`, and the repo has no `.python-version`, `.tool-versions`, or `mise.toml`. A floating interpreter pin makes Netlify's mise download a `python-build-standalone` tarball from GitHub releases on every deploy; a failed download kills the build in the **Installing dependencies** stage before `build-static.sh` even runs. The build image's own `python3` installs `requirements/runtime.lock` and runs `build-site` correctly (verified on Python 3.13 as well as 3.12), so the deploy has no interpreter-download dependency. If this setting is reintroduced in the Netlify UI instead of the file, the same failure returns.
+
 Both HTML pages carry a Content-Security-Policy that allows only the site's own files and the SHA-256 of the inline theme script, computed at build time. Changing that script needs no manual hash update; adding a script, style, or connection to another origin would be blocked by the policy.
 
 ## Local verification

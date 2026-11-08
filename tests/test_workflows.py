@@ -120,3 +120,16 @@ def test_netlify_proxies_the_check_status_from_pages() -> None:
             "force": True,
         }
     ]
+
+
+def test_netlify_needs_no_standalone_python_download() -> None:
+    """A floating PYTHON_VERSION makes Netlify's mise fetch a python-build-standalone
+    tarball from GitHub releases on every deploy. That fetch is flaky and fails the deploy
+    before scripts/build-static.sh runs. runtime.lock installs on the image's own Python,
+    so neither an env pin nor a tool version file belongs here."""
+    config = tomllib.loads(NETLIFY_CONFIG.read_text(encoding="utf-8"))
+    assert "PYTHON_VERSION" not in config.get("build", {}).get("environment", {})
+    assert not any(
+        (REPO_ROOT / name).exists()
+        for name in (".python-version", ".tool-versions", "mise.toml", ".mise.toml")
+    )

@@ -9,9 +9,12 @@
   command = "bash scripts/build-static.sh"
   publish = "build/site"
 
-[build.environment]
-  # requirements/runtime.lock is compiled for Python 3.12.
-  PYTHON_VERSION = "3.12"
+# Deliberately no PYTHON_VERSION (and no .python-version / .tool-versions / mise.toml).
+# A floating "3.12" pin makes Netlify's mise download a python-build-standalone tarball
+# from GitHub releases on every deploy; when that download fails, the deploy dies in the
+# "Installing dependencies" stage before this repo's build command runs. The image's own
+# python3 installs requirements/runtime.lock and runs build-site without issue, so the
+# static build has no interpreter-download dependency. Verified locally on Python 3.13.
 
 # Serve the same check status as the canonical GitHub Pages site. force = true is required:
 # build-static.sh publishes a static api/health.json, which would otherwise shadow this rule.
