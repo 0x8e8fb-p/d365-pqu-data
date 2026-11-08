@@ -85,6 +85,8 @@ Pages is deployed by the official GitHub Pages Actions from the verified `build/
 
 The published site contains the dashboard, `api/`, `schemas/`, `downloads/`, `feed.xml`, `calendar/*.ics`, `llms.txt`, and `404.html`. GitHub Pages serves `404.html` for every missing path, which is why that page uses paths from the site root (`/d365-pqu-data/…`); if the repository or Pages address changes, update `DEFAULT_REPO_SLUG` in `config.py` so these paths, the feed, and the calendars follow.
 
+Static mirrors built by `scripts/build-static.sh` have no `build/run-health.json`, so their built `api/health.json` is the committed health of the last **data change**, not of the last **check**. `netlify.toml` therefore proxies `/api/health.json` to the Pages endpoint with a forced `200` rewrite, so the mirror shows the same current check status as Pages without a rebuild after every daily run. The browser still requests a same-origin path, so the CSP is unchanged; every other document is served from the mirror's own static build. If the Pages address changes, update both `PAGES_HEALTH_URL` in `tests/test_workflows.py` and the redirect in `netlify.toml`.
+
 Both HTML pages carry a Content-Security-Policy that allows only the site's own files and the SHA-256 of the inline theme script, computed at build time. Changing that script needs no manual hash update; adding a script, style, or connection to another origin would be blocked by the policy.
 
 ## Local verification

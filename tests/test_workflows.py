@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import tomllib
 
 from conftest import REPO_ROOT
 from d365_pqu.config import CHECK_INTERVAL_MINUTES, UPDATE_CRON
@@ -9,6 +10,8 @@ UPDATE_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "update-pqu.yml"
 TIMER_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "update-timer.yml"
 CI_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "ci.yml"
 OPERATIONS_DOC = REPO_ROOT / "docs" / "operations.md"
+NETLIFY_CONFIG = REPO_ROOT / "netlify.toml"
+PAGES_HEALTH_URL = "https://0x8e8fb-p.github.io/d365-pqu-data/api/health.json"
 # The wait timer of the pqu-timer environment, a repository setting (see docs/operations.md).
 TIMER_WAIT_MINUTES = 1438
 
@@ -100,3 +103,20 @@ def test_operations_guide_describes_the_timer_environment() -> None:
     text = OPERATIONS_DOC.read_text(encoding="utf-8")
     assert "pqu-timer" in text
     assert f"wait_timer={TIMER_WAIT_MINUTES}" in text
+
+
+def test_netlify_proxies_the_check_status_from_pages() -> None:
+    """A static mirror has no run-health.json, so its built api/health.json is the committed
+    data/health.json: checked_at records the last DATA change, not the last CHECK. Proxy that
+    one path to Pages so the dashboard shows the same current status on both sites. The proxy
+    must be forced, otherwise the built file shadows the rule."""
+    config = tomllib.loads(NETLIFY_CONFIG.read_text(encoding="utf-8"))
+    rules = [rule for rule in config.get("redirects", []) if rule.get("from") == "/api/health.json"]
+    assert rules == [
+        {
+            "from": "/api/health.json",
+            "to": PAGES_HEALTH_URL,
+            "status": 200,
+            "force": True,
+        }
+    ]

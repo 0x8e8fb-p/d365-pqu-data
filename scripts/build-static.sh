@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Render the static site from the committed dataset for Netlify / Vercel.
+# Render the static site from the committed dataset for Netlify.
 #
 # This is a deploy-only adapter. It does NOT run sync, does NOT write to data/ or excel/,
 # does NOT contact Microsoft, and does NOT change the GitHub Pages workflow. The output is
@@ -17,10 +17,12 @@ python3 -m pip install --quiet --disable-pip-version-check --no-input \
 
 PYTHONPATH="src:$deps" python3 -m d365_pqu build-site
 
-# Optional parity setting: the committed data/health.json only changes when the data changes,
-# while GitHub Pages publishes a health document after every daily check. Set
-# D365_PQU_HEALTH_URL to the Pages /api/health.json to keep "Last check" current here too.
-# Failure is non-fatal: the committed health document stays in place.
+# Netlify proxies /api/health.json to Pages at request time (see netlify.toml), so its
+# "Last check" is always current. This optional setting is for static copies hosted elsewhere:
+# the committed data/health.json only changes when the data changes, while GitHub Pages
+# publishes a health document after every daily check. Set D365_PQU_HEALTH_URL to the Pages
+# /api/health.json to bake the current check into the built file instead. Failure is non-fatal:
+# the committed health document stays in place.
 if [ -n "${D365_PQU_HEALTH_URL:-}" ]; then
   health_tmp="build/site/api/health.json.tmp"
   if curl -fsSL --max-time 20 "$D365_PQU_HEALTH_URL" -o "$health_tmp" \

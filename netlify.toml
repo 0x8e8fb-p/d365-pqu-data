@@ -1,6 +1,9 @@
 # Netlify deployment of the published static site.
 # Renders build/site from the committed dataset; no sync, no data changes, no network
 # calls to Microsoft. GitHub Pages and .github/workflows/update-pqu.yml are untouched.
+# The one exception is /api/health.json, proxied to Pages below: the committed health
+# document records the last DATA change, not the last CHECK, so a static mirror would
+# keep showing a stale "Last check" while the daily check is in fact running on Pages.
 
 [build]
   command = "bash scripts/build-static.sh"
@@ -9,6 +12,15 @@
 [build.environment]
   # requirements/runtime.lock is compiled for Python 3.12.
   PYTHON_VERSION = "3.12"
+
+# Serve the same check status as the canonical GitHub Pages site. force = true is required:
+# build-static.sh publishes a static api/health.json, which would otherwise shadow this rule.
+# The browser still requests a same-origin path, so the page's CSP (connect-src 'self') holds.
+[[redirects]]
+  from = "/api/health.json"
+  to = "https://0x8e8fb-p.github.io/d365-pqu-data/api/health.json"
+  status = 200
+  force = true
 
 # 404.html uses GitHub Pages' /d365-pqu-data/ prefix for its stylesheet, icon and links.
 # At a Netlify root domain those paths have to resolve to the site root instead.
