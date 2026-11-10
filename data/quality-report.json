@@ -1,23 +1,23 @@
 {
   "dataset": "d365-finops-pqu",
   "schema_version": "1.1.0",
-  "generated_at": "2026-11-06T08:52:39.039785Z",
+  "generated_at": "2026-11-10T07:12:36.184572Z",
   "status": "warnings",
   "error_count": 0,
-  "warning_count": 3,
+  "warning_count": 1,
   "source": {
     "publisher": "Microsoft",
     "repository": "MicrosoftDocs/dynamics-365-unified-operations-public",
     "branch": "main",
     "file_path": "articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
-    "commit": "a1439b25a99370ba6be4edd986a6b48c6d63e9bc",
+    "commit": "a6bcea829c63d756b88d6c74ece9252b13ad7390",
     "article_url": "https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/get-started/quality-updates-schedule",
-    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/a1439b25a99370ba6be4edd986a6b48c6d63e9bc/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
+    "raw_url": "https://raw.githubusercontent.com/MicrosoftDocs/dynamics-365-unified-operations-public/a6bcea829c63d756b88d6c74ece9252b13ad7390/articles/fin-ops-core/dev-itpro/get-started/quality-updates-schedule.md",
     "markdown_date": "2026-10-13",
-    "sha256": "dfcad5a2b38caf49e74cf2a0b8afd9c6598a9f110547a60f7833e4c45cbcdfb6",
-    "retrieved_at": "2026-11-06T08:52:39.039785Z"
+    "sha256": "c3a75a4a95bdf66bb51b49d477a70c633e755bca9dc9a73c97646a1b8ffe4f25",
+    "retrieved_at": "2026-11-10T07:12:36.184572Z"
   },
-  "count": 5,
+  "count": 3,
   "records": [
     {
       "code": "cutoff-start-year-mismatch",
@@ -25,20 +25,6 @@
       "message": "Change cutoff 2026-02-04 and train start 2025-02-09 are in different years",
       "pqu_id": "10.0.46-PQU-1",
       "field": "change_cutoff_date"
-    },
-    {
-      "code": "station-schedule-build-mismatch",
-      "severity": "warning",
-      "message": "Station schedule 10.0.49 PQU-2 has app 10.0.2790.108 and platform 7.0.8199.70, but the master record has app 10.0.2790.105 and platform 7.0.8199.63",
-      "pqu_id": "10.0.49-PQU-2",
-      "field": null
-    },
-    {
-      "code": "station-schedule-build-mismatch",
-      "severity": "warning",
-      "message": "Station schedule 10.0.49 PQU-3 has app 10.0.2790.105 and platform 7.0.8199.63, but the master record has app 10.0.2790.108 and platform 7.0.8199.70",
-      "pqu_id": "10.0.49-PQU-3",
-      "field": null
     },
     {
       "code": "maintenance-geo-unmapped",

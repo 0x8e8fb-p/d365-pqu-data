@@ -1,6 +1,4 @@
 code,severity,message,pqu_id,field
 cutoff-start-year-mismatch,warning,Change cutoff 2026-02-04 and train start 2025-02-09 are in different years,10.0.46-PQU-1,change_cutoff_date
-station-schedule-build-mismatch,warning,"Station schedule 10.0.49 PQU-2 has app 10.0.2790.108 and platform 7.0.8199.70, but the master record has app 10.0.2790.105 and platform 7.0.8199.63",10.0.49-PQU-2,
-station-schedule-build-mismatch,warning,"Station schedule 10.0.49 PQU-3 has app 10.0.2790.105 and platform 7.0.8199.63, but the master record has app 10.0.2790.108 and platform 7.0.8199.70",10.0.49-PQU-3,
 maintenance-geo-unmapped,info,"Microsoft's planned maintenance window table does not list a geography for DoD, so no maintenance window is shown for it.",,region.DoD
 maintenance-geo-unmapped,info,"Microsoft's planned maintenance window table does not list a geography for Government Community Cloud, so no maintenance window is shown for it.",,region.Government Community Cloud
